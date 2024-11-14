@@ -15,13 +15,35 @@
             "role" : "Developer"
         }
     ],
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://mirrors.aliyun.com/composer/"
+        }
+    ],
     "require": {
         "php": "^8.1",
         "illuminate/support": "^10.0"
+    },
+    "require-dev" : {
+        "fakerphp/faker": "^1.14",
+        "friendsofphp/php-cs-fixer": "^3.0",
+        "mockery/mockery": "^1.6",
+        "nesbot/carbon": "^2.63",
+        "phpbench/phpbench": "^1.2",
+        "phpstan/extension-installer": "^1.1",
+        "phpstan/phpstan": "^1.11",
+        "phpunit/phpunit": "^10.0"
     },
     "autoload": {
         "psr-4": {
             "Asrtal\\Serialize\\": "src/"
         }
+    },
+    "config": {
+        "platform": {
+            "php": "8.1"
+        },
+        "root-version": "1.0.0"
     }
 }
