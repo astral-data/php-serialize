@@ -6,7 +6,7 @@
         "serialize",
         "php-mapper"
     ],
-    "homepage" : "https://github.com/Asrtal/php-serialize",
+    "homepage" : "https://github.com/astral-data/php-serialize",
     "license" : "MIT",
     "authors" : [
         {
