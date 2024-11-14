@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Asrtal\Serialize\Tests;
+namespace Astral\Serialize\Tests;
 
 
-use Asrtal\Serialize\Annotations\Groups;
-use Asrtal\Serialize\Annotations\PropertyAlisa;
-use Asrtal\Serialize\Annotations\PropertyAlisaByGroup;
+use Astral\Serialize\Annotations\Groups;
+use Astral\Serialize\Annotations\PropertyAlisa;
+use Astral\Serialize\Annotations\PropertyAlisaByGroup;
 
 #[Groups(['test', 'test_2'])]
 class TestGroups extends Serialize

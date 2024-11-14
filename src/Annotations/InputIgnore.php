@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Asrtal\Serialize\Annotations;
+namespace Astral\Serialize\Annotations;
 
 use Attribute;
 

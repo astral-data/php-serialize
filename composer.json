@@ -1,5 +1,5 @@
 {
-    "name": "asrtal/php-serialize",
+    "name": "astral/php-serialize",
     "type": "library",
     "keywords" : [
         "php-serialize",
@@ -10,7 +10,7 @@
     "license" : "MIT",
     "authors" : [
         {
-            "name" : "asrtal",
+            "name" : "astral",
             "email" : "350375092@qq.com",
             "role" : "Developer"
         }
@@ -37,7 +37,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Asrtal\\Serialize\\": "src/"
+            "Astral\\Serialize\\": "src/"
         }
     },
     "config": {

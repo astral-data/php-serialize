@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Asrtal\Serialize\Annotations;
+namespace Astral\Serialize\Annotations;
 
 use Attribute;
 use UnitEnum;
@@ -14,13 +14,12 @@ class Groups
     public function __construct(array|string $names)
     {
         $names = is_string($names) ? [$names] : $names;
-        
+
         $this->names = array_map(function ($name) {
             if ($name instanceof UnitEnum) {
                 return $name->name;
             }
             return (string) $name;
         }, $names);
-        
     }
 }

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Asrtal\Serialize\Tests;
+namespace Astral\Serialize\Tests;
 
-use Asrtal\Serialize\Exception\SerializeException;
+use Astral\Serialize\Exception\SerializeException;
 
 use PHPUnit\Framework\TestCase;
 use stdClass;
@@ -104,6 +104,5 @@ class SerializeTest extends TestCase
         $this->assertEquals(['names', 'id', 'name', 'groupsTwo'], $serialize->getFlattenPropertiesByGroup('test', $object));
         $this->assertEquals(['test-alisa-2', 'id', 'name', 'groupsTwo'], $serialize->getFlattenPropertiesAlisaByGroup('test', $object));
         $this->assertEquals('test-alisa-2', $serialize->getPropertyAlisaByGroup('names', 'test', $object));
-
     }
 }

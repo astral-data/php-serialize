@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Asrtal\Serialize\Exception;
+namespace Astral\Serialize\Exception;
 
 use Exception;
 

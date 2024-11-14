@@ -1,6 +1,6 @@
 <?php
 
-namespace Asrtal\Serialize\Enums;
+namespace Astral\Serialize\Enums;
 
 
 enum PropertyTypeEnum

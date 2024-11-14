@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Asrtal\Serialize\Annotations;
+namespace Astral\Serialize\Annotations;
 
 use Attribute;
 
 /**
  * toArray输出的属性名称
  */
-#[Attribute(Attribute::TARGET_PROPERTY|Attribute::TARGET_CLASS)]
+#[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_CLASS)]
 class OutName
 {
     /** @var string 转换的名称 */
