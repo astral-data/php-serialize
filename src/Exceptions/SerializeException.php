@@ -1,8 +1,5 @@
 <?php
-
-declare(strict_types=1);
-
-namespace Astral\Serialize\Exception;
+namespace Astral\Serialize\Exceptions;
 
 use Exception;
 

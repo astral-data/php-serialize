@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Astral\Serialize\Tests;
 
-use Astral\Serialize\Exception\SerializeException;
+use Astral\Serialize\Exceptions\SerializeException;
 
 use PHPUnit\Framework\TestCase;
 use stdClass;

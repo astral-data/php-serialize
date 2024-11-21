@@ -3,7 +3,7 @@
 namespace Astral\Serialize\Enums;
 
 
-enum PropertyTypeEnum
+enum PropertyKindEnum
 {
     case STRING;
     case INT;
@@ -14,4 +14,6 @@ enum PropertyTypeEnum
     case CollectObject;
     case ENUM;
     case DATE;
+
+
 }

@@ -29,21 +29,13 @@
         "fakerphp/faker": "^1.14",
         "friendsofphp/php-cs-fixer": "^3.0",
         "mockery/mockery": "^1.6",
-        "nesbot/carbon": "^2.63",
         "phpbench/phpbench": "^1.2",
-        "phpstan/extension-installer": "^1.1",
-        "phpstan/phpstan": "^1.11",
         "phpunit/phpunit": "^10.0"
     },
     "autoload": {
         "psr-4": {
-            "Astral\\Serialize\\": "src/"
+            "Astral\\Serialize\\": "src/",
+            "Astral\\Serialize\\Tests\\": "tests/"
         }
-    },
-    "config": {
-        "platform": {
-            "php": "8.1"
-        },
-        "root-version": "1.0.0"
     }
 }

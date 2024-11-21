@@ -9,7 +9,7 @@ use Attribute;
 /**
  * toArray输出的属性名称
  */
-#[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_CLASS)]
+#[Attribute(Attribute::TARGET_PROPERTY)]
 class OutName
 {
     /** @var string 转换的名称 */

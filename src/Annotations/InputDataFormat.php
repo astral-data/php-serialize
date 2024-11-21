@@ -6,7 +6,7 @@ namespace Astral\Serialize\Annotations;
 
 use Attribute;
 
-#[Attribute(Attribute::TARGET_PROPERTY)]
+#[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_CLASS)]
 class InputDataFormat
 {
     /** @var string input-format */
