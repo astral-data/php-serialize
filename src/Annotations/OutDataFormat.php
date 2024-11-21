@@ -9,7 +9,7 @@ use Attribute;
 /**
  * toArray 输出值为 固定日期格式 默认 YYYY-MM-DD HH:ii:ss的日期格式
  */
-#[Attribute(Attribute::TARGET_PROPERTY)]
+#[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_CLASS)]
 class OutDataFormat
 {
     /** @var string 日期格式 */

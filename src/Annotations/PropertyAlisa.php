@@ -11,12 +11,12 @@ class PropertyAlisa
 {
     public string $name;
 
-    public array $group;
+    public array $groups;
 
-    public function __construct(string $name, array $group = [])
+    public function __construct(string $name, array $groups = [])
     {
         $this->name = $name;
 
-        $this->group = $group;
+        $this->$groups = $groups;
     }
 }
