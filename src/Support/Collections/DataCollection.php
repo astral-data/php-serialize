@@ -2,38 +2,45 @@
 
 namespace Astral\Serialize\Support\Collections;
 
-use Astral\Serialize\Enums\PropertyKindEnum;
+use Astral\Serialize\Enums\TypeKindEnum;
 use Illuminate\Support\Collection;
+use ReflectionProperty;
 
-class DataCollection {
-
+class DataCollection
+{
     public string $name;
-    public PropertyKindEnum $kind;
-    public mixed $type;
 
-//    public string $inputName;
-//    public bool $inputIgnore = false;
-//    public bool $existSetter = false;
+    /** @var TypeCollection[] */
+    public array $type;
+
+    public mixed $defaultValue;
+
+    //    public string $inputName;
+
+    //    public bool $inputIgnore = false;
+
+    //    public bool $existSetter = false;
     public array $inputTranFromCollections = [];
-//    public string $outName;
-//    public bool $outIgnore = false;
-//    public bool $existGetter = false;
+
+    //    public string $outName;
+
+    //    public bool $outIgnore = false;
+
+    //    public bool $existGetter = false;
     public array $outTranFromCollections = [];
     public string $propertyAliasName;
 
     /** @var DataGroupCollection|null */
     public ?DataGroupCollection $children;
 
-    public  function __construct(string $name,mixed $type, ?PropertyKindEnum $kind)
+    public  function __construct(string $name,  mixed $defaultValue)
     {
         $this->name = $name;
-        $this->type = $type;
-        $this->kind = $kind;
+        $this->defaultValue = $defaultValue;
     }
 
-    public  function setChildren(?DataGroupCollection $collection) : void
+    public  function setChildren(?DataGroupCollection $collection): void
     {
         $this->children = &$collection;
     }
-
 }
