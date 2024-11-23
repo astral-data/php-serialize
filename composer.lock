@@ -4,7 +4,11 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
+<<<<<<< HEAD
     "content-hash": "f5f1880e3fea757139e6963479fe2c15",
+=======
+    "content-hash": "a433dd901ef38b6dafeb91ab150e960d",
+>>>>>>> 6af8e3a436675df3f65f507f4e1222a71c995b30
     "packages": [
         {
             "name": "carbonphp/carbon-doctrine-types",
@@ -294,7 +298,7 @@
         },
         {
             "name": "illuminate/conditionable",
-            "version": "v10.48.22",
+            "version": "v10.48.23",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/conditionable.git",
@@ -400,7 +404,7 @@
         },
         {
             "name": "illuminate/macroable",
-            "version": "v10.48.22",
+            "version": "v10.48.23",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/macroable.git",
@@ -452,7 +456,7 @@
         },
         {
             "name": "illuminate/support",
-            "version": "v10.48.22",
+            "version": "v10.48.23",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/support.git",
@@ -641,6 +645,7 @@
             "time": "2024-06-03T19:18:41+00:00"
         },
         {
+<<<<<<< HEAD
             "name": "nikic/php-parser",
             "version": "v5.3.0",
             "source": {
@@ -778,6 +783,8 @@
             "time": "2024-05-23T19:28:12+00:00"
         },
         {
+=======
+>>>>>>> 6af8e3a436675df3f65f507f4e1222a71c995b30
             "name": "phpdocumentor/reflection-common",
             "version": "2.2.0",
             "source": {
@@ -1625,16 +1632,16 @@
         },
         {
             "name": "voku/portable-ascii",
-            "version": "2.0.1",
+            "version": "2.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/voku/portable-ascii.git",
-                "reference": "b56450eed252f6801410d810c8e1727224ae0743"
+                "reference": "16c17671a804bb92602822113dd91fbc8a35d2af"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/voku/portable-ascii/zipball/b56450eed252f6801410d810c8e1727224ae0743",
-                "reference": "b56450eed252f6801410d810c8e1727224ae0743",
+                "url": "https://api.github.com/repos/voku/portable-ascii/zipball/16c17671a804bb92602822113dd91fbc8a35d2af",
+                "reference": "16c17671a804bb92602822113dd91fbc8a35d2af",
                 "shasum": "",
                 "mirrors": [
                     {
@@ -1665,7 +1672,7 @@
             "authors": [
                 {
                     "name": "Lars Moelleken",
-                    "homepage": "http://www.moelleken.org/"
+                    "homepage": "https://www.moelleken.org/"
                 }
             ],
             "description": "Portable ASCII library - performance optimized (ascii) string functions for php.",
@@ -1677,7 +1684,7 @@
             ],
             "support": {
                 "issues": "https://github.com/voku/portable-ascii/issues",
-                "source": "https://github.com/voku/portable-ascii/tree/2.0.1"
+                "source": "https://github.com/voku/portable-ascii/tree/2.0.2"
             },
             "funding": [
                 {
@@ -1701,7 +1708,11 @@
                     "type": "tidelift"
                 }
             ],
+<<<<<<< HEAD
             "time": "2022-03-08T17:03:00+00:00"
+=======
+            "time": "2024-11-21T00:49:12+00:00"
+>>>>>>> 6af8e3a436675df3f65f507f4e1222a71c995b30
         },
         {
             "name": "webmozart/assert",

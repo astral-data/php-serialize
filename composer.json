@@ -24,8 +24,12 @@
     "require": {
         "php": "^8.1",
         "illuminate/support": "^10.0",
+<<<<<<< HEAD
         "phpdocumentor/reflection-docblock": "^5.5",
         "phpdocumentor/reflection": "^6.0"
+=======
+        "phpdocumentor/reflection-docblock": "^5.5"
+>>>>>>> 6af8e3a436675df3f65f507f4e1222a71c995b30
     },
     "require-dev" : {
         "fakerphp/faker": "^1.14",
