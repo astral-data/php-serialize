@@ -6,7 +6,8 @@ use phpDocumentor\Reflection\Types\Context;
 use phpDocumentor\Reflection\Types\ContextFactory;
 use ReflectionClass;
 
-class PropertyTypesContextResolver {
+class PropertyTypesContextResolver
+{
 
     /** @var array<string, Context> */
     protected static array $contexts = [];

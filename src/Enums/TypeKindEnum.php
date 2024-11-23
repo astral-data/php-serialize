@@ -15,32 +15,28 @@ enum TypeKindEnum
     case BOOLEAN;
     case ARRAY;
     case OBJECT;
-    case CollectObject;
+    case COLLECT_OBJECT;
     case ENUM;
     case DATE;
 
 
-    public static function getNameTo(string $type,?string $className = null): self
+    public static function getNameTo(string $type, ?string $className = null): self
     {
 
-            if(enum_exists($className)){
-                return self::ENUM;
-            }
-            else if($className && $type == 'array' && class_exists($className)){
-                return self::CollectObject;
-            }
-            else if($className && class_exists($className) && $type != 'array'){
-                return self::OBJECT;
-            }
+        if ($className && enum_exists($className)) {
+            return self::ENUM;
+        } else if ($className && $type == 'array' && class_exists($className)) {
+            return self::COLLECT_OBJECT;
+        } else if ($className && class_exists($className) && $type != 'array') {
+            return self::OBJECT;
+        }
 
-            return match ($type) {
-                'string' => self::STRING,
-                'int' => self::INT,
-                'float' => self::FLOAT,
-                'bool' => self::BOOLEAN,
-                'array' => self::ARRAY,
-            };
-
+        return match ($type) {
+            'string' => self::STRING,
+            'int' => self::INT,
+            'float' => self::FLOAT,
+            'bool' => self::BOOLEAN,
+            'array' => self::ARRAY,
+        };
     }
 }
-

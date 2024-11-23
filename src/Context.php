@@ -30,12 +30,9 @@ class Context
         return $this;
     }
 
-<<<<<<< HEAD
-=======
     /**
      * @throws ReflectionException
      */
->>>>>>> 6af8e3a436675df3f65f507f4e1222a71c995b30
     public function getSerializeCollection(): DataGroupCollection
     {
         if (SerializeCollectionCache::has($this->serializeClassName)) {
@@ -45,12 +42,9 @@ class Context
         return $this->getGroupCollection();
     }
 
-<<<<<<< HEAD
-=======
     /**
      * @throws ReflectionException
      */
->>>>>>> 6af8e3a436675df3f65f507f4e1222a71c995b30
     public  function getGroupCollection(): DataGroupCollection
     {
         $datas = [];
@@ -72,18 +66,15 @@ class Context
         $reflectionClass = ReflectionClassInstanceManager::get($this->serializeClassName);
         foreach ($reflectionClass->getProperties(ReflectionProperty::IS_PUBLIC) as $property) {
             $dataCollection = new DataCollection(
-<<<<<<< HEAD
-                property: $property,
                 name: $property->getName(),
-                type: $property->getType()->getName(),
-                kind: PropertyKindEnum::fromTypeName($property)
-=======
-                name: $property->getName(),
+                nullable: $property->gettype()->allowsNull(),
                 defaultValue: $property->getValue(),
->>>>>>> 6af8e3a436675df3f65f507f4e1222a71c995b30
             );
+
+            $dataCollection->setType(...SerializeContainer::get()->typeCollectionManager()->getCollectionTo($property));
             $globalDataCollection->put($dataCollection);
         }
+
         GlobalDataCollectionCache::put($this->serializeClassName, $groupName, $globalDataCollection);
 
         return $globalDataCollection;

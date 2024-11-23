@@ -3,10 +3,11 @@
 namespace Astral\Serialize\Tests\TestRequest;
 
 use Astral\Serialize\Tests\TestRequest\Other\OtherTypeDoc;
+use Astral\Serialize\Tests\TestRequest\Both\BothTypeDoc;
 
-class TypeDoc
+enum ReqEnum
 {
+    case TEST_1;
 
-    /** @var OtherTypeDoc[] */
-    public array $vols;
+    case TEST_2;
 }
