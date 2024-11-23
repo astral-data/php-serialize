@@ -3,6 +3,7 @@
 namespace Astral\Serialize\Support\Collections;
 
 use Astral\Serialize\Enums\TypeKindEnum;
+use Astral\Serialize\Resolvers\PropertyTypeDocResolver;
 use Astral\Serialize\Resolvers\PropertyTypesContextResolver;
 use Astral\Serialize\SerializeContainer;
 use Astral\Serialize\Tests\TestRequest\Other\ReqOtherEnum;
@@ -19,8 +20,9 @@ use ReflectionException;
 class TypeCollectionManager
 {
     public function __construct(
+        protected readonly PropertyTypeDocResolver $propertyTypeDocResolver,
         protected readonly PropertyTypesContextResolver $propertyTypesContextResolver,
-        protected readonly TypeResolver $typeResolver,
+        protected readonly TypeResolver $typeResolver
     ) {}
 
     /**
@@ -35,7 +37,7 @@ class TypeCollectionManager
         $type = $property->getType();
 
 
-        $typeDocBlock = $this->resolveTypeFromDocBlock($property);
+        $typeDocBlock =  $this->propertyTypesContextResolver->resolveTypeFromDocBlock($property);
 
         // 判断是联合类型 但是存在 $varDoc 取 $varDoc
         if ($typeDocBlock && ($type instanceof  ReflectionUnionType || in_array($type->getName(), ['array', 'object'])))
@@ -100,11 +102,14 @@ class TypeCollectionManager
         );
     }
 
-    protected function processDocCommentNamedType(Type $typesDocBlock): array
+    /**
+     * @var Type[]
+     */
+    protected function processDocCommentNamedType(array $typesDocBlock): array
     {
         $collections = [];
         foreach ($typesDocBlock as $type) {
-            ['typeName' => $typeName, 'className' => $className] = SerializeContainer::get()->propertyTypeDocResolver()->resolve($type);
+            ['typeName' => $typeName, 'className' => $className] = $this->propertyTypeDocResolver->resolve($type);
             $collections[] = new TypeCollection(
                 kind: TypeKindEnum::getNameTo($typeName, $className),
                 className: $className
@@ -112,29 +117,5 @@ class TypeCollectionManager
         }
 
         return $collections;
-    }
-
-
-    protected function resolveTypeFromDocBlock(ReflectionProperty $property): ?Type
-    {
-        // 获取 DocBlock 注释
-        $docComment = $property->getDocComment();
-        if (!$docComment) {
-            return null;
-        }
-
-        $context = $this->propertyTypesContextResolver->execute($property->getDeclaringClass());
-        $docBlock = SerializeContainer::get()->docBlockFactory()->create($docComment, $context);
-
-        $varTags = $docBlock->getTagsByName('var');
-        if (empty($varTags)) {
-            return null;
-        }
-
-        /** @var Var_ $varTag */
-        $varTag = $varTags[0];
-
-        // 获取类型并返回
-        return $varTag->getType() ?? null;
     }
 }

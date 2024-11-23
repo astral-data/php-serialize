@@ -8,7 +8,6 @@ use Astral\Serialize\Tests\TestRequest\Other\ReqOtherEnum;
 
 class TypeOneDoc
 {
-
     /** @var OtherTypeDoc[] */
     public array $vols;
 
@@ -22,6 +21,10 @@ class TypeOneDoc
     public float $type_float;
 
     public bool $type_bool;
+
+    public int $type_int;
+
+    public ?int $default_value = 1;
 
     public ReqEnum $type_enum;
 

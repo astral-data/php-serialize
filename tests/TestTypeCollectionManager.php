@@ -1,6 +1,7 @@
 <?php
 
 use Astral\Serialize\Enums\TypeKindEnum;
+use Astral\Serialize\Resolvers\PropertyTypeDocResolver;
 use Astral\Serialize\Support\Collections\TypeCollection;
 use Astral\Serialize\Resolvers\PropertyTypesContextResolver;
 use Astral\Serialize\Support\Collections\TypeCollectionManager;
@@ -10,7 +11,7 @@ use phpDocumentor\Reflection\TypeResolver;
 
 beforeEach(function () {
     /** @var TypeCollectionManager */
-    $this->typeManager = new TypeCollectionManager(new PropertyTypesContextResolver(), new TypeResolver());
+    $this->typeManager = new TypeCollectionManager(new PropertyTypeDocResolver, new PropertyTypesContextResolver, new TypeResolver);
 });
 
 it('tests one property reflections and type parsing', function () {
@@ -40,6 +41,12 @@ it('tests one property reflections and type parsing', function () {
     $result = $this->typeManager->processNamedType($reflectionProperty->getType(), $reflectionProperty);
     expect($result)->toBeInstanceOf(TypeCollection::class)
         ->and($result->kind)->toBe(TypeKindEnum::FLOAT)
+        ->and($result->className)->toBeNull();
+
+    $reflectionProperty = new ReflectionProperty(TypeOneDoc::class, 'type_int');
+    $result = $this->typeManager->processNamedType($reflectionProperty->getType(), $reflectionProperty);
+    expect($result)->toBeInstanceOf(TypeCollection::class)
+        ->and($result->kind)->toBe(TypeKindEnum::INT)
         ->and($result->className)->toBeNull();
 
     // Test type_bool property
@@ -80,19 +87,25 @@ it('tests union property reflections and type parsing', function () {
 it('tests union doc property reflections and type parsing', function () {
     $reflectionProperty = new ReflectionProperty(TypeUnionDoc::class, 'union_data_doc');
     $result = $this->typeManager->getCollectionTo($reflectionProperty);
-
-
     expect($result)->toBeArray()->toHaveCount(2);
-
     foreach ($result as $key => $item) {
         expect($item)->toBeInstanceOf(TypeCollection::class);
 
         match ($key) {
             0 => expect($item->kind)->toBe(TypeKindEnum::OBJECT)
-                ->and($item->className)->toBe('\Astral\Serialize\Tests\TestRequest\Other\OtherTypeDoc'),
+                ->and($item->className)->toBe('Astral\Serialize\Tests\TestRequest\Other\OtherTypeDoc'),
             1 => expect($item->kind)->toBe(TypeKindEnum::COLLECT_OBJECT)
-                ->and($item->className)->toBe('\Astral\Serialize\Tests\TestRequest\Both\BothTypeDoc'),
+                ->and($item->className)->toBe('Astral\Serialize\Tests\TestRequest\Both\BothTypeDoc'),
             default => expect(false)->toBeTrue("Unexpected element at index {$key}")
         };
     }
+
+    $reflectionProperty = new ReflectionProperty(TypeOneDoc::class, 'data_doc');
+    $result = $this->typeManager->getCollectionTo($reflectionProperty);
+    expect($result)->toBeArray()->toHaveCount(1);
+    expect($result[0])->toBeInstanceOf(Astral\Serialize\Support\Collections\TypeCollection::class);
+    expect($result[0]->kind)
+        ->toBe(Astral\Serialize\Enums\TypeKindEnum::OBJECT);
+    expect($result[0]->className)
+        ->toBe('Astral\Serialize\Tests\TestRequest\Both\BothTypeDoc');
 });

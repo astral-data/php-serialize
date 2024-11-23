@@ -17,7 +17,7 @@ class GlobalDataCollectionCache
     {
         $cacheKey = self::getCacheKey($className, $groupName);
 
-        if(isset(self::$caches[$cacheKey])){
+        if (isset(self::$caches[$cacheKey])) {
             return self::$caches[$cacheKey];
         }
 
@@ -28,6 +28,11 @@ class GlobalDataCollectionCache
     public static function put(string $className, string $groupName, DataGroupCollection $collection): void
     {
         self::$caches[self::getCacheKey($className, $groupName)] = $collection;
+    }
+
+    public static function toArray()
+    {
+        return self::$caches;
     }
 
     private static function getCacheKey(string $className, string $groupName): string

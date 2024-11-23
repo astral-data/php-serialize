@@ -4,27 +4,24 @@ namespace Astral\Serialize;
 
 use Astral\Serialize\Support\Instance\SerializeInstanceManager;
 
-abstract class Serialize {
+abstract class Serialize
+{
 
-    public static function from(mixed $payload,array $groups = []): static
+    public static function from(mixed $payload, array $groups = []): static
     {
         /** @var static $instance */
-        $instance = SerializeInstanceManager::build(static::class);
+        $instance = SerializeInstanceManager::get(static::class);
         $instance->getContext()->setGroups($groups)->setPayload($payload);
 
         return $instance;
     }
 
-    public function toArray()
-    {
-
-    }
+    public function toArray() {}
 
 
 
     protected function getContext()
     {
-//            Serialize::withGroups([])::from()
+        //            Serialize::withGroups([])::from()
     }
-
 }

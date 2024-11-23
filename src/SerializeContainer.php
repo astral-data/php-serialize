@@ -53,6 +53,7 @@ class SerializeContainer
     public function typeCollectionManager(): TypeCollectionManager
     {
         return $this->typeCollectionManager ??= new TypeCollectionManager(
+            $this->propertyTypeDocResolver(),
             $this->propertyTypesContextResolver(),
             $this->typeResolver()
         );

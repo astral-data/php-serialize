@@ -4,22 +4,22 @@ namespace Astral\Serialize\Support\Instance;
 
 use InvalidArgumentException;
 
-class SerializeInstanceManager {
+class SerializeInstanceManager
+{
 
     private static array $instances = [];
 
-    public static function build($class)
+    public static function get($class)
     {
         if (!class_exists($class)) {
             throw new InvalidArgumentException("Class {$class} does not exist.");
         }
 
-        if(!isset(self::$instances[$class])){
+        if (!isset(self::$instances[$class])) {
             self::$instances[$class] = new $class;
         }
 
         return self::$instances[$class];
-
     }
 
     public static function clear($class = null): void
@@ -30,5 +30,4 @@ class SerializeInstanceManager {
             self::$instances = [];
         }
     }
-
 }

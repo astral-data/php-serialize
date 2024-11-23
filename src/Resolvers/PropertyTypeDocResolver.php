@@ -32,7 +32,7 @@ class PropertyTypeDocResolver
 
         return [
             'typeName' => 'array',
-            'className' => $className,
+            'className' => ltrim($className, '\\'),
         ];
     }
 
@@ -40,7 +40,7 @@ class PropertyTypeDocResolver
     {
         return [
             'typeName' => 'object',
-            'className' => $type->getFqsen()->__toString(),
+            'className' =>  ltrim($type->getFqsen()->__toString(), '\\'),
         ];
     }
 

@@ -2,9 +2,11 @@
 
 namespace Astral\Serialize\Support\Collections;
 
-use Astral\Serialize\Enums\TypeKindEnum;
-use Illuminate\Support\Collection;
 use ReflectionProperty;
+use Illuminate\Support\Collection;
+use Astral\Serialize\Enums\TypeKindEnum;
+use Astral\Serialize\Support\Collections\TypeCollection;
+use Astral\Serialize\Support\Collections\DataGroupCollection;
 
 class DataCollection
 {
@@ -33,8 +35,8 @@ class DataCollection
 
     public string $propertyAliasName;
 
-    /** @var DataGroupCollection|null */
-    public ?DataGroupCollection $children;
+    /** @var DataGroupCollection[]|null */
+    public ?array $children = [];
 
     public  function __construct(string $name, bool $nullable, mixed $defaultValue)
     {
@@ -48,8 +50,13 @@ class DataCollection
         $this->type = $types;
     }
 
-    public  function setChildren(?DataGroupCollection $collection): void
+    /**
+     *
+     * @param DataGroupCollection|null $collection
+     * @return void
+     */
+    public  function addChildren(?DataGroupCollection $collection): void
     {
-        $this->children = &$collection;
+        $this->children[] = &$collection;
     }
 }
