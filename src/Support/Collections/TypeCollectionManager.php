@@ -100,7 +100,7 @@ class TypeCollectionManager
         );
     }
 
-    protected function processDocCommentNamedType(?Type $typesDocBlock): array
+    protected function processDocCommentNamedType(Type $typesDocBlock): array
     {
         $collections = [];
         foreach ($typesDocBlock as $type) {
