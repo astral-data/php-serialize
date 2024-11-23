@@ -14,7 +14,7 @@ class SerializeCollectionCache
         return isset(self::$caches[$className]);
     }
 
-    public static function &get(string $className): ?DataGroupCollection
+    public static function get(string $className): ?DataGroupCollection
     {
         $cacheKey = $className;
 

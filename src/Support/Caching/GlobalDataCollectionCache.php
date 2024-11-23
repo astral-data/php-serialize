@@ -13,7 +13,7 @@ class GlobalDataCollectionCache
         return isset(self::$caches[self::getCacheKey($className, $groupName)]);
     }
 
-    public static function &get(string $className, string $groupName): ?DataGroupCollection
+    public static function get(string $className, string $groupName): ?DataGroupCollection
     {
         $cacheKey = self::getCacheKey($className, $groupName);
 

@@ -60,7 +60,7 @@ class Context
     /**
      * @throws ReflectionException
      */
-    public function parseSerializeClass(string $groupName, string $className, int $maxDepth = 100, int $currentDepth = 0): ?DataGroupCollection
+    public function parseSerializeClass(string $groupName, string $className, int $maxDepth = 10, int $currentDepth = 0): ?DataGroupCollection
     {
         // 检查嵌套层级是否超过最大限制
         if ($currentDepth > $maxDepth) {
@@ -69,7 +69,7 @@ class Context
 
         $cachedCollection = GlobalDataCollectionCache::get($className, $groupName);
         if ($cachedCollection) {
-            foreach ($cachedCollection->properties as $property) {
+            foreach ($cachedCollection->getProperties() as $property) {
                 $this->assembleChildren(
                     dataCollection: $property,
                     groupName: $groupName,
@@ -80,11 +80,9 @@ class Context
             return $cachedCollection;
         }
 
-        // 初始化一个新的 DataGroupCollection
         $globalDataCollection = new DataGroupCollection(groupName: $groupName, className: $className);
         $reflectionClass = ReflectionClassInstanceManager::get($className);
 
-        // 遍历公共属性
         foreach ($reflectionClass->getProperties(ReflectionProperty::IS_PUBLIC) as $property) {
             $dataCollection = new DataCollection(
                 name: $property->getName(),
@@ -122,8 +120,8 @@ class Context
         int $maxDepth,
         int $currentDepth
     ): void {
-        foreach ($dataCollection->type as $type) {
-            if ($type->kind === TypeKindEnum::OBJECT || $type->kind === TypeKindEnum::COLLECT_OBJECT) {
+        foreach ($dataCollection->getType() as $type) {
+            if ($type->kind->isObjectType()) {
                 $childCollection = $this->parseSerializeClass(
                     groupName: $groupName,
                     className: $type->className,

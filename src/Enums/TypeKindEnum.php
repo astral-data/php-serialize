@@ -20,6 +20,17 @@ enum TypeKindEnum
     case DATE;
 
 
+
+    public function isObjectType(): bool
+    {
+        return $this === self::OBJECT || $this === self::COLLECT_OBJECT;
+    }
+
+    public function isPrimitive(): bool
+    {
+        return in_array($this, [self::STRING, self::INT, self::FLOAT, self::BOOLEAN, self::ARRAY], true);
+    }
+
     public static function getNameTo(string $type, ?string $className = null): self
     {
 
