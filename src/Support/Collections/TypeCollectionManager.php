@@ -96,6 +96,8 @@ class TypeCollectionManager
         //     $className = SerializeContainer::get()->typeResolver()->resolve($typeName, $context)->__toString;
         // }
 
+        // var_dump($typeName, $className);
+
         return new TypeCollection(
             kind: TypeKindEnum::getNameTo($typeName, $className),
             className: $className

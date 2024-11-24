@@ -15,15 +15,15 @@ enum TypeKindEnum
     case BOOLEAN;
     case ARRAY;
     case OBJECT;
+    case CLASS_OBJECT;
     case COLLECT_OBJECT;
     case ENUM;
     case DATE;
 
 
-
-    public function isObjectType(): bool
+    public function existsClass(): bool
     {
-        return $this === self::OBJECT || $this === self::COLLECT_OBJECT;
+        return $this === self::CLASS_OBJECT || $this === self::COLLECT_OBJECT;
     }
 
     public function isPrimitive(): bool
@@ -39,7 +39,7 @@ enum TypeKindEnum
         } else if ($className && $type == 'array' && class_exists($className)) {
             return self::COLLECT_OBJECT;
         } else if ($className && class_exists($className) && $type != 'array') {
-            return self::OBJECT;
+            return self::CLASS_OBJECT;
         }
 
         return match ($type) {
@@ -48,6 +48,7 @@ enum TypeKindEnum
             'float' => self::FLOAT,
             'bool' => self::BOOLEAN,
             'array' => self::ARRAY,
+            'object' => self::OBJECT,
         };
     }
 }

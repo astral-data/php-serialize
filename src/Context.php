@@ -3,6 +3,7 @@
 namespace Astral\Serialize;
 
 use Astral\Serialize\Enums\TypeKindEnum;
+use Astral\Serialize\Resolvers\ClassGroupResolver;
 use Astral\Serialize\Support\Caching\GlobalDataCollectionCache;
 use Astral\Serialize\Support\Caching\SerializeCollectionCache;
 use Astral\Serialize\Support\Collections\DataCollection;
@@ -18,16 +19,29 @@ class Context
     private array $groups;
     public const DEFAULT_GROUP_NAME = 'default';
 
-    public function __construct(string $class, array $groups = [])
+    public function __construct(
+        protected readonly ClassGroupResolver $classGroupResolver,
+        protected readonly ReflectionClassInstanceManager $reflectionClassInstanceManager
+    ) {}
+
+    public function setClassName($className): static
     {
-        $this->serializeClassName = $class;
-        $this->groups = $groups ?: [self::DEFAULT_GROUP_NAME];
+        $this->serializeClassName = $className;
+        return $this;
     }
 
     public function setGroups(array $groups): static
     {
+        $reflectionClass = $this->reflectionClassInstanceManager->get($this->serializeClassName);
+        $this->classGroupResolver->resolveExistsGroup($reflectionClass, $groups);
         $this->groups = $groups;
         return $this;
+    }
+
+    public function getGroups(): array
+    {
+        $this->groups = $this->groups ? $this->groups : [self::DEFAULT_GROUP_NAME];
+        return $this->groups;
     }
 
     /**
@@ -121,7 +135,7 @@ class Context
         int $currentDepth
     ): void {
         foreach ($dataCollection->getType() as $type) {
-            if ($type->kind->isObjectType()) {
+            if ($type->kind->existsClass()) {
                 $childCollection = $this->parseSerializeClass(
                     groupName: $groupName,
                     className: $type->className,

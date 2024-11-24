@@ -9,12 +9,14 @@ use Astral\Serialize\Tests\TestRequest\Other\ReqOtherEnum;
 class TypeOneDoc
 {
     /** @var OtherTypeDoc[] */
-    public array $vols;
+    public array $type_collect_object;
 
     /** @var BothTypeDoc */
-    public object $data_doc;
+    public object $type_class_object_doc;
 
-    public OtherTypeDoc $data;
+    public OtherTypeDoc $type_class_object;
+
+    public object $type_object;
 
     public string $type_string;
 
