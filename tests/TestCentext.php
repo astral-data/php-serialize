@@ -6,7 +6,7 @@ use Astral\Serialize\Tests\TestRequest\TypeOneDoc;
 
 beforeEach(function () {
     /** @var Context */
-    $this->context = new Context(TypeOneDoc::class, []);
+    $this->context = new Context();
 });
 
 it('test parse serialize class', function () {

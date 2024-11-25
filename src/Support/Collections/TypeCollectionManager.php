@@ -26,7 +26,6 @@ class TypeCollectionManager
     ) {}
 
     /**
-     * 获取属性的类型集合
      *
      * @param ReflectionProperty $property
      * @return TypeCollection[]
@@ -37,21 +36,17 @@ class TypeCollectionManager
         $type = $property->getType();
 
 
-        $typeDocBlock =  $this->propertyTypesContextResolver->resolveTypeFromDocBlock($property);
+        $typeDocBlock = $this->propertyTypesContextResolver->resolveTypeFromDocBlock($property);
 
-        // 判断是联合类型 但是存在 $varDoc 取 $varDoc
-        if ($typeDocBlock && ($type instanceof  ReflectionUnionType || in_array($type->getName(), ['array', 'object'])))
+        if ($typeDocBlock && ($type instanceof ReflectionUnionType || in_array($type->getName(), ['array', 'object']))){
             return $this->processDocCommentNamedType($typeDocBlock);
-        // 判断是否是联合类型
-        if ($type instanceof ReflectionUnionType) {
+        }else if ($type instanceof ReflectionUnionType) {
             return $this->processUnionType($type, $property);
         }
-        // 判断是否是单一类型
         else if ($type instanceof ReflectionNamedType) {
             return [$this->processNamedType($type, $property)];
         }
 
-        // 如果没有类型，抛出异常
         throw new ReflectionException(sprintf(
             'Property "%s" in class "%s" does not have a valid type.',
             $property->getName(),
@@ -60,7 +55,6 @@ class TypeCollectionManager
     }
 
     /**
-     * 处理联合类型 (string|int|null 等)
      *
      * @param ReflectionUnionType $type
      * @param ReflectionProperty $property
@@ -78,9 +72,9 @@ class TypeCollectionManager
     }
 
     /**
-     * 处理单一类型
      *
      * @param ReflectionNamedType $type
+     * @param ReflectionProperty $property
      * @return TypeCollection|array
      */
     public function processNamedType(ReflectionNamedType $type, ReflectionProperty $property): TypeCollection|array
@@ -105,7 +99,8 @@ class TypeCollectionManager
     }
 
     /**
-     * @var Type[]
+     * @param Type[] $typesDocBlock
+     * @return array
      */
     protected function processDocCommentNamedType(array $typesDocBlock): array
     {

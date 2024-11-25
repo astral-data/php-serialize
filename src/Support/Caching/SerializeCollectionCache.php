@@ -22,8 +22,7 @@ class SerializeCollectionCache
             return self::$caches[$cacheKey];
         }
 
-        $null = null;
-        return  $null;
+        return null;
     }
 
     public static function put(string $className, DataGroupCollection $collection): void
@@ -32,7 +31,7 @@ class SerializeCollectionCache
     }
 
 
-    public static function toArray()
+    public static function toArray(): array
     {
         return self::$caches;
     }

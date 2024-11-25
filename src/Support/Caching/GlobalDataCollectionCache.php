@@ -21,8 +21,7 @@ class GlobalDataCollectionCache
             return self::$caches[$cacheKey];
         }
 
-        $null = null;
-        return  $null;
+        return null;
     }
 
     public static function put(string $className, string $groupName, DataGroupCollection $collection): void
@@ -30,7 +29,7 @@ class GlobalDataCollectionCache
         self::$caches[self::getCacheKey($className, $groupName)] = $collection;
     }
 
-    public static function toArray()
+    public static function toArray(): array
     {
         return self::$caches;
     }

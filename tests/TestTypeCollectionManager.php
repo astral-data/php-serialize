@@ -10,10 +10,9 @@ use Astral\Serialize\Tests\TestRequest\TypeUnionDoc;
 use phpDocumentor\Reflection\TypeResolver;
 
 beforeEach(function () {
-    /** @var TypeCollectionManager */
+    /** @var TypeCollectionManager $this */
     $this->typeManager = new TypeCollectionManager(new PropertyTypeDocResolver, new PropertyTypesContextResolver, new TypeResolver);
 });
-
 
 it('tests one property reflections not parsing doc', function () {
     $reflectionProperty = new ReflectionProperty(TypeOneDoc::class, 'type_collect_object');
@@ -114,10 +113,8 @@ it('tests union doc property reflections and type parsing', function () {
 
     $reflectionProperty = new ReflectionProperty(TypeOneDoc::class, 'type_class_object_doc');
     $result = $this->typeManager->getCollectionTo($reflectionProperty);
-    expect($result)->toBeArray()->toHaveCount(1);
-    expect($result[0])->toBeInstanceOf(Astral\Serialize\Support\Collections\TypeCollection::class);
-    expect($result[0]->kind)
-        ->toBe(Astral\Serialize\Enums\TypeKindEnum::CLASS_OBJECT);
-    expect($result[0]->className)
-        ->toBe('Astral\Serialize\Tests\TestRequest\Both\BothTypeDoc');
+    expect($result)->toBeArray()->toHaveCount(1)
+        ->and($result[0])->toBeInstanceOf(Astral\Serialize\Support\Collections\TypeCollection::class)
+        ->and($result[0]->kind)->toBe(Astral\Serialize\Enums\TypeKindEnum::CLASS_OBJECT)
+        ->and($result[0]->className)->toBe('Astral\Serialize\Tests\TestRequest\Both\BothTypeDoc');
 });

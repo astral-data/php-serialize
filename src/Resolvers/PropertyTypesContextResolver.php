@@ -2,6 +2,7 @@
 
 namespace Astral\Serialize\Resolvers;
 
+use phpDocumentor\Reflection\DocBlock\Tags\Var_;
 use ReflectionClass;
 use ReflectionProperty;
 use phpDocumentor\Reflection\Type;
