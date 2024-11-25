@@ -4,7 +4,8 @@ namespace Astral\Serialize\Support\Caching;
 
 use Astral\Serialize\Support\Collections\DataGroupCollection;
 
-class SerializeCollectionCache {
+class SerializeCollectionCache
+{
 
     private static array $caches = [];
 
@@ -13,11 +14,11 @@ class SerializeCollectionCache {
         return isset(self::$caches[$className]);
     }
 
-    public static function &get(string $className): ?DataGroupCollection
+    public static function get(string $className): ?DataGroupCollection
     {
         $cacheKey = $className;
 
-        if(isset(self::$caches[$cacheKey])){
+        if (isset(self::$caches[$cacheKey])) {
             return self::$caches[$cacheKey];
         }
 
@@ -30,4 +31,9 @@ class SerializeCollectionCache {
         self::$caches[$className] = &$collection;
     }
 
+
+    public static function toArray()
+    {
+        return self::$caches;
+    }
 }

@@ -11,7 +11,7 @@ use UnitEnum;
 class Groups
 {
     public array $names;
-    public function __construct(array|string $names)
+    public function __construct(mixed ...$names)
     {
         $names = is_string($names) ? [$names] : $names;
 

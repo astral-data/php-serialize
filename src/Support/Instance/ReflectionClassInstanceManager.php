@@ -5,7 +5,8 @@ namespace Astral\Serialize\Support\Instance;
 use ReflectionClass;
 use ReflectionException;
 
-class ReflectionClassInstanceManager {
+class ReflectionClassInstanceManager
+{
     private static array $instances = [];
 
     /**
@@ -24,5 +25,4 @@ class ReflectionClassInstanceManager {
     {
         self::$instances = [];
     }
-
 }

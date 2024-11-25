@@ -17,4 +17,13 @@ class TypeCollection
         $this->kind = $kind;
         $this->className = $className;
     }
+
+
+    public function toArray(): array
+    {
+        return [
+            'kind' => $this->kind->name,
+            'className' => $this->className,
+        ];
+    }
 }
