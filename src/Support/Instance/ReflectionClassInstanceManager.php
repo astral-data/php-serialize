@@ -12,7 +12,7 @@ class ReflectionClassInstanceManager
     /**
      * @throws ReflectionException
      */
-    public static function get(string $className): ReflectionClass
+    public function get(string $className): ReflectionClass
     {
         if (!isset(self::$instances[$className])) {
             self::$instances[$className] = new ReflectionClass($className);
@@ -21,7 +21,7 @@ class ReflectionClassInstanceManager
         return self::$instances[$className];
     }
 
-    public static function clear(): void
+    public function clear(): void
     {
         self::$instances = [];
     }

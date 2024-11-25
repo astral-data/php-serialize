@@ -1,12 +1,12 @@
 <?php
 
 use Astral\Serialize\Context;
-use Astral\Serialize\Support\Caching\GlobalDataCollectionCache;
+use Astral\Serialize\Support\Factories\ContextFactory;
 use Astral\Serialize\Tests\TestRequest\TypeOneDoc;
 
 beforeEach(function () {
-    /** @var Context */
-    $this->context = new Context();
+    /** @var Context $this */
+    $this->context = ContextFactory::build(TypeOneDoc::class, []);
 });
 
 it('test parse serialize class', function () {
@@ -29,8 +29,8 @@ it('test parse serialize class', function () {
     echo sprintf(
         "Start Memory: %.2f MB\nEnd Memory: %.2f MB\nMemory Used: %.2f MB\nPeak Memory: %.2f MB\n",
         $startMemory / 1024 / 1024,
-        $endMemory / 1024 / 1024,
-        $memoryUsed / 1024 / 1024,
-        $peakMemory / 1024 / 1024
+        $endMemory   / 1024 / 1024,
+        $memoryUsed  / 1024 / 1024,
+        $peakMemory  / 1024 / 1024
     );
 });

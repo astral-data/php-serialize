@@ -5,8 +5,8 @@ namespace Astral\Serialize\Support\Facades;
 use Astral\Serialize\Support\Config\ConfigManager;
 use BadMethodCallException;
 
-class Bootstrap {
-
+class Bootstrap
+{
     public static function __callStatic(string $name, array $arguments)
     {
         $instance = ConfigManager::getInstance();

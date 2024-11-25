@@ -6,7 +6,6 @@ use Astral\Serialize\Support\Instance\SerializeInstanceManager;
 
 abstract class Serialize
 {
-
     public static function from(mixed $payload, array $groups = []): static
     {
         /** @var static $instance */
@@ -16,7 +15,9 @@ abstract class Serialize
         return $instance;
     }
 
-    public function toArray() {}
+    public function toArray()
+    {
+    }
 
 
 

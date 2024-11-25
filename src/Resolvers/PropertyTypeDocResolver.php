@@ -2,24 +2,20 @@
 
 namespace Astral\Serialize\Resolvers;
 
-use ReflectionClass;
 use phpDocumentor\Reflection\Type;
 use phpDocumentor\Reflection\Types\Array_;
 use phpDocumentor\Reflection\Types\Mixed_;
-use phpDocumentor\Reflection\Types\Context;
 use phpDocumentor\Reflection\Types\Object_;
-use phpDocumentor\Reflection\Types\ContextFactory;
 
 class PropertyTypeDocResolver
 {
-
     public function resolve(Type $type): array
     {
         return match (true) {
-            $type instanceof Array_ => $this->resolveArrayType($type),
+            $type instanceof Array_  => $this->resolveArrayType($type),
             $type instanceof Object_ => $this->resolveObjectType($type),
-            $type instanceof Mixed_ => $this->resolveMixedType($type),
-            default => $this->resolveDefaultType($type),
+            $type instanceof Mixed_  => $this->resolveMixedType($type),
+            default                  => $this->resolveDefaultType($type),
         };
     }
 
@@ -31,7 +27,7 @@ class PropertyTypeDocResolver
             : (string)$valueType;
 
         return [
-            'typeName' => 'array',
+            'typeName'  => 'array',
             'className' => ltrim($className, '\\'),
         ];
     }
@@ -39,15 +35,15 @@ class PropertyTypeDocResolver
     protected function resolveObjectType(Object_ $type): array
     {
         return [
-            'typeName' => 'object',
-            'className' =>  ltrim($type->getFqsen()->__toString(), '\\'),
+            'typeName'  => 'object',
+            'className' => ltrim($type->getFqsen()->__toString(), '\\'),
         ];
     }
 
     protected function resolveMixedType(Mixed_ $type): array
     {
         return [
-            'typeName' => 'string',
+            'typeName'  => 'string',
             'className' => null,
         ];
     }
@@ -55,7 +51,7 @@ class PropertyTypeDocResolver
     protected function resolveDefaultType(Type $type): array
     {
         return [
-            'typeName' => (string)$type,
+            'typeName'  => (string)$type,
             'className' => null,
         ];
     }

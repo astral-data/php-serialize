@@ -3,8 +3,6 @@
 namespace Astral\Serialize\Support\Collections;
 
 use Astral\Serialize\Enums\TypeKindEnum;
-use Illuminate\Support\Collection;
-use ReflectionProperty;
 
 class TypeCollection
 {
@@ -14,7 +12,7 @@ class TypeCollection
 
     public function __construct(TypeKindEnum $kind, ?string $className = null)
     {
-        $this->kind = $kind;
+        $this->kind      = $kind;
         $this->className = $className;
     }
 
@@ -22,7 +20,7 @@ class TypeCollection
     public function toArray(): array
     {
         return [
-            'kind' => $this->kind->name,
+            'kind'      => $this->kind->name,
             'className' => $this->className,
         ];
     }

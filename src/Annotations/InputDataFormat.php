@@ -16,12 +16,12 @@ class InputDataFormat
     public string $outFormat;
 
     /**
-     * @param  string  $inputFormat  
-     * @param  string  $outFormat 
+     * @param  string  $inputFormat
+     * @param  string  $outFormat
      */
     public function __construct(string $inputFormat = 'Y-m-d H:i:s', string $outFormat = 'Y-m-d H:i:s')
     {
         $this->inputFormat = $inputFormat;
-        $this->outFormat = $outFormat;
+        $this->outFormat   = $outFormat;
     }
 }

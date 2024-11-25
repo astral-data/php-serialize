@@ -2,14 +2,12 @@
 
 namespace Astral\Serialize;
 
-use Astral\Serialize\Enums\TypeKindEnum;
 use Astral\Serialize\Resolvers\ClassGroupResolver;
 use Astral\Serialize\Support\Caching\GlobalDataCollectionCache;
 use Astral\Serialize\Support\Caching\SerializeCollectionCache;
 use Astral\Serialize\Support\Collections\DataCollection;
 use Astral\Serialize\Support\Collections\DataGroupCollection;
 use Astral\Serialize\Support\Instance\ReflectionClassInstanceManager;
-use ReflectionClass;
 use ReflectionException;
 use ReflectionProperty;
 
@@ -20,9 +18,10 @@ class Context
     public const DEFAULT_GROUP_NAME = 'default';
 
     public function __construct(
-        protected readonly ClassGroupResolver $classGroupResolver,
-        protected readonly ReflectionClassInstanceManager $reflectionClassInstanceManager
-    ) {}
+        public readonly ClassGroupResolver $classGroupResolver,
+        public readonly ReflectionClassInstanceManager $reflectionClassInstanceManager
+    ) {
+    }
 
     public function setClassName($className): static
     {
@@ -59,7 +58,7 @@ class Context
     /**
      * @throws ReflectionException
      */
-    public  function getGroupCollection(): DataGroupCollection|array
+    public function getGroupCollection(): DataGroupCollection|array
     {
         $dates = [];
         foreach ($this->groups as $group) {
@@ -95,7 +94,7 @@ class Context
         }
 
         $globalDataCollection = new DataGroupCollection(groupName: $groupName, className: $className);
-        $reflectionClass = ReflectionClassInstanceManager::get($className);
+        $reflectionClass      = ReflectionClassInstanceManager::get($className);
 
         foreach ($reflectionClass->getProperties(ReflectionProperty::IS_PUBLIC) as $property) {
             $dataCollection = new DataCollection(
@@ -148,7 +147,11 @@ class Context
     }
 
 
-    public function setPayload(mixed $payload): void {}
+    public function setPayload(mixed $payload): void
+    {
+    }
 
-    public  function toArray() {}
+    public function toArray()
+    {
+    }
 }

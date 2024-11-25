@@ -7,7 +7,6 @@ use Astral\Serialize\Tests\TestRequest\Both\BothTypeDoc;
 
 class TypeUnionDoc
 {
-
     /** @var OtherTypeDoc[]|BothTypeDoc[] */
     public array $union_vols;
 

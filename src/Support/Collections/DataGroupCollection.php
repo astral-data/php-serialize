@@ -2,9 +2,6 @@
 
 namespace Astral\Serialize\Support\Collections;
 
-use Illuminate\Support\Collection;
-use Astral\Serialize\Support\Collections\DataCollection;
-
 class DataGroupCollection
 {
     private string $groupName;
@@ -66,9 +63,9 @@ class DataGroupCollection
     public function toArray(): array
     {
         return [
-            'groupName' => $this->groupName,
-            'className' => $this->className,
-            'properties' => array_map(fn($property) => $property->toArray(), $this->properties),
+            'groupName'  => $this->groupName,
+            'className'  => $this->className,
+            'properties' => array_map(fn ($property) => $property->toArray(), $this->properties),
         ];
     }
 

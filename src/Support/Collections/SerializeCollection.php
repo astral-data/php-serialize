@@ -1,4 +1,5 @@
 <?php
+
 //
 //namespace Astral\Serialize\Support\Collections;
 //

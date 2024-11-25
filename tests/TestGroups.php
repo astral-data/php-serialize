@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Astral\Serialize\Tests;
 
-
 use Astral\Serialize\Annotations\Groups;
 use Astral\Serialize\Annotations\PropertyAlisa;
 use Astral\Serialize\Annotations\PropertyAlisaByGroup;

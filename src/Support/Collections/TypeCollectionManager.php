@@ -6,12 +6,8 @@ use Astral\Serialize\Enums\TypeKindEnum;
 use Astral\Serialize\Resolvers\PropertyTypeDocResolver;
 use Astral\Serialize\Resolvers\PropertyTypesContextResolver;
 use Astral\Serialize\SerializeContainer;
-use Astral\Serialize\Tests\TestRequest\Other\ReqOtherEnum;
-use phpDocumentor\Reflection\DocBlock\Tags\Var_;
 use phpDocumentor\Reflection\Type;
 use phpDocumentor\Reflection\TypeResolver;
-use phpDocumentor\Reflection\Types\Array_;
-use phpDocumentor\Reflection\Types\Object_;
 use ReflectionNamedType;
 use ReflectionProperty;
 use ReflectionUnionType;
@@ -23,7 +19,8 @@ class TypeCollectionManager
         protected readonly PropertyTypeDocResolver $propertyTypeDocResolver,
         protected readonly PropertyTypesContextResolver $propertyTypesContextResolver,
         protected readonly TypeResolver $typeResolver
-    ) {}
+    ) {
+    }
 
     /**
      *
@@ -38,12 +35,11 @@ class TypeCollectionManager
 
         $typeDocBlock = $this->propertyTypesContextResolver->resolveTypeFromDocBlock($property);
 
-        if ($typeDocBlock && ($type instanceof ReflectionUnionType || in_array($type->getName(), ['array', 'object']))){
+        if ($typeDocBlock && ($type instanceof ReflectionUnionType || in_array($type->getName(), ['array', 'object']))) {
             return $this->processDocCommentNamedType($typeDocBlock);
-        }else if ($type instanceof ReflectionUnionType) {
+        } elseif ($type instanceof ReflectionUnionType) {
             return $this->processUnionType($type, $property);
-        }
-        else if ($type instanceof ReflectionNamedType) {
+        } elseif ($type instanceof ReflectionNamedType) {
             return [$this->processNamedType($type, $property)];
         }
 
@@ -81,8 +77,8 @@ class TypeCollectionManager
     {
 
         // 获取类型名称
-        $typeName = $type->getName();
-        $className = class_exists($typeName) ?  $typeName : null;
+        $typeName  = $type->getName();
+        $className = class_exists($typeName) ? $typeName : null;
 
         // 尝试获取className
         // if (!$type->isBuiltin() && !class_exists($typeName)) {
@@ -107,7 +103,7 @@ class TypeCollectionManager
         $collections = [];
         foreach ($typesDocBlock as $type) {
             ['typeName' => $typeName, 'className' => $className] = $this->propertyTypeDocResolver->resolve($type);
-            $collections[] = new TypeCollection(
+            $collections[]                                       = new TypeCollection(
                 kind: TypeKindEnum::getNameTo($typeName, $className),
                 className: $className
             );

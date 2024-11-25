@@ -2,12 +2,6 @@
 
 namespace Astral\Serialize\Support\Collections;
 
-use ReflectionProperty;
-use Illuminate\Support\Collection;
-use Astral\Serialize\Enums\TypeKindEnum;
-use Astral\Serialize\Support\Collections\TypeCollection;
-use Astral\Serialize\Support\Collections\DataGroupCollection;
-
 class DataCollection
 {
     private string $name;
@@ -38,11 +32,11 @@ class DataCollection
     /** @var DataGroupCollection[]|null */
     public ?array $children = null;
 
-    public  function __construct(string $name, bool $nullable, mixed $defaultValue)
+    public function __construct(string $name, bool $nullable, mixed $defaultValue)
     {
-        $this->name = $name;
+        $this->name         = $name;
         $this->defaultValue = $defaultValue;
-        $this->nullable = $nullable;
+        $this->nullable     = $nullable;
     }
 
     public function getName(): string
@@ -99,11 +93,11 @@ class DataCollection
     public function toArray(): array
     {
         return [
-            'name' => $this->name,
-            'type' => array_map(fn($type) => $type->toArray(), $this->type),
+            'name'         => $this->name,
+            'type'         => array_map(fn ($type) => $type->toArray(), $this->type),
             'defaultValue' => $this->defaultValue,
-            'nullable' => $this->nullable,
-            'children' => $this->children ? array_map(fn($child) => $child->toArray(), $this->children) : null,
+            'nullable'     => $this->nullable,
+            'children'     => $this->children ? array_map(fn ($child) => $child->toArray(), $this->children) : null,
         ];
     }
 }

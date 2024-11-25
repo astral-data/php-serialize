@@ -4,7 +4,7 @@ namespace Astral\Serialize\Support\Caching;
 
 use Astral\Serialize\Support\Collections\DataGroupCollection;
 
-class SerializeCollectionCache
+class ClassGroupsCache
 {
     private static array $caches = [];
 
@@ -24,9 +24,9 @@ class SerializeCollectionCache
         return null;
     }
 
-    public function put(string $className, DataGroupCollection $collection): void
+    public function put(string $className, array $groups): void
     {
-        self::$caches[$className] = $collection;
+        self::$caches[$className] = $groups;
     }
 
 

@@ -26,7 +26,7 @@ class OutDataFormat
      */
     public function __construct(string $format, bool $isThrow = false)
     {
-        $this->format = $format;
+        $this->format  = $format;
         $this->isThrow = $isThrow;
     }
 }

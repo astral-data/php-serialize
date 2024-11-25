@@ -8,12 +8,12 @@ class GlobalDataCollectionCache
 {
     private static array $caches = [];
 
-    public static function has(string $className, string $groupName): bool
+    public function has(string $className, string $groupName): bool
     {
         return isset(self::$caches[self::getCacheKey($className, $groupName)]);
     }
 
-    public static function get(string $className, string $groupName): ?DataGroupCollection
+    public function get(string $className, string $groupName): ?DataGroupCollection
     {
         $cacheKey = self::getCacheKey($className, $groupName);
 
@@ -24,17 +24,17 @@ class GlobalDataCollectionCache
         return null;
     }
 
-    public static function put(string $className, string $groupName, DataGroupCollection $collection): void
+    public function put(string $className, string $groupName, DataGroupCollection $collection): void
     {
         self::$caches[self::getCacheKey($className, $groupName)] = $collection;
     }
 
-    public static function toArray(): array
+    public function toArray(): array
     {
         return self::$caches;
     }
 
-    private static function getCacheKey(string $className, string $groupName): string
+    private function getCacheKey(string $className, string $groupName): string
     {
         return sha1($className . '_' . $groupName);
     }

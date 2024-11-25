@@ -13,8 +13,7 @@ class SerializeTest extends TestCase
 {
     public function testFromObject(): void
     {
-        $classNotDoc = new class
-        {
+        $classNotDoc = new class () {
             /**
              * @var string prop
              */
@@ -23,8 +22,7 @@ class SerializeTest extends TestCase
             public $prop2;
         };
 
-        $classObject = new class
-        {
+        $classObject = new class () {
             /**
              * @var string prop
              */
@@ -63,14 +61,14 @@ class SerializeTest extends TestCase
             'prop3' => 0,
             'prop4' => false,
             'prop5' => ['1', '2', '3'],
-            'prop6' => new stdClass,
+            'prop6' => new stdClass(),
         ];
 
         $this->expectException(SerializeException::class);
         $this->expectExceptionMessage('docComment is null Property [ prop2 ] must add doc comment');
-        $result = (new Serialize)->fromObject($classNotDoc, $mockObject);
+        $result = (new Serialize())->fromObject($classNotDoc, $mockObject);
 
-        $result = (new Serialize)->fromObject($classObject, $mockObject);
+        $result = (new Serialize())->fromObject($classObject, $mockObject);
         foreach ($result as $propertyName => $expectedValue) {
             $this->assertEquals($expectedValue, $result->{$propertyName});
         }
@@ -79,8 +77,8 @@ class SerializeTest extends TestCase
     public function testGetPropertyAlisaGroup(): void
     {
 
-        $serialize = new Serialize;
-        $object = $serialize->fromJson(TestGroup::class, '{
+        $serialize = new Serialize();
+        $object    = $serialize->fromJson(TestGroup::class, '{
             "pid":"test1",
             "names": "Example Test",
             "lists": [

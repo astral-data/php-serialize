@@ -11,18 +11,18 @@ use phpDocumentor\Reflection\TypeResolver;
 
 beforeEach(function () {
     /** @var TypeCollectionManager $this */
-    $this->typeManager = new TypeCollectionManager(new PropertyTypeDocResolver, new PropertyTypesContextResolver, new TypeResolver);
+    $this->typeManager = new TypeCollectionManager(new PropertyTypeDocResolver(), new PropertyTypesContextResolver(), new TypeResolver());
 });
 
 it('tests one property reflections not parsing doc', function () {
     $reflectionProperty = new ReflectionProperty(TypeOneDoc::class, 'type_collect_object');
-    $result = $this->typeManager->processNamedType($reflectionProperty->getType(), $reflectionProperty);
+    $result             = $this->typeManager->processNamedType($reflectionProperty->getType(), $reflectionProperty);
     expect($result)->toBeInstanceOf(TypeCollection::class)
         ->and($result->kind)->toBe(TypeKindEnum::ARRAY)
         ->and($result->className)->toBeNull();
 
     $reflectionProperty = new ReflectionProperty(TypeOneDoc::class, 'type_class_object_doc');
-    $result = $this->typeManager->processNamedType($reflectionProperty->getType(), $reflectionProperty);
+    $result             = $this->typeManager->processNamedType($reflectionProperty->getType(), $reflectionProperty);
     expect($result)->toBeInstanceOf(TypeCollection::class)
         ->and($result->kind)->toBe(TypeKindEnum::OBJECT)
         ->and($result->className)->toBeNull();
@@ -31,46 +31,46 @@ it('tests one property reflections not parsing doc', function () {
 it('tests one property reflections and type parsing', function () {
 
     $reflectionProperty = new ReflectionProperty(TypeOneDoc::class, 'type_class_object');
-    $result = $this->typeManager->processNamedType($reflectionProperty->getType(), $reflectionProperty);
+    $result             = $this->typeManager->processNamedType($reflectionProperty->getType(), $reflectionProperty);
     expect($result)->toBeInstanceOf(TypeCollection::class)
         ->and($result->kind)->toBe(TypeKindEnum::CLASS_OBJECT)
         ->and($result->className)->toBe('Astral\Serialize\Tests\TestRequest\Other\OtherTypeDoc');
 
 
     $reflectionProperty = new ReflectionProperty(TypeOneDoc::class, 'type_object');
-    $result = $this->typeManager->processNamedType($reflectionProperty->getType(), $reflectionProperty);
+    $result             = $this->typeManager->processNamedType($reflectionProperty->getType(), $reflectionProperty);
     expect($result)->toBeInstanceOf(TypeCollection::class)
         ->and($result->kind)->toBe(TypeKindEnum::OBJECT)
         ->and($result->className)->toBeNull();
 
 
     $reflectionProperty = new ReflectionProperty(TypeOneDoc::class, 'type_string');
-    $result = $this->typeManager->processNamedType($reflectionProperty->getType(), $reflectionProperty);
+    $result             = $this->typeManager->processNamedType($reflectionProperty->getType(), $reflectionProperty);
     expect($result)->toBeInstanceOf(TypeCollection::class)
         ->and($result->kind)->toBe(TypeKindEnum::STRING)
         ->and($result->className)->toBeNull();
 
 
     $reflectionProperty = new ReflectionProperty(TypeOneDoc::class, 'type_float');
-    $result = $this->typeManager->processNamedType($reflectionProperty->getType(), $reflectionProperty);
+    $result             = $this->typeManager->processNamedType($reflectionProperty->getType(), $reflectionProperty);
     expect($result)->toBeInstanceOf(TypeCollection::class)
         ->and($result->kind)->toBe(TypeKindEnum::FLOAT)
         ->and($result->className)->toBeNull();
 
     $reflectionProperty = new ReflectionProperty(TypeOneDoc::class, 'type_int');
-    $result = $this->typeManager->processNamedType($reflectionProperty->getType(), $reflectionProperty);
+    $result             = $this->typeManager->processNamedType($reflectionProperty->getType(), $reflectionProperty);
     expect($result)->toBeInstanceOf(TypeCollection::class)
         ->and($result->kind)->toBe(TypeKindEnum::INT)
         ->and($result->className)->toBeNull();
 
     $reflectionProperty = new ReflectionProperty(TypeOneDoc::class, 'type_bool');
-    $result = $this->typeManager->processNamedType($reflectionProperty->getType(), $reflectionProperty);
+    $result             = $this->typeManager->processNamedType($reflectionProperty->getType(), $reflectionProperty);
     expect($result)->toBeInstanceOf(TypeCollection::class)
         ->and($result->kind)->toBe(TypeKindEnum::BOOLEAN)
         ->and($result->className)->toBeNull();
 
     $reflectionProperty = new ReflectionProperty(TypeOneDoc::class, 'type_enum_1');
-    $result = $this->typeManager->processNamedType($reflectionProperty->getType(), $reflectionProperty);
+    $result             = $this->typeManager->processNamedType($reflectionProperty->getType(), $reflectionProperty);
     expect($result)->toBeInstanceOf(TypeCollection::class)
         ->and($result->kind)->toBe(TypeKindEnum::ENUM)
         ->and($result->className)->toBe('Astral\Serialize\Tests\TestRequest\Other\ReqOtherEnum');
@@ -78,7 +78,7 @@ it('tests one property reflections and type parsing', function () {
 
 it('tests union property reflections and type parsing', function () {
     $reflectionProperty = new ReflectionProperty(TypeUnionDoc::class, 'union_data');
-    $result = $this->typeManager->processUnionType($reflectionProperty->getType(), $reflectionProperty);
+    $result             = $this->typeManager->processUnionType($reflectionProperty->getType(), $reflectionProperty);
 
     expect($result)->toBeArray()->toHaveCount(3);
 
@@ -98,7 +98,7 @@ it('tests union property reflections and type parsing', function () {
 
 it('tests union doc property reflections and type parsing', function () {
     $reflectionProperty = new ReflectionProperty(TypeUnionDoc::class, 'union_data_doc');
-    $result = $this->typeManager->getCollectionTo($reflectionProperty);
+    $result             = $this->typeManager->getCollectionTo($reflectionProperty);
     expect($result)->toBeArray()->toHaveCount(2);
     foreach ($result as $key => $item) {
         expect($item)->toBeInstanceOf(TypeCollection::class);
@@ -112,7 +112,7 @@ it('tests union doc property reflections and type parsing', function () {
     }
 
     $reflectionProperty = new ReflectionProperty(TypeOneDoc::class, 'type_class_object_doc');
-    $result = $this->typeManager->getCollectionTo($reflectionProperty);
+    $result             = $this->typeManager->getCollectionTo($reflectionProperty);
     expect($result)->toBeArray()->toHaveCount(1)
         ->and($result[0])->toBeInstanceOf(Astral\Serialize\Support\Collections\TypeCollection::class)
         ->and($result[0]->kind)->toBe(Astral\Serialize\Enums\TypeKindEnum::CLASS_OBJECT)

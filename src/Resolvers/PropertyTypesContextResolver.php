@@ -13,7 +13,6 @@ use phpDocumentor\Reflection\Types\ContextFactory;
 
 class PropertyTypesContextResolver
 {
-
     /** @var array<string, Context> */
     protected static array $contexts = [];
 
@@ -29,7 +28,7 @@ class PropertyTypesContextResolver
             return null;
         }
 
-        $context = $this->resolveContexts($property->getDeclaringClass());
+        $context  = $this->resolveContexts($property->getDeclaringClass());
         $docBlock = SerializeContainer::get()->docBlockFactory()->create($docComment, $context);
 
         $varTags = $docBlock->getTagsByName('var');

@@ -9,16 +9,12 @@ use phpDocumentor\Reflection\Types\Compound;
 use phpDocumentor\Reflection\Types\ContextFactory;
 use ReflectionProperty;
 use PHPUnit\Framework\TestCase;
-use Astral\Serialize\Annotations\Groups;
 use phpDocumentor\Reflection\TypeResolver;
 use phpDocumentor\Reflection\DocBlockFactory;
-use Astral\Serialize\Annotations\PropertyAlisa;
 use Astral\Serialize\Tests\TestRequest\TypeDoc;
-use phpDocumentor\Reflection\Types\Context;
 
 class TestTypeDoc extends TestCase
 {
-    
     public function testTypeDoc(): void
     {
         // 使用反射获取 `acreages` 属性
@@ -31,7 +27,7 @@ class TestTypeDoc extends TestCase
         $context = (new ContextFactory())->createFromReflector($reflectionProperty->getDeclaringClass());
 
         $docFactory = DocBlockFactory::createInstance();
-        $docBlock = $docFactory->create($docComment,$context);
+        $docBlock   = $docFactory->create($docComment, $context);
 
         /** @var Var_|null $typeDocs */
         $typeDocs = $docBlock->getTagsByName('var')[0] ?? null;
@@ -39,21 +35,21 @@ class TestTypeDoc extends TestCase
 
         $types = $typeDocs->getType();
 
-        if($types instanceof Compound){
-            foreach ($types as $singleType){
+        if($types instanceof Compound) {
+            foreach ($types as $singleType) {
                 print_r($singleType);
             }
         }
-//        var_dump($typeDocs);
+        //        var_dump($typeDocs);
         die;
 
         // 使用 TypeResolver 解析类型
         $typeResolver = new TypeResolver();
-//        $type = $typeResolver->resolve($varDocs[0]->__toString(), $context);
+        //        $type = $typeResolver->resolve($varDocs[0]->__toString(), $context);
 
         $type = $typeResolver->resolve('(OtherTypeDoc|BothTypeDoc)[]', $context);
 
-        var_dump( $context,$type->__toString());
+        var_dump($context, $type->__toString());
         die;
 
         $this->assertStringContainsString('Astral\Serialize\Tests\TestRequest\Other\OtherTypeDoc', (string)$type, '解析的类型中未包含 OtherTypeDoc');

@@ -2,11 +2,6 @@
 
 namespace Astral\Serialize\Enums;
 
-use ReflectionException;
-use ReflectionNamedType;
-use ReflectionProperty;
-use ReflectionUnionType;
-
 enum TypeKindEnum
 {
     case STRING;
@@ -36,18 +31,18 @@ enum TypeKindEnum
 
         if ($className && enum_exists($className)) {
             return self::ENUM;
-        } else if ($className && $type == 'array' && class_exists($className)) {
+        } elseif ($className && $type == 'array' && class_exists($className)) {
             return self::COLLECT_OBJECT;
-        } else if ($className && class_exists($className) && $type != 'array') {
+        } elseif ($className && class_exists($className) && $type != 'array') {
             return self::CLASS_OBJECT;
         }
 
         return match ($type) {
             'string' => self::STRING,
-            'int' => self::INT,
-            'float' => self::FLOAT,
-            'bool' => self::BOOLEAN,
-            'array' => self::ARRAY,
+            'int'    => self::INT,
+            'float'  => self::FLOAT,
+            'bool'   => self::BOOLEAN,
+            'array'  => self::ARRAY,
             'object' => self::OBJECT,
         };
     }

@@ -14,7 +14,7 @@ class SerializeCollectionCacheTest extends TestCase
      */
     public function testHasReturnsTrueForExistingCache()
     {
-        $className = 'TestClass';
+        $className  = 'TestClass';
         $collection = $this->createMock(DataGroupCollection::class);
 
         SerializeCollectionCache::put($className, $collection);
@@ -26,9 +26,9 @@ class SerializeCollectionCacheTest extends TestCase
      */
     public function testOverwriteExistingCacheEntryWhenPuttingNewCollection()
     {
-        $className = 'TestClass';
+        $className         = 'TestClass';
         $initialCollection = $this->createMock(DataGroupCollection::class);
-        $newCollection = $this->createMock(DataGroupCollection::class);
+        $newCollection     = $this->createMock(DataGroupCollection::class);
 
         SerializeCollectionCache::put($className, $initialCollection);
         $this->assertSame($initialCollection, SerializeCollectionCache::get($className));
@@ -42,50 +42,50 @@ class SerializeCollectionCacheTest extends TestCase
      * @throws Exception
      */
     public function testGetReturnsCorrectDataGroupCollectionForExistingCache()
-{
-    $className = 'TestClass';
-    $collection = $this->createMock(DataGroupCollection::class);
+    {
+        $className  = 'TestClass';
+        $collection = $this->createMock(DataGroupCollection::class);
 
-    SerializeCollectionCache::put($className, $collection);
+        SerializeCollectionCache::put($className, $collection);
 
-    $result = SerializeCollectionCache::get($className);
+        $result = SerializeCollectionCache::get($className);
 
-    $this->assertSame($collection, $result);
-}
+        $this->assertSame($collection, $result);
+    }
 
     /**
      * @throws Exception
      */
     public function testSuccessfullyAddNewDataGroupCollectionToCache()
-{
-    $className = 'TestClass';
-    $collection = $this->createMock(DataGroupCollection::class);
+    {
+        $className  = 'TestClass';
+        $collection = $this->createMock(DataGroupCollection::class);
 
-    SerializeCollectionCache::put($className, $collection);
+        SerializeCollectionCache::put($className, $collection);
 
-    $this->assertTrue(SerializeCollectionCache::has($className));
-    $this->assertSame($collection, SerializeCollectionCache::get($className));
-}public function testGetReturnsNullForNonExistentClass()
-{
-    $className = 'NonExistentClass';
+        $this->assertTrue(SerializeCollectionCache::has($className));
+        $this->assertSame($collection, SerializeCollectionCache::get($className));
+    }public function testGetReturnsNullForNonExistentClass()
+    {
+        $className = 'NonExistentClass';
 
-    $result = SerializeCollectionCache::get($className);
+        $result = SerializeCollectionCache::get($className);
 
-    $this->assertNull($result);
-}public function testHasReturnsFalseForNonExistingCache()
-{
-    $className = 'NonExistentClass';
+        $this->assertNull($result);
+    }public function testHasReturnsFalseForNonExistingCache()
+    {
+        $className = 'NonExistentClass';
 
-    $this->assertFalse(SerializeCollectionCache::has($className));
-}
+        $this->assertFalse(SerializeCollectionCache::has($className));
+    }
 
     /**
      * @throws Exception
      */
     public function testMaintainSeparateCachesForDifferentClassNames()
     {
-        $className1 = 'TestClass1';
-        $className2 = 'TestClass2';
+        $className1  = 'TestClass1';
+        $className2  = 'TestClass2';
         $collection1 = $this->createMock(DataGroupCollection::class);
         $collection2 = $this->createMock(DataGroupCollection::class);
 
@@ -106,8 +106,8 @@ class SerializeCollectionCacheTest extends TestCase
     {
         $upperCaseClassName = 'TestClass';
         $lowerCaseClassName = 'testCases';
-        $collectionUpper = $this->createMock(DataGroupCollection::class);
-        $collectionLower = $this->createMock(DataGroupCollection::class);
+        $collectionUpper    = $this->createMock(DataGroupCollection::class);
+        $collectionLower    = $this->createMock(DataGroupCollection::class);
 
         SerializeCollectionCache::put($upperCaseClassName, $collectionUpper);
         SerializeCollectionCache::put($lowerCaseClassName, $collectionLower);
@@ -124,18 +124,18 @@ class SerializeCollectionCacheTest extends TestCase
      */
     public function testReturnSameReferenceWhenGettingCacheMultipleTimes()
     {
-        $className = 'TestClass';
+        $className  = 'TestClass';
         $collection = $this->createMock(DataGroupCollection::class);
 
         SerializeCollectionCache::put($className, $collection);
 
-        $firstGet = SerializeCollectionCache::get($className);
+        $firstGet  = SerializeCollectionCache::get($className);
         $secondGet = SerializeCollectionCache::get($className);
 
         $this->assertSame($firstGet, $secondGet);
 
         // Modify the first reference
-//        $firstGet->someMethod();
+        //        $firstGet->someMethod();
 
         $thirdGet = SerializeCollectionCache::get($className);
 
@@ -144,8 +144,8 @@ class SerializeCollectionCacheTest extends TestCase
     }
     public function testNotAffectOtherCachesWhenModifyingOrRemovingOneEntry()
     {
-        $className1 = 'TestClass1';
-        $className2 = 'TestClass2';
+        $className1  = 'TestClass1';
+        $className2  = 'TestClass2';
         $collection1 = $this->createMock(DataGroupCollection::class);
         $collection2 = $this->createMock(DataGroupCollection::class);
 

@@ -1,4 +1,5 @@
 <?php
+
 namespace Astral\Serialize\Exceptions;
 
 use Exception;

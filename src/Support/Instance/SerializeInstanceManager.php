@@ -6,23 +6,22 @@ use InvalidArgumentException;
 
 class SerializeInstanceManager
 {
-
     private static array $instances = [];
 
-    public static function get($class)
+    public function get($class)
     {
         if (!class_exists($class)) {
             throw new InvalidArgumentException("Class {$class} does not exist.");
         }
 
         if (!isset(self::$instances[$class])) {
-            self::$instances[$class] = new $class;
+            self::$instances[$class] = new $class();
         }
 
         return self::$instances[$class];
     }
 
-    public static function clear($class = null): void
+    public function clear($class = null): void
     {
         if ($class) {
             unset(self::$instances[$class]);
