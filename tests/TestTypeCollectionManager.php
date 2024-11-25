@@ -2,8 +2,8 @@
 
 use Astral\Serialize\Enums\TypeKindEnum;
 use Astral\Serialize\Resolvers\PropertyTypeDocResolver;
-use Astral\Serialize\Support\Collections\TypeCollection;
 use Astral\Serialize\Resolvers\PropertyTypesContextResolver;
+use Astral\Serialize\Support\Collections\TypeCollection;
 use Astral\Serialize\Support\Collections\TypeCollectionManager;
 use Astral\Serialize\Tests\TestRequest\TypeOneDoc;
 use Astral\Serialize\Tests\TestRequest\TypeUnionDoc;

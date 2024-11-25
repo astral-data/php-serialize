@@ -8,10 +8,10 @@ use Astral\Serialize\Resolvers\PropertyTypesContextResolver;
 use Astral\Serialize\SerializeContainer;
 use phpDocumentor\Reflection\Type;
 use phpDocumentor\Reflection\TypeResolver;
+use ReflectionException;
 use ReflectionNamedType;
 use ReflectionProperty;
 use ReflectionUnionType;
-use ReflectionException;
 
 class TypeCollectionManager
 {

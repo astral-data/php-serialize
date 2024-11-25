@@ -15,7 +15,6 @@ enum TypeKindEnum
     case ENUM;
     case DATE;
 
-
     public function existsClass(): bool
     {
         return $this === self::CLASS_OBJECT || $this === self::COLLECT_OBJECT;

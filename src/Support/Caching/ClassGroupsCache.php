@@ -29,7 +29,6 @@ class ClassGroupsCache
         self::$caches[$className] = $groups;
     }
 
-
     public function toArray(): array
     {
         return self::$caches;

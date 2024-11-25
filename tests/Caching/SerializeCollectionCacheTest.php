@@ -2,10 +2,10 @@
 
 namespace Astral\Serialize\Tests\Caching;
 
-use PHPUnit\Framework\MockObject\Exception;
-use PHPUnit\Framework\TestCase;
 use Astral\Serialize\Support\Caching\SerializeCollectionCache;
 use Astral\Serialize\Support\Collections\DataGroupCollection;
+use PHPUnit\Framework\MockObject\Exception;
+use PHPUnit\Framework\TestCase;
 
 class SerializeCollectionCacheTest extends TestCase
 {
@@ -21,6 +21,7 @@ class SerializeCollectionCacheTest extends TestCase
 
         $this->assertTrue(SerializeCollectionCache::has($className));
     }
+
     /**
      * @throws Exception
      */
@@ -65,14 +66,18 @@ class SerializeCollectionCacheTest extends TestCase
 
         $this->assertTrue(SerializeCollectionCache::has($className));
         $this->assertSame($collection, SerializeCollectionCache::get($className));
-    }public function testGetReturnsNullForNonExistentClass()
+    }
+
+    public function testGetReturnsNullForNonExistentClass()
     {
         $className = 'NonExistentClass';
 
         $result = SerializeCollectionCache::get($className);
 
         $this->assertNull($result);
-    }public function testHasReturnsFalseForNonExistingCache()
+    }
+
+    public function testHasReturnsFalseForNonExistingCache()
     {
         $className = 'NonExistentClass';
 
@@ -142,6 +147,7 @@ class SerializeCollectionCacheTest extends TestCase
         // Ensure the third get still returns the same (now modified) reference
         $this->assertSame($firstGet, $thirdGet);
     }
+
     public function testNotAffectOtherCachesWhenModifyingOrRemovingOneEntry()
     {
         $className1  = 'TestClass1';
@@ -166,5 +172,4 @@ class SerializeCollectionCacheTest extends TestCase
         $this->assertTrue(SerializeCollectionCache::has($className2));
         $this->assertSame($collection2, SerializeCollectionCache::get($className2));
     }
-
 }

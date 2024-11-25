@@ -1,9 +1,9 @@
 <?php
 
+use Astral\Serialize\Resolvers\PropertyTypesContextResolver;
+use Astral\Serialize\Tests\TestRequest\TypeOneDoc;
 use phpDocumentor\Reflection\Fqsen;
 use phpDocumentor\Reflection\Types\Object_;
-use Astral\Serialize\Tests\TestRequest\TypeOneDoc;
-use Astral\Serialize\Resolvers\PropertyTypesContextResolver;
 
 beforeEach(function () {
     /** @var PropertyTypesContextResolver $this */

@@ -2,20 +2,19 @@
 
 namespace Astral\Serialize\Resolvers;
 
-use phpDocumentor\Reflection\DocBlock\Tags\Var_;
-use ReflectionClass;
-use ReflectionProperty;
-use phpDocumentor\Reflection\Type;
 use Astral\Serialize\SerializeContainer;
+use phpDocumentor\Reflection\DocBlock\Tags\Var_;
+use phpDocumentor\Reflection\Type;
 use phpDocumentor\Reflection\Types\Compound;
 use phpDocumentor\Reflection\Types\Context;
 use phpDocumentor\Reflection\Types\ContextFactory;
+use ReflectionClass;
+use ReflectionProperty;
 
 class PropertyTypesContextResolver
 {
     /** @var array<string, Context> */
     protected static array $contexts = [];
-
 
     /**
      * @return Type[]|null
@@ -56,7 +55,6 @@ class PropertyTypesContextResolver
         // 否则，将单一类型包装成数组返回
         return [$tag];
     }
-
 
     public function resolveContexts(ReflectionClass $reflection): Context
     {

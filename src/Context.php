@@ -146,7 +146,6 @@ class Context
         }
     }
 
-
     public function setPayload(mixed $payload): void
     {
     }

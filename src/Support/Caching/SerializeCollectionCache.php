@@ -29,7 +29,6 @@ class SerializeCollectionCache
         self::$caches[$className] = $collection;
     }
 
-
     public function toArray(): array
     {
         return self::$caches;

@@ -89,7 +89,6 @@ class DataCollection
         }
     }
 
-
     public function toArray(): array
     {
         return [

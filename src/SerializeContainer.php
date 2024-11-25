@@ -6,12 +6,12 @@ use Astral\Serialize\Resolvers\ClassGroupResolver;
 use Astral\Serialize\Resolvers\PropertyTypeDocResolver;
 use Astral\Serialize\Resolvers\PropertyTypesContextResolver;
 use Astral\Serialize\Support\Collections\TypeCollectionManager;
+use Astral\Serialize\Support\Instance\ReflectionClassInstanceManager;
+use Astral\Serialize\Support\Instance\ReflectionContextInstanceManager;
+use Astral\Serialize\Support\Instance\SerializeInstanceManager;
 use phpDocumentor\Reflection\DocBlockFactory;
 use phpDocumentor\Reflection\TypeResolver;
 use phpDocumentor\Reflection\Types\ContextFactory;
-use Astral\Serialize\Support\Instance\SerializeInstanceManager;
-use Astral\Serialize\Support\Instance\ReflectionClassInstanceManager;
-use Astral\Serialize\Support\Instance\ReflectionContextInstanceManager;
 
 class SerializeContainer
 {

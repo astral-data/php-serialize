@@ -19,8 +19,6 @@ abstract class Serialize
     {
     }
 
-
-
     protected function getContext()
     {
         //            Serialize::withGroups([])::from()

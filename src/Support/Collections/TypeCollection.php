@@ -9,13 +9,11 @@ class TypeCollection
     public TypeKindEnum $kind;
     public ?string $className;
 
-
     public function __construct(TypeKindEnum $kind, ?string $className = null)
     {
         $this->kind      = $kind;
         $this->className = $className;
     }
-
 
     public function toArray(): array
     {

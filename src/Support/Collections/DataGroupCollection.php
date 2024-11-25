@@ -69,7 +69,6 @@ class DataGroupCollection
         ];
     }
 
-
     public function count(): int
     {
         return count($this->properties);

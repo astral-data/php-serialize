@@ -24,5 +24,7 @@ return $config
         'no_empty_statement' => true,
         'line_ending' => true,
         'blank_line_after_opening_tag' => true,
+        'ordered_imports' => ['sort_algorithm' => 'alpha'],
+        'class_attributes_separation' => ['elements' => ['method' => 'one']],
     ])
     ->setFinder($finder);
