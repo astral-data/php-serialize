@@ -2,6 +2,7 @@
 
 namespace Astral\Serialize;
 
+use Astral\Serialize\Support\Factories\ContextFactory;
 use Astral\Serialize\Support\Instance\SerializeInstanceManager;
 
 abstract class Serialize
@@ -10,7 +11,7 @@ abstract class Serialize
     {
         /** @var static $instance */
         $instance = SerializeInstanceManager::get(static::class);
-        $instance->getContext()->setGroups($groups)->setPayload($payload);
+        $instance->getContext($groups)->setPayload($payload);
 
         return $instance;
     }
@@ -19,8 +20,8 @@ abstract class Serialize
     {
     }
 
-    protected function getContext()
+    protected function getContext(array $groups = []): Context
     {
-        //            Serialize::withGroups([])::from()
+        return ContextFactory::build(static::class, $groups);
     }
 }
