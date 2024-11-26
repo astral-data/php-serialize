@@ -2,12 +2,16 @@
 
 namespace Astral\Serialize\Support\Facades;
 
+use Astral\Serialize\Enums\CacheDriverEnum;
 use Astral\Serialize\Support\Config\ConfigManager;
 use BadMethodCallException;
 
+/**
+ * @method static string|CacheDriverEnum getCacheDriver()
+ */
 class Bootstrap
 {
-    public static function __callStatic(string $name, array $arguments)
+    public static function __callStatic(string $name, array $arguments): Bootstrap
     {
         $instance = ConfigManager::getInstance();
 

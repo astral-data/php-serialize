@@ -32,7 +32,6 @@ class TypeCollectionManager
     {
         $type = $property->getType();
 
-
         $typeDocBlock = $this->propertyTypesContextResolver->resolveTypeFromDocBlock($property);
 
         if ($typeDocBlock && ($type instanceof ReflectionUnionType || in_array($type->getName(), ['array', 'object']))) {
@@ -75,6 +74,11 @@ class TypeCollectionManager
      */
     public function processNamedType(ReflectionNamedType $type, ReflectionProperty $property): TypeCollection|array
     {
+
+
+
+
+
 
         // 获取类型名称
         $typeName  = $type->getName();

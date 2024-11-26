@@ -2,11 +2,16 @@
 
 namespace Astral\Serialize\Support\Config;
 
+use Astral\Serialize\Enums\CacheDriverEnum;
+use Astral\Serialize\Support\Caching\MemoryCache;
+
 class ConfigManager
 {
     public static ConfigManager $instance;
     private array $inputTransFrom = [];
     private array $outTransFrom   = [];
+
+    private string|CacheDriverEnum $cacheDriver = MemoryCache::class;
 
     public static function getInstance(): ConfigManager
     {
@@ -33,5 +38,20 @@ class ConfigManager
     public function getOutTransFrom(): array
     {
         return $this->outTransFrom;
+    }
+
+    public function getCacheDriver(): string
+    {
+        if($this->cacheDriver instanceof CacheDriverEnum) {
+            return $this->cacheDriver->value;
+        }
+
+        return $this->cacheDriver;
+    }
+
+    public function setCacheDriver(string|CacheDriverEnum $cacheDriver): static
+    {
+        $this->cacheDriver = $cacheDriver;
+        return $this;
     }
 }

@@ -2,7 +2,11 @@
 
 namespace Astral\Serialize;
 
+use Illuminate\Support\Collection;
+use Psr\SimpleCache\CacheInterface;
+use Psr\SimpleCache\InvalidArgumentException;
 use Astral\Serialize\Resolvers\ClassGroupResolver;
+use Astral\Serialize\Exceptions\NotFindGroupException;
 use Astral\Serialize\Support\Caching\GlobalDataCollectionCache;
 use Astral\Serialize\Support\Caching\SerializeCollectionCache;
 use Astral\Serialize\Support\Collections\DataCollection;
@@ -19,7 +23,8 @@ class Context
 
     public function __construct(
         public readonly ClassGroupResolver $classGroupResolver,
-        public readonly ReflectionClassInstanceManager $reflectionClassInstanceManager
+        public readonly ReflectionClassInstanceManager $reflectionClassInstanceManager,
+        public readonly CacheInterface $cache
     ) {
     }
 
@@ -29,27 +34,33 @@ class Context
         return $this;
     }
 
+    /**
+     * @throws NotFindGroupException|InvalidArgumentException|ReflectionException
+     */
     public function setGroups(array $groups): static
     {
         $reflectionClass = $this->reflectionClassInstanceManager->get($this->serializeClassName);
-        $this->classGroupResolver->resolveExistsGroup($reflectionClass, $groups);
+        $this->classGroupResolver->resolveExistsGroups($reflectionClass, $groups);
         $this->groups = $groups;
+
         return $this;
     }
 
     public function getGroups(): array
     {
-        $this->groups = $this->groups ? $this->groups : [self::DEFAULT_GROUP_NAME];
+        $this->groups = $this->groups ?: [self::DEFAULT_GROUP_NAME];
         return $this->groups;
     }
 
     /**
      * @throws ReflectionException
+     * @throws InvalidArgumentException
+     * @throws NotFindGroupException
      */
     public function getSerializeCollection(): DataGroupCollection
     {
-        if (SerializeCollectionCache::has($this->serializeClassName)) {
-            return SerializeCollectionCache::get($this->serializeClassName);
+        if ($this->cache->has($this->serializeClassName)) {
+            return $this->cache->get($this->serializeClassName);
         }
 
         return $this->getGroupCollection();
@@ -57,12 +68,14 @@ class Context
 
     /**
      * @throws ReflectionException
+     * @throws InvalidArgumentException
+     * @throws NotFindGroupException
      */
     public function getGroupCollection(): DataGroupCollection|array
     {
         $dates = [];
         foreach ($this->groups as $group) {
-            if (!GlobalDataCollectionCache::has($this->serializeClassName, $group)) {
+            if (!$this->cache->has($this->serializeClassName.':'.$group)) {
                 $dates[] = $this->parseSerializeClass($group, $this->serializeClassName);
             }
         }
@@ -72,6 +85,8 @@ class Context
 
     /**
      * @throws ReflectionException
+     * @throws InvalidArgumentException
+     * @throws NotFindGroupException
      */
     public function parseSerializeClass(string $groupName, string $className, int $maxDepth = 10, int $currentDepth = 0): ?DataGroupCollection
     {
@@ -80,7 +95,7 @@ class Context
             throw new \RuntimeException("Maximum nesting level of $maxDepth exceeded while parsing $className.");
         }
 
-        $cachedCollection = GlobalDataCollectionCache::get($className, $groupName);
+        $cachedCollection = $this->cache->get($className.':'.$groupName);
         if ($cachedCollection) {
             foreach ($cachedCollection->getProperties() as $property) {
                 $this->assembleChildren(
@@ -97,6 +112,11 @@ class Context
         $reflectionClass      = ReflectionClassInstanceManager::get($className);
 
         foreach ($reflectionClass->getProperties(ReflectionProperty::IS_PUBLIC) as $property) {
+
+            if(!$this->classGroupResolver->resolveExistsGroups($property, $groupName)) {
+                continue;
+            }
+
             $dataCollection = new DataCollection(
                 name: $property->getName(),
                 nullable: $property->getType()->allowsNull(),
@@ -117,7 +137,7 @@ class Context
         }
 
         // 将解析结果存入缓存
-        GlobalDataCollectionCache::put($className, $groupName, $globalDataCollection);
+        $this->cache->set($className.':'.$groupName, $globalDataCollection);
 
         return $globalDataCollection;
     }
@@ -126,6 +146,8 @@ class Context
      * 组装 Children 信息
      *
      * @throws ReflectionException
+     * @throws InvalidArgumentException
+     * @throws NotFindGroupException
      */
     private function assembleChildren(
         DataCollection $dataCollection,
