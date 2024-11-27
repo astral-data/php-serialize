@@ -2,13 +2,13 @@
 
 namespace Astral\Serialize\Resolvers;
 
-use Astral\Serialize\Context;
-use Psr\SimpleCache\CacheInterface;
 use Astral\Serialize\Annotations\Groups;
+use Astral\Serialize\Context;
+use Astral\Serialize\Exceptions\NotFindGroupException;
+use Psr\SimpleCache\CacheInterface;
+use Psr\SimpleCache\InvalidArgumentException;
 use ReflectionClass;
 use ReflectionProperty;
-use Psr\SimpleCache\InvalidArgumentException;
-use Astral\Serialize\Exceptions\NotFindGroupException;
 
 class ClassGroupResolver
 {
@@ -18,20 +18,21 @@ class ClassGroupResolver
 
     }
 
-
     /**
      * @throws NotFindGroupException
      * @throws InvalidArgumentException
      */
     public function resolveExistsGroups(ReflectionClass|ReflectionProperty $reflection, string|array $groups): bool
     {
-        $groups = (array) $groups;
+        $groups          = (array) $groups;
         $availableGroups = array_merge([Context::DEFAULT_GROUP_NAME], $this->getGroupsTo($reflection));
+
+
         if(!empty(array_diff($groups, $availableGroups))) {
             throw new NotFindGroupException(
                 sprintf('Invalid group(s) "%s" for %s', implode(',', array_diff($groups, $availableGroups)), $reflection->getName())
             );
-        };
+        }
 
         return true;
     }
@@ -54,11 +55,11 @@ class ClassGroupResolver
 
         $this->cache->set($cacheKey, $attributes[0]->newInstance()->names);
 
-        return $attributes;
+        return $attributes[0]->newInstance()->names;
     }
 
     public function getCacheKey(ReflectionClass|ReflectionProperty $reflection): string
     {
-        return $reflection instanceof ReflectionClass ? $reflection->getName() : $reflection->getDeclaringClass().':'.$reflection->getName();
+        return $reflection instanceof ReflectionClass ? $reflection->getName() : $reflection->getDeclaringClass() . ':' . $reflection->getName();
     }
 }

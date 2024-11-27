@@ -2,16 +2,14 @@
 
 namespace Astral\Serialize;
 
-use Illuminate\Support\Collection;
-use Psr\SimpleCache\CacheInterface;
-use Psr\SimpleCache\InvalidArgumentException;
-use Astral\Serialize\Resolvers\ClassGroupResolver;
+use RuntimeException;
 use Astral\Serialize\Exceptions\NotFindGroupException;
-use Astral\Serialize\Support\Caching\GlobalDataCollectionCache;
-use Astral\Serialize\Support\Caching\SerializeCollectionCache;
+use Astral\Serialize\Resolvers\ClassGroupResolver;
 use Astral\Serialize\Support\Collections\DataCollection;
 use Astral\Serialize\Support\Collections\DataGroupCollection;
 use Astral\Serialize\Support\Instance\ReflectionClassInstanceManager;
+use Psr\SimpleCache\CacheInterface;
+use Psr\SimpleCache\InvalidArgumentException;
 use ReflectionException;
 use ReflectionProperty;
 
@@ -19,7 +17,7 @@ class Context
 {
     private string $serializeClassName;
     private array $groups;
-    public const DEFAULT_GROUP_NAME = 'default';
+    public const DEFAULT_GROUP_NAME = '_default';
 
     public function __construct(
         public readonly ClassGroupResolver $classGroupResolver,
@@ -57,7 +55,7 @@ class Context
      * @throws InvalidArgumentException
      * @throws NotFindGroupException
      */
-    public function getSerializeCollection(): DataGroupCollection
+    public function getCollection(): DataGroupCollection
     {
         if ($this->cache->has($this->serializeClassName)) {
             return $this->cache->get($this->serializeClassName);
@@ -75,7 +73,7 @@ class Context
     {
         $dates = [];
         foreach ($this->groups as $group) {
-            if (!$this->cache->has($this->serializeClassName.':'.$group)) {
+            if (!$this->cache->has($this->serializeClassName . ':' . $group)) {
                 $dates[] = $this->parseSerializeClass($group, $this->serializeClassName);
             }
         }
@@ -92,10 +90,10 @@ class Context
     {
         // 检查嵌套层级是否超过最大限制
         if ($currentDepth > $maxDepth) {
-            throw new \RuntimeException("Maximum nesting level of $maxDepth exceeded while parsing $className.");
+            throw new RuntimeException("Maximum nesting level of $maxDepth exceeded while parsing $className.");
         }
 
-        $cachedCollection = $this->cache->get($className.':'.$groupName);
+        $cachedCollection = $this->cache->get($className . ':' . $groupName);
         if ($cachedCollection) {
             foreach ($cachedCollection->getProperties() as $property) {
                 $this->assembleChildren(
@@ -137,7 +135,7 @@ class Context
         }
 
         // 将解析结果存入缓存
-        $this->cache->set($className.':'.$groupName, $globalDataCollection);
+        $this->cache->set($className . ':' . $groupName, $globalDataCollection);
 
         return $globalDataCollection;
     }

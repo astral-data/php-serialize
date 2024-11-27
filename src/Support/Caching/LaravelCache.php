@@ -3,8 +3,8 @@
 namespace Astral\Serialize\Support\Caching;
 
 use DateInterval;
-use Psr\SimpleCache\CacheInterface;
 use Illuminate\Contracts\Cache\Repository as CacheRepository;
+use Psr\SimpleCache\CacheInterface;
 
 class LaravelCache implements CacheInterface
 {

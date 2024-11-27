@@ -3,6 +3,7 @@
 namespace Astral\Serialize;
 
 use Astral\Serialize\Resolvers\ClassGroupResolver;
+use Astral\Serialize\Support\Factories\CacheFactory;
 use Astral\Serialize\Resolvers\PropertyTypeDocResolver;
 use Astral\Serialize\Resolvers\PropertyTypesContextResolver;
 use Astral\Serialize\Support\Collections\TypeCollectionManager;
@@ -70,7 +71,9 @@ class SerializeContainer
 
     public function classGroupResolver(): ClassGroupResolver
     {
-        return $this->classGroupResolver ??= new ClassGroupResolver();
+        return $this->classGroupResolver ??= new ClassGroupResolver(
+            CacheFactory::build()
+        );
     }
 
     public function reflectionClassInstanceManager(): ReflectionClassInstanceManager
@@ -86,10 +89,5 @@ class SerializeContainer
     public function serializeInstanceManager(): SerializeInstanceManager
     {
         return $this->serializeInstanceManager ??= new SerializeInstanceManager();
-    }
-
-    public function context(): Context
-    {
-        return $this->context ??= new Context($this->classGroupResolver(), $this->reflectionClassInstanceManager());
     }
 }

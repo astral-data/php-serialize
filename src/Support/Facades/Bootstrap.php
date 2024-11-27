@@ -11,7 +11,7 @@ use BadMethodCallException;
  */
 class Bootstrap
 {
-    public static function __callStatic(string $name, array $arguments): Bootstrap
+    public static function __callStatic(string $name, array $arguments): Bootstrap|string
     {
         $instance = ConfigManager::getInstance();
 

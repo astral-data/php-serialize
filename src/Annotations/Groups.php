@@ -12,10 +12,8 @@ class Groups
 {
     public array $names;
 
-    public function __construct(mixed ...$names)
+    public function __construct(string|int|UnitEnum ...$names)
     {
-        $names = is_string($names) ? [$names] : $names;
-
         $this->names = array_map(function ($name) {
             if ($name instanceof UnitEnum) {
                 return $name->name;

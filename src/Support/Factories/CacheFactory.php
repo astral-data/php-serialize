@@ -2,15 +2,14 @@
 
 namespace Astral\Serialize\Support\Factories;
 
-use Astral\Serialize\Context;
-use Psr\SimpleCache\CacheInterface;
-use Astral\Serialize\SerializeContainer;
 use Astral\Serialize\Support\Facades\Bootstrap;
+use Psr\SimpleCache\CacheInterface;
 
 class CacheFactory
 {
+    private static ?CacheInterface $instance = null;
     public static function build(): CacheInterface
     {
-        return new (Bootstrap::getCacheDriver());
+        return self::$instance ??= new (Bootstrap::getCacheDriver());
     }
 }
