@@ -7,22 +7,22 @@ use ReflectionException;
 
 class ReflectionClassInstanceManager
 {
-    private static array $instances = [];
+    private array $instances = [];
 
     /**
      * @throws ReflectionException
      */
     public function get(string $className): ReflectionClass
     {
-        if (!isset(self::$instances[$className])) {
-            self::$instances[$className] = new ReflectionClass($className);
+        if (!isset($this->instances[$className])) {
+            $this->instances[$className] = new ReflectionClass($className);
         }
 
-        return self::$instances[$className];
+        return$this->instances[$className];
     }
 
     public function clear(): void
     {
-        self::$instances = [];
+        $this->instances = [];
     }
 }

@@ -8,7 +8,6 @@ use Astral\Serialize\Resolvers\PropertyTypeDocResolver;
 use Astral\Serialize\Resolvers\PropertyTypesContextResolver;
 use Astral\Serialize\Support\Collections\TypeCollectionManager;
 use Astral\Serialize\Support\Instance\ReflectionClassInstanceManager;
-use Astral\Serialize\Support\Instance\ReflectionContextInstanceManager;
 use Astral\Serialize\Support\Instance\SerializeInstanceManager;
 use phpDocumentor\Reflection\DocBlockFactory;
 use phpDocumentor\Reflection\TypeResolver;
@@ -27,7 +26,6 @@ class SerializeContainer
     protected ?PropertyTypeDocResolver $propertyTypeDocResolver                   = null;
     protected ?ClassGroupResolver $classGroupResolver                             = null;
     protected ?ReflectionClassInstanceManager $reflectionClassInstanceManager     = null;
-    protected ?ReflectionContextInstanceManager $reflectionContextInstanceManager = null;
     protected ?SerializeInstanceManager $serializeInstanceManager                 = null;
 
     public static function get(): SerializeContainer
@@ -81,10 +79,6 @@ class SerializeContainer
         return $this->reflectionClassInstanceManager ??= new ReflectionClassInstanceManager();
     }
 
-    public function reflectionContextInstanceManager(): ReflectionContextInstanceManager
-    {
-        return $this->reflectionContextInstanceManager ??= new ReflectionContextInstanceManager();
-    }
 
     public function serializeInstanceManager(): SerializeInstanceManager
     {

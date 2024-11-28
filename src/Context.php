@@ -20,9 +20,9 @@ class Context
     public const DEFAULT_GROUP_NAME = '_default';
 
     public function __construct(
-        public readonly ClassGroupResolver $classGroupResolver,
-        public readonly ReflectionClassInstanceManager $reflectionClassInstanceManager,
-        public readonly CacheInterface $cache
+        private readonly ClassGroupResolver $classGroupResolver,
+        private readonly ReflectionClassInstanceManager $reflectionClassInstanceManager,
+        private readonly CacheInterface $cache
     ) {
     }
 

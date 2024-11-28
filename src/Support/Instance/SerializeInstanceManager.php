@@ -6,7 +6,7 @@ use InvalidArgumentException;
 
 class SerializeInstanceManager
 {
-    private static array $instances = [];
+    private array $instances = [];
 
     public function get($class)
     {
@@ -14,19 +14,19 @@ class SerializeInstanceManager
             throw new InvalidArgumentException("Class {$class} does not exist.");
         }
 
-        if (!isset(self::$instances[$class])) {
-            self::$instances[$class] = new $class();
+        if (!isset($this->instances[$class])) {
+            $this->instances[$class] = new $class();
         }
 
-        return self::$instances[$class];
+        return $this->instances[$class];
     }
 
     public function clear($class = null): void
     {
         if ($class) {
-            unset(self::$instances[$class]);
+            unset($this->instances[$class]);
         } else {
-            self::$instances = [];
+            $this->instances = [];
         }
     }
 }

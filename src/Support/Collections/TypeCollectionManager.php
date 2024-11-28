@@ -74,12 +74,6 @@ class TypeCollectionManager
      */
     public function processNamedType(ReflectionNamedType $type, ReflectionProperty $property): TypeCollection|array
     {
-
-
-
-
-
-
         // 获取类型名称
         $typeName  = $type->getName();
         $className = class_exists($typeName) ? $typeName : null;
