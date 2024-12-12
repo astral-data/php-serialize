@@ -2,12 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Astral\Serialize\Annotations;
+namespace Astral\Serialize\Annotations\InputValue;
 
+use Astral\Serialize\Contracts\Attribute\InputValueCastInterface;
+use Astral\Serialize\Support\Collections\DataCollection;
 use Attribute;
 
 #[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_CLASS)]
-class InputDataFormat
+class InputDataFormat implements InputValueCastInterface
 {
     /** @var string input-format */
     public string $inputFormat;
@@ -23,5 +25,10 @@ class InputDataFormat
     {
         $this->inputFormat = $inputFormat;
         $this->outFormat   = $outFormat;
+    }
+
+    public function resolve(DataCollection $dataCollection, mixed $value): mixed
+    {
+        // TODO: Implement resolve() method.
     }
 }

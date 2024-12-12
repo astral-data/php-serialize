@@ -4,7 +4,7 @@ namespace Astral\Serialize;
 
 use Astral\Serialize\Exceptions\NotFoundAttributePropertyResolver;
 use Astral\Serialize\Exceptions\NotFoundGroupException;
-use Astral\Serialize\Resolvers\AttributePropertyResolver;
+use Astral\Serialize\Resolvers\DataCollectionCastResolver;
 use Astral\Serialize\Resolvers\GroupResolver;
 use Astral\Serialize\Support\Collections\DataCollection;
 use Astral\Serialize\Support\Collections\DataGroupCollection;
@@ -25,7 +25,7 @@ class Context
         private readonly CacheInterface                 $cache,
         private readonly ReflectionClassInstanceManager $reflectionClassInstanceManager,
         private readonly GroupResolver                  $classGroupResolver,
-        private readonly AttributePropertyResolver      $attributePropertyResolver,
+        private readonly DataCollectionCastResolver     $dataCollectionCastResolver,
     ) {
     }
 
@@ -149,7 +149,7 @@ class Context
 
             $typeCollections = SerializeContainer::get()->typeCollectionManager()->getCollectionTo($property);
             $dataCollection->setType(...$typeCollections);
-            $this->attributePropertyResolver->resolve($property, $dataCollection);
+            $this->dataCollectionCastResolver->resolve($dataCollection,$property);
 
             $this->assembleChildren(
                 dataCollection: $dataCollection,

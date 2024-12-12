@@ -2,7 +2,7 @@
 
 namespace Astral\Serialize;
 
-use Astral\Serialize\Resolvers\AttributePropertyResolver;
+use Astral\Serialize\Resolvers\DataCollectionCastResolver;
 use Astral\Serialize\Resolvers\GroupResolver;
 use Astral\Serialize\Resolvers\PropertyTypeDocResolver;
 use Astral\Serialize\Resolvers\PropertyTypesContextResolver;
@@ -18,17 +18,17 @@ use phpDocumentor\Reflection\Types\ContextFactory;
 class SerializeContainer
 {
     protected static self $instance;
-    protected ?ContextFactory $contextFactory                                     = null;
-    protected ?Context $context                                                   = null;
-    protected ?TypeResolver $typeResolver                                         = null;
-    protected ?DocBlockFactory $docBlockFactory                                   = null;
-    protected ?TypeCollectionManager $typeCollectionManager                       = null;
-    protected ?PropertyTypesContextResolver $propertyTypesContextResolver         = null;
-    protected ?PropertyTypeDocResolver $propertyTypeDocResolver                   = null;
-    protected ?GroupResolver $classGroupResolver                                  = null;
-    protected ?ReflectionClassInstanceManager $reflectionClassInstanceManager     = null;
-    protected ?SerializeInstanceManager $serializeInstanceManager                 = null;
-    protected ?AttributePropertyResolver $attributePropertyResolver               = null;
+    protected ?ContextFactory $contextFactory                                      = null;
+    protected ?Context $context                                                    = null;
+    protected ?TypeResolver $typeResolver                                          = null;
+    protected ?DocBlockFactory $docBlockFactory                                    = null;
+    protected ?TypeCollectionManager $typeCollectionManager                        = null;
+    protected ?PropertyTypesContextResolver $propertyTypesContextResolver          = null;
+    protected ?PropertyTypeDocResolver $propertyTypeDocResolver                    = null;
+    protected ?GroupResolver $classGroupResolver                                   = null;
+    protected ?ReflectionClassInstanceManager $reflectionClassInstanceManager      = null;
+    protected ?SerializeInstanceManager $serializeInstanceManager                  = null;
+    protected ?DataCollectionCastResolver $attributePropertyResolver               = null;
 
     public static function get(): SerializeContainer
     {
@@ -76,9 +76,9 @@ class SerializeContainer
         );
     }
 
-    public function attributePropertyResolver(): AttributePropertyResolver
+    public function attributePropertyResolver(): DataCollectionCastResolver
     {
-        return $this->attributePropertyResolver ??= new AttributePropertyResolver(ConfigManager::getInstance());
+        return $this->attributePropertyResolver ??= new DataCollectionCastResolver(ConfigManager::getInstance());
     }
 
     public function reflectionClassInstanceManager(): ReflectionClassInstanceManager

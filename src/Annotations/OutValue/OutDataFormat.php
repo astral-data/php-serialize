@@ -2,15 +2,17 @@
 
 declare(strict_types=1);
 
-namespace Astral\Serialize\Annotations;
+namespace Astral\Serialize\Annotations\OutValue;
 
+use Astral\Serialize\Contracts\Attribute\InputValueCastInterface;
+use Astral\Serialize\Support\Collections\DataCollection;
 use Attribute;
 
 /**
  * toArray 输出值为 固定日期格式 默认 YYYY-MM-DD HH:ii:ss的日期格式
  */
 #[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_CLASS)]
-class OutDataFormat
+class OutDataFormat implements InputValueCastInterface
 {
     /** @var string 日期格式 */
     public string $format = 'Y-m-d H:i:s';
@@ -28,5 +30,10 @@ class OutDataFormat
     {
         $this->format  = $format;
         $this->isThrow = $isThrow;
+    }
+
+    public function resolve(DataCollection $dataCollection, mixed $value): mixed
+    {
+        // TODO: Implement resolve() method.
     }
 }

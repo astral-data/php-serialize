@@ -2,36 +2,23 @@
 
 namespace Astral\Serialize\Support\Config;
 
-use Astral\Serialize\Annotations\InputIgnore;
-use Astral\Serialize\Annotations\InputName;
-use Astral\Serialize\Annotations\OutIgnore;
-use Astral\Serialize\Annotations\OutName;
 use Astral\Serialize\Contracts\Attribute\DataCollectionCastInterface;
 use Astral\Serialize\Enums\CacheDriverEnum;
 use Astral\Serialize\Exceptions\NotFoundAttributePropertyResolver;
 use Astral\Serialize\Support\Caching\MemoryCache;
-use Astral\Serialize\Support\TransFrom\InputIgnoreResolver;
-use Astral\Serialize\Support\TransFrom\InputNameResolver;
-use Astral\Serialize\Support\TransFrom\OutIgnoreResolver;
-use Astral\Serialize\Support\TransFrom\OutNameResolver;
+use Illuminate\Support\Collection;
 
 class ConfigManager
 {
     public static ConfigManager $instance;
 
-    /** @var array<class-string,class-string> */
-    private array $attributePropertyResolver = [
-        InputIgnore::class => InputIgnoreResolver::class,
-        InputName::class   => InputNameResolver::class,
-        OutIgnore::class   => OutIgnoreResolver::class,
-        OutName::class     => OutNameResolver::class,
-    ];
+    private Collection $attributePropertyResolver;
 
-    private array $inputTransFromClass = [
+    private array $inputValueCasts = [
 
     ];
 
-    private array $outputTransFromClass = [
+    private array $outputValueCasts = [
 
     ];
 
@@ -42,34 +29,25 @@ class ConfigManager
         return self::$instance ??= new self();
     }
 
-    public function addAttributePropertyResolver($annotationClass, $resolverClass): static
+    /**
+     * @throws NotFoundAttributePropertyResolver
+     */
+    public function addAttributePropertyResolver(DataCollectionCastInterface|string $resolverClass): static
     {
-        $this->attributePropertyResolver[$annotationClass] = $resolverClass;
+        if(is_string($resolverClass) && !is_subclass_of($resolverClass, DataCollectionCastInterface::class)) {
+            throw new NotFoundAttributePropertyResolver('Resolver class must be an instance of DataCollectionCastInterface');
+        }
+
+        $this->getAttributePropertyResolver()->push(is_string($resolverClass) ? new $resolverClass() : $resolverClass);
         return $this;
     }
 
     /**
-     * @return array<class-string,class-string>
+     * @return Collection
      */
-    public function getAttributePropertyResolver(): array
+    public function getAttributePropertyResolver(): Collection
     {
-        return $this->attributePropertyResolver;
-    }
-
-    /**
-     * @throws NotFoundAttributePropertyResolver
-     */
-    public function matchAttributePropertyResolver(string|object $annotationClass): DataCollectionCastInterface
-    {
-        if (is_object($annotationClass)) {
-            $annotationClass = get_class($annotationClass);
-        }
-
-        if (isset($this->getAttributePropertyResolver()[$annotationClass])) {
-            return new ($this->getAttributePropertyResolver()[$annotationClass]);
-        }
-
-        throw  new NotFoundAttributePropertyResolver('not find resolver class:' . $annotationClass);
+        return $this->attributePropertyResolver ??= new Collection();
     }
 
     public function setTransFromClass($val): static
