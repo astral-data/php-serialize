@@ -3,25 +3,39 @@
 namespace Astral\Serialize;
 
 use Astral\Serialize\Support\Factories\ContextFactory;
-use Astral\Serialize\Support\Instance\SerializeInstanceManager;
 
+/**
+ * @method static Context setGroups(array $groups)
+ * @method static Context from(...$values)
+ * @method static Context toArray()
+ *
+ * @see Context
+ */
 abstract class Serialize
 {
-    public static function from(mixed $payload, array $groups = []): static
-    {
-        /** @var static $instance */
-        $instance = SerializeInstanceManager::get(static::class);
-        $instance->getContext($groups)->setPayload($payload);
+    protected ?Context $_context = null;
 
-        return $instance;
+    /**
+     */
+    protected function getContext(): Context
+    {
+        return $this->_context ??= ContextFactory::build(static::class);
     }
 
-    public function toArray()
+    public function __call($name, $args)
     {
+        $instances = $this->getContext(); // 调用实例的上下文
+        $instances->{$name}(...$args);
+
+        return $instances;
     }
 
-    protected function getContext(array $groups = []): Context
+    public static function __callStatic($name, $args)
     {
-        return ContextFactory::build(static::class, $groups);
+        $instance  = new static(); // 创建当前类的实例
+        $instances = $instance->getContext(); // 获取实例的上下文
+        $instances->{$name}(...$args);
+
+        return $instances;
     }
 }

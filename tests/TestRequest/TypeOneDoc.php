@@ -2,12 +2,16 @@
 
 namespace Astral\Serialize\Tests\TestRequest;
 
+use Astral\Serialize\Annotations\InputName;
+use Astral\Serialize\Annotations\OutIgnore;
 use Astral\Serialize\Tests\TestRequest\Both\BothTypeDoc;
 use Astral\Serialize\Tests\TestRequest\Other\OtherTypeDoc;
 use Astral\Serialize\Tests\TestRequest\Other\ReqOtherEnum;
 
 class TypeOneDoc
 {
+    #[InputName('input_name')]
+    #[OutIgnore]
     /** @var OtherTypeDoc[] */
     public array $type_collect_object;
 

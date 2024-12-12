@@ -19,7 +19,7 @@ it('creates groups with integer names', function () {
 it('creates groups with UnitEnum values', function () {
     enum TestEnum: string
     {
-        case FIRST = 'first';
+        case FIRST  = 'first';
         case SECOND = 'second';
     }
 
@@ -45,7 +45,7 @@ it('creates groups with mixed enums and strings', function () {
     enum TestEnumUnion: string
     {
         case ADMIN = 'admin';
-        case USER = 'user';
+        case USER  = 'user';
     }
 
     // 使用字符串和枚举混合创建 Groups 实例

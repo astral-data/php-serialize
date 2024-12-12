@@ -14,7 +14,12 @@ it('test parse serialize class', function () {
     // 记录测试开始前的内存使用
     $startMemory = memory_get_usage();
 
-    $result =  $this->context->parseSerializeClass(Context::DEFAULT_GROUP_NAME, TypeOneDoc::class);
+    //    $result =  $this->context->parseSerializeClass(Context::DEFAULT_GROUP_NAME, TypeOneDoc::class);
+
+    $object           = new TypeOneDoc();
+    $object->type_int = 22;
+    $std              = new StdClass();
+    $this->context->setPayload($object);
 
     // 记录测试结束后的内存使用
     $endMemory = memory_get_usage();

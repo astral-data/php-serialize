@@ -2,9 +2,10 @@
 
 namespace Astral\Serialize;
 
-use RuntimeException;
-use Astral\Serialize\Exceptions\NotFindGroupException;
-use Astral\Serialize\Resolvers\ClassGroupResolver;
+use Astral\Serialize\Exceptions\NotFoundAttributePropertyResolver;
+use Astral\Serialize\Exceptions\NotFoundGroupException;
+use Astral\Serialize\Resolvers\AttributePropertyResolver;
+use Astral\Serialize\Resolvers\GroupResolver;
 use Astral\Serialize\Support\Collections\DataCollection;
 use Astral\Serialize\Support\Collections\DataGroupCollection;
 use Astral\Serialize\Support\Instance\ReflectionClassInstanceManager;
@@ -12,17 +13,19 @@ use Psr\SimpleCache\CacheInterface;
 use Psr\SimpleCache\InvalidArgumentException;
 use ReflectionException;
 use ReflectionProperty;
+use RuntimeException;
 
 class Context
 {
     private string $serializeClassName;
     private array $groups;
-    public const DEFAULT_GROUP_NAME = '_default';
+    private object $serialize;
 
     public function __construct(
-        private readonly ClassGroupResolver $classGroupResolver,
+        private readonly CacheInterface                 $cache,
         private readonly ReflectionClassInstanceManager $reflectionClassInstanceManager,
-        private readonly CacheInterface $cache
+        private readonly GroupResolver                  $classGroupResolver,
+        private readonly AttributePropertyResolver      $attributePropertyResolver,
     ) {
     }
 
@@ -32,8 +35,15 @@ class Context
         return $this;
     }
 
+    public function getSerialize(): string
+    {
+        return $this->serializeClassName;
+    }
+
     /**
-     * @throws NotFindGroupException|InvalidArgumentException|ReflectionException
+     * @throws NotFoundGroupException
+     * @throws InvalidArgumentException
+     * @throws ReflectionException
      */
     public function setGroups(array $groups): static
     {
@@ -46,14 +56,20 @@ class Context
 
     public function getGroups(): array
     {
-        $this->groups = $this->groups ?: [self::DEFAULT_GROUP_NAME];
+        $this->groups = $this->groups ?: [$this->serializeClassName];
         return $this->groups;
+    }
+
+    public function getSerializeClassName(): string
+    {
+        return $this->serializeClassName;
     }
 
     /**
      * @throws ReflectionException
      * @throws InvalidArgumentException
-     * @throws NotFindGroupException
+     * @throws NotFoundGroupException
+     * @throws NotFoundAttributePropertyResolver
      */
     public function getCollection(): DataGroupCollection
     {
@@ -67,28 +83,35 @@ class Context
     /**
      * @throws ReflectionException
      * @throws InvalidArgumentException
-     * @throws NotFindGroupException
+     * @throws NotFoundGroupException
+     * @throws NotFoundAttributePropertyResolver
      */
-    public function getGroupCollection(): DataGroupCollection|array
+    public function getGroupCollection(): DataGroupCollection
     {
-        $dates = [];
-        foreach ($this->groups as $group) {
-            if (!$this->cache->has($this->serializeClassName . ':' . $group)) {
-                $dates[] = $this->parseSerializeClass($group, $this->serializeClassName);
+        $cachedCollection = null;
+        foreach ($this->getGroups() as $group) {
+            if ($this->cache->has($this->serializeClassName . ':' . $group)) {
+                /** @var DataGroupCollection $cachedCollection */
+                $cachedCollection = $this->cache->get($this->serializeClassName . ':' . $group);
+            } else {
+                /** @var DataGroupCollection $cachedCollection */
+                $cachedCollection = $this->parseSerializeClass($group, $this->serializeClassName);
+                $this->cache->set($this->serializeClassName . ':' . $group, $cachedCollection); // 将解析结果缓存
             }
         }
 
-        return $dates;
+        return $cachedCollection;
     }
 
     /**
      * @throws ReflectionException
      * @throws InvalidArgumentException
-     * @throws NotFindGroupException
+     * @throws NotFoundGroupException
+     * @throws NotFoundAttributePropertyResolver
      */
     public function parseSerializeClass(string $groupName, string $className, int $maxDepth = 10, int $currentDepth = 0): ?DataGroupCollection
     {
-        // 检查嵌套层级是否超过最大限制
+        // max depth
         if ($currentDepth > $maxDepth) {
             throw new RuntimeException("Maximum nesting level of $maxDepth exceeded while parsing $className.");
         }
@@ -107,22 +130,26 @@ class Context
         }
 
         $globalDataCollection = new DataGroupCollection(groupName: $groupName, className: $className);
-        $reflectionClass      = ReflectionClassInstanceManager::get($className);
+        $reflectionClass      = $this->reflectionClassInstanceManager->get($className);
 
         foreach ($reflectionClass->getProperties(ReflectionProperty::IS_PUBLIC) as $property) {
 
+            // group filter
             if(!$this->classGroupResolver->resolveExistsGroups($property, $groupName)) {
                 continue;
             }
 
             $dataCollection = new DataCollection(
+                parentGroupCollection: $globalDataCollection,
                 name: $property->getName(),
                 nullable: $property->getType()->allowsNull(),
                 defaultValue: $property->getDefaultValue(),
+                attributes: array_merge($property->getDeclaringClass()->getAttributes(), $property->getAttributes()),
             );
 
             $typeCollections = SerializeContainer::get()->typeCollectionManager()->getCollectionTo($property);
             $dataCollection->setType(...$typeCollections);
+            $this->attributePropertyResolver->resolve($property, $dataCollection);
 
             $this->assembleChildren(
                 dataCollection: $dataCollection,
@@ -134,18 +161,19 @@ class Context
             $globalDataCollection->put($dataCollection);
         }
 
-        // 将解析结果存入缓存
+        // cache
         $this->cache->set($className . ':' . $groupName, $globalDataCollection);
 
         return $globalDataCollection;
     }
 
     /**
-     * 组装 Children 信息
+     * Children
      *
      * @throws ReflectionException
      * @throws InvalidArgumentException
-     * @throws NotFindGroupException
+     * @throws NotFoundGroupException
+     * @throws NotFoundAttributePropertyResolver
      */
     private function assembleChildren(
         DataCollection $dataCollection,
@@ -153,6 +181,11 @@ class Context
         int $maxDepth,
         int $currentDepth
     ): void {
+
+        if($dataCollection->getInputIgnore()) {
+            return;
+        }
+
         foreach ($dataCollection->getType() as $type) {
             if ($type->kind->existsClass()) {
                 $childCollection = $this->parseSerializeClass(
@@ -166,8 +199,27 @@ class Context
         }
     }
 
-    public function setPayload(mixed $payload): void
+    /**
+     * @throws NotFoundAttributePropertyResolver
+     * @throws ReflectionException
+     * @throws NotFoundGroupException
+     * @throws InvalidArgumentException
+     */
+    public function setPayload(... $payload): void
     {
+        $groupCollection = $this->getGroupCollection();
+
+        foreach ($payload as $field => $value) {
+            if(is_array($value)) {
+                $this->setPayload($value);
+                continue;
+            }
+
+            print_r($field . ':' . $value);
+
+        }
+
+
     }
 
     public function toArray()

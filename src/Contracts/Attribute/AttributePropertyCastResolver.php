@@ -1,0 +1,10 @@
+<?php
+
+namespace Astral\Serialize\Contracts\Attribute;
+
+use Astral\Serialize\Support\Collections\DataCollection;
+
+interface AttributePropertyCastResolver
+{
+    public function resolve(DataCollection $dataCollection): void;
+}

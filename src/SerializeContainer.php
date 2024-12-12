@@ -2,11 +2,13 @@
 
 namespace Astral\Serialize;
 
-use Astral\Serialize\Resolvers\ClassGroupResolver;
-use Astral\Serialize\Support\Factories\CacheFactory;
+use Astral\Serialize\Resolvers\AttributePropertyResolver;
+use Astral\Serialize\Resolvers\GroupResolver;
 use Astral\Serialize\Resolvers\PropertyTypeDocResolver;
 use Astral\Serialize\Resolvers\PropertyTypesContextResolver;
 use Astral\Serialize\Support\Collections\TypeCollectionManager;
+use Astral\Serialize\Support\Config\ConfigManager;
+use Astral\Serialize\Support\Factories\CacheFactory;
 use Astral\Serialize\Support\Instance\ReflectionClassInstanceManager;
 use Astral\Serialize\Support\Instance\SerializeInstanceManager;
 use phpDocumentor\Reflection\DocBlockFactory;
@@ -16,17 +18,17 @@ use phpDocumentor\Reflection\Types\ContextFactory;
 class SerializeContainer
 {
     protected static self $instance;
-    protected ?ContextFactory $contextFactory = null;
-
+    protected ?ContextFactory $contextFactory                                     = null;
     protected ?Context $context                                                   = null;
     protected ?TypeResolver $typeResolver                                         = null;
     protected ?DocBlockFactory $docBlockFactory                                   = null;
     protected ?TypeCollectionManager $typeCollectionManager                       = null;
     protected ?PropertyTypesContextResolver $propertyTypesContextResolver         = null;
     protected ?PropertyTypeDocResolver $propertyTypeDocResolver                   = null;
-    protected ?ClassGroupResolver $classGroupResolver                             = null;
+    protected ?GroupResolver $classGroupResolver                                  = null;
     protected ?ReflectionClassInstanceManager $reflectionClassInstanceManager     = null;
     protected ?SerializeInstanceManager $serializeInstanceManager                 = null;
+    protected ?AttributePropertyResolver $attributePropertyResolver               = null;
 
     public static function get(): SerializeContainer
     {
@@ -67,18 +69,22 @@ class SerializeContainer
         );
     }
 
-    public function classGroupResolver(): ClassGroupResolver
+    public function classGroupResolver(): GroupResolver
     {
-        return $this->classGroupResolver ??= new ClassGroupResolver(
+        return $this->classGroupResolver ??= new GroupResolver(
             CacheFactory::build()
         );
+    }
+
+    public function attributePropertyResolver(): AttributePropertyResolver
+    {
+        return $this->attributePropertyResolver ??= new AttributePropertyResolver(ConfigManager::getInstance());
     }
 
     public function reflectionClassInstanceManager(): ReflectionClassInstanceManager
     {
         return $this->reflectionClassInstanceManager ??= new ReflectionClassInstanceManager();
     }
-
 
     public function serializeInstanceManager(): SerializeInstanceManager
     {

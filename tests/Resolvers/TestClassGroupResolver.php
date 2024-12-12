@@ -1,21 +1,22 @@
 <?php
-use Astral\Serialize\Resolvers\ClassGroupResolver;
-use Astral\Serialize\Exceptions\NotFindGroupException;
+
+use Astral\Serialize\Exceptions\NotFoundGroupException;
+use Astral\Serialize\Resolvers\GroupResolver;
 use Psr\SimpleCache\CacheInterface;
 
-it('throws NotFindGroupException when groups do not exist', function () {
+it('throws NotFoundGroupException when groups do not exist', function () {
     $mockCache = mock(CacheInterface::class);
     $mockCache->shouldReceive('has')->andReturnUsing(fn ($key) => false);
     $mockCache->shouldReceive('get')->andReturnUsing(fn ($key) => []);
     $mockCache->shouldReceive('set')->andReturnUsing(fn ($key, $value) => true);
 
-    $resolver = new ClassGroupResolver($mockCache);
+    $resolver = new GroupResolver($mockCache);
 
     $reflection = $this->createMock(ReflectionClass::class);
     $reflection->method('getAttributes')->willReturn([]);
 
     $resolver->resolveExistsGroups($reflection, ['nonexistent']);
-})->throws(NotFindGroupException::class);
+})->throws(NotFoundGroupException::class);
 
 it('returns true when groups exist', function () {
     $mockCache = mock(CacheInterface::class);
@@ -43,8 +44,8 @@ it('returns true when groups exist', function () {
         }
     ]);
 
-    $resolver = new ClassGroupResolver($mockCache);
-    $result = $resolver->resolveExistsGroups($reflection, ['group1']);
+    $resolver = new GroupResolver($mockCache);
+    $result   = $resolver->resolveExistsGroups($reflection, ['group1']);
 
     expect($result)->toBeTrue();
 });
@@ -54,7 +55,7 @@ it('returns cached groups when available', function () {
     $mockCache->shouldReceive('has')->andReturnUsing(fn ($key) => true);
     $mockCache->shouldReceive('get')->andReturnUsing(fn ($key) => ['cached_group1', 'cached_group2']);
 
-    $resolver = new ClassGroupResolver($mockCache);
+    $resolver = new GroupResolver($mockCache);
 
     $reflection = $this->createMock(ReflectionClass::class);
 
@@ -69,7 +70,7 @@ it('generates correct cache keys for ReflectionClass', function () {
     $reflection = $this->createMock(ReflectionClass::class);
     $reflection->method('getName')->willReturn('TestClass');
 
-    $resolver = new ClassGroupResolver($mockCache);
+    $resolver = new GroupResolver($mockCache);
     $cacheKey = $resolver->getCacheKey($reflection);
 
     expect($cacheKey)->toBe('TestClass');
@@ -85,9 +86,8 @@ it('generates correct cache keys for ReflectionProperty', function () {
     $reflection->method('getDeclaringClass')->willReturn($declaringClass);
     $reflection->method('getName')->willReturn('testProperty');
 
-    $resolver = new ClassGroupResolver($mockCache);
+    $resolver = new GroupResolver($mockCache);
     $cacheKey = $resolver->getCacheKey($reflection);
 
     expect($cacheKey)->toBe('TestClass:testProperty');
 });
-

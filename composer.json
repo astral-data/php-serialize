@@ -33,7 +33,6 @@
         "friendsofphp/php-cs-fixer": "^3.0",
         "mockery/mockery": "^1.6",
         "phpbench/phpbench": "^1.2",
-        "phpunit/phpunit": "^10.0",
         "pestphp/pest": "^2.30"
     },
     "autoload": {

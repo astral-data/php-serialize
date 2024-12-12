@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace Astral\Serialize\Annotations;
 
+use Astral\Serialize\Contracts\Attribute\AttributePropertyResolver;
 use Attribute;
 
 #[Attribute(Attribute::TARGET_PROPERTY)]
-class OutIgnore
+class OutIgnore implements AttributePropertyResolver
 {
     public array $groups;
 

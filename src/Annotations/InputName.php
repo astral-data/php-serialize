@@ -4,19 +4,23 @@ declare(strict_types=1);
 
 namespace Astral\Serialize\Annotations;
 
+use Astral\Serialize\Contracts\Attribute\AttributePropertyResolver;
 use Attribute;
 
 /**
  * 映射前端的属性名称到后端的属性名称
  */
 #[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_CLASS)]
-class InputName
+class InputName implements AttributePropertyResolver
 {
-    /** @var string 转换的名称 */
     public string $name;
 
-    public function __construct(string $name)
+    public array $groups;
+
+    public function __construct(string $name, array|string $groups = [])
     {
-        $this->name = $name;
+
+        $this->name   = $name;
+        $this->groups = is_string($groups) ? (array)$groups : $groups;
     }
 }

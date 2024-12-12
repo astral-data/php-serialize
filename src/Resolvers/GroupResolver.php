@@ -3,14 +3,13 @@
 namespace Astral\Serialize\Resolvers;
 
 use Astral\Serialize\Annotations\Groups;
-use Astral\Serialize\Context;
-use Astral\Serialize\Exceptions\NotFindGroupException;
+use Astral\Serialize\Exceptions\NotFoundGroupException;
 use Psr\SimpleCache\CacheInterface;
 use Psr\SimpleCache\InvalidArgumentException;
 use ReflectionClass;
 use ReflectionProperty;
 
-class ClassGroupResolver
+class GroupResolver
 {
     public function __construct(
         private readonly CacheInterface $cache
@@ -19,17 +18,17 @@ class ClassGroupResolver
     }
 
     /**
-     * @throws NotFindGroupException
+     * @throws NotFoundGroupException
      * @throws InvalidArgumentException
      */
     public function resolveExistsGroups(ReflectionClass|ReflectionProperty $reflection, string|array $groups): bool
     {
         $groups          = (array) $groups;
-        $availableGroups = array_merge([Context::DEFAULT_GROUP_NAME], $this->getGroupsTo($reflection));
-
+        $defaultGroup    =  $reflection instanceof ReflectionProperty ? $reflection->getDeclaringClass()->getName() : $reflection->getName();
+        $availableGroups = array_merge([$defaultGroup], $this->getGroupsTo($reflection));
 
         if(!empty(array_diff($groups, $availableGroups))) {
-            throw new NotFindGroupException(
+            throw new NotFoundGroupException(
                 sprintf('Invalid group(s) "%s" for %s', implode(',', array_diff($groups, $availableGroups)), $reflection->getName())
             );
         }

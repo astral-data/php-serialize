@@ -8,6 +8,7 @@ use BadMethodCallException;
 
 /**
  * @method static string|CacheDriverEnum getCacheDriver()
+ * @see ConfigManager::getCacheDriver
  */
 class Bootstrap
 {

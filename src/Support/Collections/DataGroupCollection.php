@@ -53,11 +53,19 @@ class DataGroupCollection
     /**
      * 合并另一个 DataGroupCollection
      */
-    public function merge(DataGroupCollection $other): void
+    public function merge(DataGroupCollection $collection): DataGroupCollection
     {
-        foreach ($other->getProperties() as $data) {
-            $this->put($data);
+        $cloneCollection = clone $this;
+        foreach ($collection->getProperties() as $property) {
+            $name = $property->getName();
+            if (!isset($cloneCollection->properties[$name])) {
+                $cloneCollection->properties[$name] = $property;
+            } else {
+                $cloneCollection->properties[$name] = $property->merge($property);
+            }
         }
+
+        return $cloneCollection;
     }
 
     public function toArray(): array
@@ -69,8 +77,18 @@ class DataGroupCollection
         ];
     }
 
+    public function getPropertiesName(): array
+    {
+        return collect($this->properties)->map(fn ($property) => $property->getName())->toArray();
+    }
+
     public function count(): int
     {
         return count($this->properties);
+    }
+
+    public function getPropertyTo(string $inputName): ?DataCollection
+    {
+        return collect($this->getProperties())->first(fn ($e) => in_array($inputName, $e->inputName)) ?? null;
     }
 }

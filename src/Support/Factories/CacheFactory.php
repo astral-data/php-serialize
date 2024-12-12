@@ -8,6 +8,7 @@ use Psr\SimpleCache\CacheInterface;
 class CacheFactory
 {
     private static ?CacheInterface $instance = null;
+
     public static function build(): CacheInterface
     {
         return self::$instance ??= new (Bootstrap::getCacheDriver());
