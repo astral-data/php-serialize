@@ -2,13 +2,13 @@
 
 namespace Astral\Serialize\Resolvers;
 
-use ReflectionProperty;
 use Astral\Serialize\Contracts\Attribute\DataCollectionCastInterface;
-use Astral\Serialize\Contracts\Attribute\InputValueCastInterface;
 use Astral\Serialize\Exceptions\NotFoundAttributePropertyResolver;
 use Astral\Serialize\Support\Collections\DataCollection;
 use Astral\Serialize\Support\Config\ConfigManager;
+use Illuminate\Support\Collection;
 use InvalidArgumentException;
+use ReflectionProperty;
 
 class DataCollectionCastResolver
 {
@@ -23,7 +23,7 @@ class DataCollectionCastResolver
      */
     public function resolve(DataCollection $dataCollection, ReflectionProperty $property): void
     {
-        $this->configManager->getAttributePropertyResolver()
+        (new Collection($this->configManager->getAttributePropertyResolver()))
             ->each(function (DataCollectionCastInterface $goalCast) use ($dataCollection) {
                 $goalCast->resolve($dataCollection);
             });

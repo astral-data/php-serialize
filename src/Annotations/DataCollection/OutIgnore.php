@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Astral\Serialize\Annotations\DataCollection;
 
-use ReflectionProperty;
 use Astral\Serialize\Contracts\Attribute\DataCollectionCastInterface;
 use Astral\Serialize\Support\Collections\DataCollection;
 use Attribute;
+use ReflectionProperty;
 
 #[Attribute(Attribute::TARGET_PROPERTY)]
 class OutIgnore implements DataCollectionCastInterface
@@ -19,9 +19,14 @@ class OutIgnore implements DataCollectionCastInterface
         $this->groups = $groups;
     }
 
+    private function shouldIgnore(string $groupName): bool
+    {
+        return in_array($groupName, $this->groups, true);
+    }
+
     public function resolve(DataCollection $dataCollection, ReflectionProperty|null $property = null): void
     {
-        if(!$this->groups || in_array($dataCollection->getParentGroupCollection()->getGroupName(), $this->groups)) {
+        if ($this->shouldIgnore($dataCollection->getParentGroupCollection()->getGroupName())) {
             $dataCollection->setOutIgnore(true);
         }
     }

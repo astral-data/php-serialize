@@ -2,8 +2,8 @@
 
 namespace Astral\Serialize\Contracts\Attribute;
 
-use ReflectionProperty;
 use Astral\Serialize\Support\Collections\DataCollection;
+use ReflectionProperty;
 
 interface DataCollectionCastInterface
 {

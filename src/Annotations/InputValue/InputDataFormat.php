@@ -7,6 +7,7 @@ namespace Astral\Serialize\Annotations\InputValue;
 use Astral\Serialize\Contracts\Attribute\InputValueCastInterface;
 use Astral\Serialize\Support\Collections\DataCollection;
 use Attribute;
+use DateTime;
 
 #[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_CLASS)]
 class InputDataFormat implements InputValueCastInterface
@@ -27,8 +28,9 @@ class InputDataFormat implements InputValueCastInterface
         $this->outFormat   = $outFormat;
     }
 
-    public function resolve(DataCollection $dataCollection, mixed $value): mixed
+    public function resolve(DataCollection $dataCollection, mixed $value): string
     {
-        // TODO: Implement resolve() method.
+        $dateTime = DateTime::createFromFormat($this->inputFormat, (string)$value);
+        return $dateTime !== false ? $dateTime->format($this->outFormat) : (string)$value;
     }
 }

@@ -7,6 +7,8 @@ use Astral\Serialize\Enums\TypeKindEnum;
 class TypeCollection
 {
     public TypeKindEnum $kind;
+
+    /** @var class-string $className */
     public ?string $className;
 
     public function __construct(TypeKindEnum $kind, ?string $className = null)

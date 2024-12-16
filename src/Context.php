@@ -149,7 +149,7 @@ class Context
 
             $typeCollections = SerializeContainer::get()->typeCollectionManager()->getCollectionTo($property);
             $dataCollection->setType(...$typeCollections);
-            $this->dataCollectionCastResolver->resolve($dataCollection,$property);
+            $this->dataCollectionCastResolver->resolve($dataCollection, $property);
 
             $this->assembleChildren(
                 dataCollection: $dataCollection,

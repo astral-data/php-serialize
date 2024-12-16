@@ -2,26 +2,30 @@
 
 namespace Astral\Serialize\Support\Config;
 
+use Astral\Serialize\Cast\OutValueEnumCast;
 use Astral\Serialize\Contracts\Attribute\DataCollectionCastInterface;
+use Astral\Serialize\Contracts\Attribute\InputValueCastInterface;
+use Astral\Serialize\Contracts\Attribute\OutValueCastInterface;
 use Astral\Serialize\Enums\CacheDriverEnum;
 use Astral\Serialize\Exceptions\NotFoundAttributePropertyResolver;
 use Astral\Serialize\Support\Caching\MemoryCache;
-use Illuminate\Support\Collection;
 
 class ConfigManager
 {
     public static ConfigManager $instance;
 
-    private Collection $attributePropertyResolver;
+    /** @var DataCollectionCastInterface[] $attributePropertyResolver */
+    private array $attributePropertyResolver = [];
 
-    private array $inputValueCasts = [
+    /** @var InputValueCastInterface[] $inputValueCasts */
+    private array $inputValueCasts = [];
 
-    ];
-
+    /** @var OutValueCastInterface[] $outputValueCasts */
     private array $outputValueCasts = [
-
+        OutValueEnumCast::class
     ];
 
+    /** @var CacheDriverEnum|class-string $cacheDriver */
     private string|CacheDriverEnum $cacheDriver = MemoryCache::class;
 
     public static function getInstance(): ConfigManager
@@ -37,29 +41,50 @@ class ConfigManager
         if(is_string($resolverClass) && !is_subclass_of($resolverClass, DataCollectionCastInterface::class)) {
             throw new NotFoundAttributePropertyResolver('Resolver class must be an instance of DataCollectionCastInterface');
         }
+        $this->attributePropertyResolver[] = (is_string($resolverClass) ? new $resolverClass() : $resolverClass);
 
-        $this->getAttributePropertyResolver()->push(is_string($resolverClass) ? new $resolverClass() : $resolverClass);
         return $this;
     }
 
     /**
-     * @return Collection
+     * @throws NotFoundAttributePropertyResolver
      */
-    public function getAttributePropertyResolver(): Collection
+    public function addOutputValueCasts(OutValueCastInterface|string $castClass): static
     {
-        return $this->attributePropertyResolver ??= new Collection();
-    }
-
-    public function setTransFromClass($val): static
-    {
-        $this->transFromClass[$val] = $val;
+        if(is_string($castClass) && !is_subclass_of($castClass, OutValueCastInterface::class)) {
+            throw new NotFoundAttributePropertyResolver('Resolver class must be an instance of OutValueCastInterface');
+        }
+        $this->outputValueCasts[] = (is_string($castClass) ? new $castClass() : $castClass);
 
         return $this;
     }
 
-    public function getTransFromClass(): array
+    /**
+     * @throws NotFoundAttributePropertyResolver
+     */
+    public function addInputValueCasts(InputValueCastInterface|string $castClass): static
     {
-        return $this->transFromClass;
+        if(is_string($castClass) && !is_subclass_of($castClass, InputValueCastInterface::class)) {
+            throw new NotFoundAttributePropertyResolver('Resolver class must be an instance of InputValueCastInterface');
+        }
+        $this->inputValueCasts[] = (is_string($castClass) ? new $castClass() : $castClass);
+
+        return $this;
+    }
+
+    public function getAttributePropertyResolver(): array
+    {
+        return $this->attributePropertyResolver;
+    }
+
+    public function getInputValueCasts(): array
+    {
+        return $this->inputValueCasts;
+    }
+
+    public function getOutValueCasts(): array
+    {
+        return $this->outputValueCasts;
     }
 
     public function getCacheDriver(): string

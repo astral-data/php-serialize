@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Astral\Serialize\Annotations\DataCollection;
 
-use ReflectionProperty;
 use Astral\Serialize\Contracts\Attribute\DataCollectionCastInterface;
 use Astral\Serialize\Support\Collections\DataCollection;
 use Attribute;
+use ReflectionProperty;
 
 /**
  * 映射前端的属性名称到后端的属性名称
