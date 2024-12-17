@@ -21,16 +21,20 @@ class GroupResolver
      * @throws NotFoundGroupException
      * @throws InvalidArgumentException
      */
-    public function resolveExistsGroups(ReflectionClass|ReflectionProperty $reflection, string|array $groups): bool
+    public function resolveExistsGroups(ReflectionClass|ReflectionProperty $reflection, string $defaultGroup, string|array $groups): bool
     {
-        $groups          = (array) $groups;
-        $defaultGroup    =  $reflection instanceof ReflectionProperty ? $reflection->getDeclaringClass()->getName() : $reflection->getName();
-        $availableGroups = array_merge([$defaultGroup], $this->getGroupsTo($reflection));
 
-        if(!empty(array_diff($groups, $availableGroups))) {
-            throw new NotFoundGroupException(
-                sprintf('Invalid group(s) "%s" for %s', implode(',', array_diff($groups, $availableGroups)), $reflection->getName())
-            );
+        $groups          = (array) $groups;
+        $availableGroups = array_merge([$defaultGroup], $this->getGroupsTo($reflection));
+        $invalidGroups = array_filter($groups, fn ($group) => !in_array($group, $availableGroups, true));
+
+        if ($invalidGroups) {
+            throw new NotFoundGroupException(sprintf(
+                'Invalid group(s) "%s" for %s. Available groups: [%s]',
+                implode(',', $invalidGroups),
+                $reflection->getName(),
+                implode(',', $availableGroups)
+            ));
         }
 
         return true;
@@ -39,10 +43,10 @@ class GroupResolver
     /**
      * @throws InvalidArgumentException
      */
-    public function getGroupsTo(ReflectionClass|ReflectionProperty $reflection)
+    public function getGroupsTo(ReflectionClass|ReflectionProperty $reflection): array
     {
         $cacheKey = $this->getCacheKey($reflection);
-        if($this->cache->has($cacheKey)) {
+        if ($this->cache->has($cacheKey)) {
             return $this->cache->get($cacheKey);
         }
 

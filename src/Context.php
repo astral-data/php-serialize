@@ -6,6 +6,7 @@ use Astral\Serialize\Exceptions\NotFoundAttributePropertyResolver;
 use Astral\Serialize\Exceptions\NotFoundGroupException;
 use Astral\Serialize\Resolvers\DataCollectionCastResolver;
 use Astral\Serialize\Resolvers\GroupResolver;
+use Astral\Serialize\Resolvers\PropertyInputValueResolver;
 use Astral\Serialize\Support\Collections\DataCollection;
 use Astral\Serialize\Support\Collections\DataGroupCollection;
 use Astral\Serialize\Support\Instance\ReflectionClassInstanceManager;
@@ -17,27 +18,17 @@ use RuntimeException;
 
 class Context
 {
-    private string $serializeClassName;
-    private array $groups;
-    private object $serialize;
+    private array $groups = [];
 
     public function __construct(
+        private object                                  $serialize,
+        private readonly string                         $serializeClassName,
         private readonly CacheInterface                 $cache,
         private readonly ReflectionClassInstanceManager $reflectionClassInstanceManager,
         private readonly GroupResolver                  $classGroupResolver,
         private readonly DataCollectionCastResolver     $dataCollectionCastResolver,
+        private readonly PropertyInputValueResolver     $propertyInputValueResolver,
     ) {
-    }
-
-    public function setClassName($className): static
-    {
-        $this->serializeClassName = $className;
-        return $this;
-    }
-
-    public function getSerialize(): string
-    {
-        return $this->serializeClassName;
     }
 
     /**
@@ -48,7 +39,7 @@ class Context
     public function setGroups(array $groups): static
     {
         $reflectionClass = $this->reflectionClassInstanceManager->get($this->serializeClassName);
-        $this->classGroupResolver->resolveExistsGroups($reflectionClass, $groups);
+        $this->classGroupResolver->resolveExistsGroups($reflectionClass, $this->serializeClassName, $groups);
         $this->groups = $groups;
 
         return $this;
@@ -135,7 +126,7 @@ class Context
         foreach ($reflectionClass->getProperties(ReflectionProperty::IS_PUBLIC) as $property) {
 
             // group filter
-            if(!$this->classGroupResolver->resolveExistsGroups($property, $groupName)) {
+            if (!$this->classGroupResolver->resolveExistsGroups($property, $this->serializeClassName, $groupName)) {
                 continue;
             }
 
@@ -182,7 +173,7 @@ class Context
         int $currentDepth
     ): void {
 
-        if($dataCollection->getInputIgnore()) {
+        if ($dataCollection->getInputIgnore()) {
             return;
         }
 
@@ -205,21 +196,13 @@ class Context
      * @throws NotFoundGroupException
      * @throws InvalidArgumentException
      */
-    public function setPayload(... $payload): void
+    public function from(... $payload): object
     {
-        $groupCollection = $this->getGroupCollection();
-
-        foreach ($payload as $field => $value) {
-            if(is_array($value)) {
-                $this->setPayload($value);
-                continue;
-            }
-
-            print_r($field . ':' . $value);
-
+        foreach ($payload as $itemPayload) {
+            $this->propertyInputValueResolver->resolve($this->serialize, $this->getGroupCollection(), $itemPayload);
         }
 
-
+        return $this->serialize;
     }
 
     public function toArray()

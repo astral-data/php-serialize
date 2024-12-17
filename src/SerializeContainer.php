@@ -4,6 +4,8 @@ namespace Astral\Serialize;
 
 use Astral\Serialize\Resolvers\DataCollectionCastResolver;
 use Astral\Serialize\Resolvers\GroupResolver;
+use Astral\Serialize\Resolvers\InputValueCastResolver;
+use Astral\Serialize\Resolvers\PropertyInputValueResolver;
 use Astral\Serialize\Resolvers\PropertyTypeDocResolver;
 use Astral\Serialize\Resolvers\PropertyTypesContextResolver;
 use Astral\Serialize\Support\Collections\TypeCollectionManager;
@@ -29,6 +31,10 @@ class SerializeContainer
     protected ?ReflectionClassInstanceManager $reflectionClassInstanceManager      = null;
     protected ?SerializeInstanceManager $serializeInstanceManager                  = null;
     protected ?DataCollectionCastResolver $attributePropertyResolver               = null;
+
+    protected ?PropertyInputValueResolver $propertyInputValueResolver = null;
+
+    protected ?InputValueCastResolver $inputValueCastResolver               = null;
 
     public static function get(): SerializeContainer
     {
@@ -84,6 +90,16 @@ class SerializeContainer
     public function reflectionClassInstanceManager(): ReflectionClassInstanceManager
     {
         return $this->reflectionClassInstanceManager ??= new ReflectionClassInstanceManager();
+    }
+
+    public function propertyInputValueResolver(): PropertyInputValueResolver
+    {
+        return $this->propertyInputValueResolver ??= new PropertyInputValueResolver(ConfigManager::getInstance(), $this->inputValueCastResolver());
+    }
+
+    public function inputValueCastResolver(): InputValueCastResolver
+    {
+        return $this->inputValueCastResolver ??= new InputValueCastResolver(ConfigManager::getInstance());
     }
 
     public function serializeInstanceManager(): SerializeInstanceManager

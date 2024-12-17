@@ -36,7 +36,7 @@ class OutDataFormat implements OutValueCastInterface
     public function resolve(DataCollection $dataCollection, mixed $value): mixed
     {
 
-        if($value instanceof DateTimeInterface) {
+        if ($value instanceof DateTimeInterface) {
             return $value->format($this->format);
         } elseif (is_numeric($value)) {
             return date($this->format, $value);

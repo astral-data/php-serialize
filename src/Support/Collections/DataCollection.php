@@ -7,9 +7,9 @@ class DataCollection
     /** @var TypeCollection[] */
     private array $type;
 
-    private array $inputName;
+    private array $inputName = [];
 
-    private array $outName;
+    private array $outName = [];
 
     private bool $inputIgnore = false;
 

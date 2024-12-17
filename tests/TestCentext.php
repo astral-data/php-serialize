@@ -6,7 +6,7 @@ use Astral\Serialize\Tests\TestRequest\TypeOneDoc;
 
 beforeEach(function () {
     /** @var Context $this */
-    $this->context = ContextFactory::build(TypeOneDoc::class, []);
+//    $this->context = ContextFactory::build(TypeOneDoc::class, []);
 });
 
 it('test parse serialize class', function () {
@@ -16,10 +16,9 @@ it('test parse serialize class', function () {
 
     //    $result =  $this->context->parseSerializeClass(Context::DEFAULT_GROUP_NAME, TypeOneDoc::class);
 
-    $object           = new TypeOneDoc();
-    $object->type_int = 22;
-    $std              = new StdClass();
-    $this->context->setPayload($object);
+    $object  = TypeOneDoc::from(['type_string' => 'test_string','type_object' => new StdClass(),'type_int' => 11]);
+    print_r($object);
+
 
     // 记录测试结束后的内存使用
     $endMemory = memory_get_usage();

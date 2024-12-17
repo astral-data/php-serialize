@@ -13,29 +13,35 @@ use Astral\Serialize\Support\Factories\ContextFactory;
  */
 abstract class Serialize
 {
-    protected ?Context $_context = null;
+    private ?Context $_context = null;
 
     /**
      */
     protected function getContext(): Context
     {
-        return $this->_context ??= ContextFactory::build(static::class);
+        return $this->_context ??= ContextFactory::build(static::class, $this);
     }
 
     public function __call($name, $args)
     {
-        $instances = $this->getContext(); // 调用实例的上下文
-        $instances->{$name}(...$args);
+        $this->getContext()->{$name}(...$args);
 
-        return $instances;
+        return $this;
     }
 
     public static function __callStatic($name, $args)
     {
         $instance  = new static(); // 创建当前类的实例
-        $instances = $instance->getContext(); // 获取实例的上下文
-        $instances->{$name}(...$args);
+        $instance->getContext()->{$name}(...$args);
 
-        return $instances;
+        return $instance;
+    }
+
+    public function __debugInfo()
+    {
+        $res = get_object_vars($this);
+        $res['_context'] = null;
+
+        return $res;
     }
 }

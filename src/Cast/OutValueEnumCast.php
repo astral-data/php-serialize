@@ -12,7 +12,7 @@ class OutValueEnumCast implements OutValueCastInterface
 {
     public function resolve(DataCollection $dataCollection, mixed $value): string
     {
-        if($value instanceof UnitEnum) {
+        if ($value instanceof UnitEnum) {
             return $value->name;
         }
 

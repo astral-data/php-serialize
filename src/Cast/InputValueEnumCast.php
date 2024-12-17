@@ -4,34 +4,34 @@ declare(strict_types=1);
 
 namespace Astral\Serialize\Cast;
 
-use UnitEnum;
+use Astral\Serialize\Contracts\Attribute\InputValueCastInterface;
 use Astral\Serialize\Enums\TypeKindEnum;
 use Astral\Serialize\Exceptions\ValueCastError;
-use Astral\Serialize\Contracts\Attribute\InputValueCastInterface;
 use Astral\Serialize\Support\Collections\DataCollection;
 use BackedEnum;
+use UnitEnum;
 
 class InputValueEnumCast implements InputValueCastInterface
 {
     /**
      * @throws ValueCastError
      */
-    public function resolve(DataCollection $dataCollection, mixed $value): string
+    public function resolve(mixed $value, DataCollection $dataCollection): string
     {
         if (is_string($value) && $dataCollection->getType()) {
             $enumClasses = [];
-            $name = null;
+            $name        = null;
             foreach ($dataCollection->getType() as $type) {
                 if ($type->kind === TypeKindEnum::ENUM) {
                     $enumClasses[] = $type->className;
-                    $enumInstance = $this->findEnumInstance($type->className, $value);
+                    $enumInstance  = $this->findEnumInstance($type->className, $value);
                     if ($enumInstance) {
                         return $enumInstance->name;
                     }
                 }
             }
 
-            if(count($dataCollection->getType()) === 1 && $enumClasses && $name === null) {
+            if (count($dataCollection->getType()) === 1 && $enumClasses && $name === null) {
                 throw new ValueCastError(
                     sprintf(
                         'Enum value "%s" not found in classes: %s',

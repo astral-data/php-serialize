@@ -9,14 +9,16 @@ class ContextFactory
 {
     /**
      */
-    public static function build(string $className): Context
+    public static function build(string $className, object $object): Context
     {
         return (new Context(
-            CacheFactory::build(),
-            SerializeContainer::get()->reflectionClassInstanceManager(),
-            SerializeContainer::get()->classGroupResolver(),
-            SerializeContainer::get()->attributePropertyResolver()
-        ))
-        ->setClassName($className);
+            serialize:$object,
+            serializeClassName:$className,
+            cache:CacheFactory::build(),
+            reflectionClassInstanceManager:SerializeContainer::get()->reflectionClassInstanceManager(),
+            classGroupResolver:SerializeContainer::get()->classGroupResolver(),
+            dataCollectionCastResolver:SerializeContainer::get()->attributePropertyResolver(),
+            propertyInputValueResolver:SerializeContainer::get()->propertyInputValueResolver()
+        ));
     }
 }

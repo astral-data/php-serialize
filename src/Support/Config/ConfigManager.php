@@ -38,7 +38,7 @@ class ConfigManager
      */
     public function addAttributePropertyResolver(DataCollectionCastInterface|string $resolverClass): static
     {
-        if(is_string($resolverClass) && !is_subclass_of($resolverClass, DataCollectionCastInterface::class)) {
+        if (is_string($resolverClass) && !is_subclass_of($resolverClass, DataCollectionCastInterface::class)) {
             throw new NotFoundAttributePropertyResolver('Resolver class must be an instance of DataCollectionCastInterface');
         }
         $this->attributePropertyResolver[] = (is_string($resolverClass) ? new $resolverClass() : $resolverClass);
@@ -51,7 +51,7 @@ class ConfigManager
      */
     public function addOutputValueCasts(OutValueCastInterface|string $castClass): static
     {
-        if(is_string($castClass) && !is_subclass_of($castClass, OutValueCastInterface::class)) {
+        if (is_string($castClass) && !is_subclass_of($castClass, OutValueCastInterface::class)) {
             throw new NotFoundAttributePropertyResolver('Resolver class must be an instance of OutValueCastInterface');
         }
         $this->outputValueCasts[] = (is_string($castClass) ? new $castClass() : $castClass);
@@ -64,7 +64,7 @@ class ConfigManager
      */
     public function addInputValueCasts(InputValueCastInterface|string $castClass): static
     {
-        if(is_string($castClass) && !is_subclass_of($castClass, InputValueCastInterface::class)) {
+        if (is_string($castClass) && !is_subclass_of($castClass, InputValueCastInterface::class)) {
             throw new NotFoundAttributePropertyResolver('Resolver class must be an instance of InputValueCastInterface');
         }
         $this->inputValueCasts[] = (is_string($castClass) ? new $castClass() : $castClass);
@@ -89,7 +89,7 @@ class ConfigManager
 
     public function getCacheDriver(): string
     {
-        if($this->cacheDriver instanceof CacheDriverEnum) {
+        if ($this->cacheDriver instanceof CacheDriverEnum) {
             return $this->cacheDriver->value;
         }
 

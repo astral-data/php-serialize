@@ -6,5 +6,5 @@ use Astral\Serialize\Support\Collections\DataCollection;
 
 interface InputValueCastInterface
 {
-    public function resolve(DataCollection $dataCollection, mixed $value): mixed;
+    public function resolve(mixed $value, DataCollection $dataCollection): mixed;
 }

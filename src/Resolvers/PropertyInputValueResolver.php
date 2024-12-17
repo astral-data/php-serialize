@@ -2,57 +2,93 @@
 
 namespace Astral\Serialize\Resolvers;
 
-use InvalidArgumentException;
+use Astral\Serialize\Exceptions\NotFoundAttributePropertyResolver;
 use Astral\Serialize\Support\Collections\DataCollection;
 use Astral\Serialize\Support\Collections\DataGroupCollection;
 use Astral\Serialize\Support\Collections\TypeCollection;
+use Astral\Serialize\Support\Config\ConfigManager;
 use Illuminate\Support\Collection;
 
 class PropertyInputValueResolver
 {
-    public function resolve(object|string $serialize, DataGroupCollection $groupCollection, array $payload): object
+    public function __construct(
+        private readonly ConfigManager $configManager,
+        private readonly InputValueCastResolver $inputValueCastResolver,
+    ) {
+
+    }
+
+    /**
+     * @throws NotFoundAttributePropertyResolver
+     */
+    public function resolve(string|object $serialize, DataGroupCollection $groupCollection, array $payload): object
     {
         // 获取对象实例
         $object = is_string($serialize) ? new $serialize() : $serialize;
 
-        // 获取 payload 的所有键
         $payloadKeys = array_keys($payload);
 
         // 遍历所有属性集合
         foreach ($groupCollection->getProperties() as $collection) {
+
             // 跳过需要忽略的输入
             if ($collection->getInputIgnore()) {
                 continue;
             }
 
-            // 检查 getInputName 的所有值是否都存在于 payloadKeys 中
-            $inputNames    = $collection->getInputName();
-            $matchedValues = array_intersect_key($payload, array_flip($inputNames));
-            // 如果没有完全匹配，进行处理
-            if (count($matchedValues) !== count($inputNames)) {
+            $inputName = $this->inputNameValid($collection, $payloadKeys);
+
+            if ($inputName === false) {
                 continue;
             }
 
-            // 解析值
-            $resolvedValue = $this->resolveValue($collection, $matchedValues);
-            $propertyName  = $collection->getName();
 
-            // 动态设置对象的属性
-            if (property_exists($object, $propertyName)) {
-                $object->{$propertyName} = $resolvedValue;
-            } else {
-                // 如果属性不存在，可以选择抛出异常或者跳过
-                throw new InvalidArgumentException("Property '{$propertyName}' does not exist in the given object.");
+            $resolvedValue = $this->resolveValue($collection, $payload[$inputName]);
+
+            // exec input value cast
+            foreach ($this->configManager->getInputValueCasts() as $cast) {
+                $resolvedValue = $cast->resolve($resolvedValue, $collection);
             }
+            $this->inputValueCastResolver->resolve($resolvedValue, $collection);
+
+            $object->{$collection->getName()} = $resolvedValue;
 
         }
 
         return $object;
     }
 
+    private function inputNameValid(DataCollection $collection, array &$payloadKeys): false|string
+    {
+        $inputNames = $collection->getInputName();
+
+
+        if (!$inputNames && in_array($collection->getName(), $payloadKeys)) {
+            unset($payloadKeys[$collection->getName()]);
+            return $collection->getName();
+        }
+
+
+        if (count($inputNames) === 1 && in_array($inputNames[0], $payloadKeys)) {
+            unset($payloadKeys[$inputNames[0]]);
+            return $collection->getName();
+        }
+
+        $intersect = array_intersect($inputNames, $payloadKeys)[0] ?? false;
+        if ($intersect !== false) {
+            unset($payloadKeys[$intersect]);
+            return $intersect;
+        }
+
+        return false;
+    }
+
+    /**
+     * @throws NotFoundAttributePropertyResolver
+     */
     private function resolveValue(DataCollection $collection, $value): mixed
     {
-        if (is_array($value) && collect($collection->getType())->first(fn (TypeCollection $e) => $e->kind->existsClass())) {
+        if ($value && is_array($value) && collect($collection->getType())->first(fn (TypeCollection $e) => $e->kind->existsClass())) {
 
             /** @var Collection<DataGroupCollection> $children */
             $children = collect($collection->getChildren());
@@ -64,7 +100,7 @@ class PropertyInputValueResolver
 
             $bestMatchClass = $children
                 ->mapWithKeys(function (DataGroupCollection $child) use ($value) {
-                    $fields = $child->getPropertiesName(); // 假设子类有一个方法获取字段名列表
+                    $fields     = $child->getPropertiesName(); // 假设子类有一个方法获取字段名列表
                     $matchScore = count(array_intersect($fields, array_keys($value)));
                     return [$child->getClassName() => $matchScore];
                 })
@@ -73,7 +109,7 @@ class PropertyInputValueResolver
                 ->first(); // 获取匹配度最高的子元素
 
             if (!$bestMatchClass) {
-                return null;
+                return $value;
             }
 
             $child = $children->first(fn ($e) => $e->getClassName() === $bestMatchClass);

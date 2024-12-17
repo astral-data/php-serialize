@@ -2,14 +2,13 @@
 
 namespace Astral\Serialize\Resolvers;
 
-use Astral\Serialize\Contracts\Attribute\DataCollectionCastInterface;
+use Astral\Serialize\Contracts\Attribute\InputValueCastInterface;
 use Astral\Serialize\Exceptions\NotFoundAttributePropertyResolver;
 use Astral\Serialize\Support\Collections\DataCollection;
 use Astral\Serialize\Support\Config\ConfigManager;
 use InvalidArgumentException;
-use ReflectionProperty;
 
-class DataCollectionCastResolver
+class InputValueCastResolver
 {
     public function __construct(
         private readonly ConfigManager $configManager
@@ -20,7 +19,7 @@ class DataCollectionCastResolver
     /**
      * @throws NotFoundAttributePropertyResolver
      */
-    public function resolve(DataCollection $dataCollection, ReflectionProperty $property): void
+    public function resolve(mixed $value, DataCollection $dataCollection): mixed
     {
 
         foreach ($this->configManager->getAttributePropertyResolver() as $cast) {
@@ -30,12 +29,14 @@ class DataCollectionCastResolver
         $attributes =  $dataCollection->getAttributes();
 
         if (!$attributes) {
-            return;
+            return $value;
         }
 
         foreach ($attributes as $attribute) {
-            $this->resolveCast($attribute->newInstance(), $dataCollection);
+            $value = $this->resolveCast($attribute->newInstance(), $dataCollection, $value);
         }
+
+        return $value;
     }
 
     /**
@@ -43,7 +44,7 @@ class DataCollectionCastResolver
      *
      * @throws InvalidArgumentException
      */
-    private function resolveCast(object $cast, DataCollection $dataCollection): void
+    private function resolveCast(object $cast, DataCollection $dataCollection, mixed $value): mixed
     {
         if (!is_object($cast)) {
             throw new InvalidArgumentException(sprintf(
@@ -52,8 +53,10 @@ class DataCollectionCastResolver
             ));
         }
 
-        if (is_subclass_of($cast, DataCollectionCastInterface::class)) {
-            $cast->resolve($dataCollection);
+        if (is_subclass_of($cast, InputValueCastInterface::class)) {
+            return  $cast->resolve($value, $dataCollection);
         }
+
+        return  $value;
     }
 }
