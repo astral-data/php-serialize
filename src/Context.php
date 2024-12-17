@@ -196,13 +196,11 @@ class Context
      * @throws NotFoundGroupException
      * @throws InvalidArgumentException
      */
-    public function from(... $payload): object
+    public function from(... $payload): void
     {
         foreach ($payload as $itemPayload) {
             $this->propertyInputValueResolver->resolve($this->serialize, $this->getGroupCollection(), $itemPayload);
         }
-
-        return $this->serialize;
     }
 
     public function toArray()
