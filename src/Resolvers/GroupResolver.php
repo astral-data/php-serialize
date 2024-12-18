@@ -26,7 +26,7 @@ class GroupResolver
 
         $groups          = (array) $groups;
         $availableGroups = array_merge([$defaultGroup], $this->getGroupsTo($reflection));
-        $invalidGroups = array_filter($groups, fn ($group) => !in_array($group, $availableGroups, true));
+        $invalidGroups   = array_filter($groups, fn ($group) => !in_array($group, $availableGroups, true));
 
         if ($invalidGroups) {
             throw new NotFoundGroupException(sprintf(

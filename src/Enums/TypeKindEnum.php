@@ -38,8 +38,8 @@ enum TypeKindEnum
 
         return match ($type) {
             'string' => self::STRING,
-            'int'    => self::INT,
-            'float'  => self::FLOAT,
+            'int' ,'integer'   => self::INT,
+            'double', 'float' => self::FLOAT,
             'bool'   => self::BOOLEAN,
             'array'  => self::ARRAY,
             'object' => self::OBJECT,

@@ -25,7 +25,6 @@ abstract class Serialize
     public function __call($name, $args)
     {
         $this->getContext()->{$name}(...$args);
-
         return $this;
     }
 
@@ -39,7 +38,7 @@ abstract class Serialize
 
     public function __debugInfo()
     {
-        $res = get_object_vars($this);
+        $res             = get_object_vars($this);
         $res['_context'] = null;
 
         return $res;

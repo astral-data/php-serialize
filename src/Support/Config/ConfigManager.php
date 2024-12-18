@@ -3,12 +3,16 @@
 namespace Astral\Serialize\Support\Config;
 
 use Astral\Serialize\Cast\OutValueEnumCast;
-use Astral\Serialize\Contracts\Attribute\DataCollectionCastInterface;
-use Astral\Serialize\Contracts\Attribute\InputValueCastInterface;
-use Astral\Serialize\Contracts\Attribute\OutValueCastInterface;
 use Astral\Serialize\Enums\CacheDriverEnum;
-use Astral\Serialize\Exceptions\NotFoundAttributePropertyResolver;
 use Astral\Serialize\Support\Caching\MemoryCache;
+use Astral\Serialize\Cast\InputValue\InputValueEnumCast;
+use Astral\Serialize\Cast\InputValue\InputValueSetTypeCast;
+use Astral\Serialize\Contracts\Attribute\OutValueCastInterface;
+use Astral\Serialize\Cast\InputValue\InputValueSingleChildCast;
+use Astral\Serialize\Contracts\Attribute\InputValueCastInterface;
+use Astral\Serialize\Exceptions\NotFoundAttributePropertyResolver;
+use Astral\Serialize\Cast\InputValue\InputValueBestMatchChildCast;
+use Astral\Serialize\Contracts\Attribute\DataCollectionCastInterface;
 
 class ConfigManager
 {
@@ -18,7 +22,12 @@ class ConfigManager
     private array $attributePropertyResolver = [];
 
     /** @var InputValueCastInterface[] $inputValueCasts */
-    private array $inputValueCasts = [];
+    private array $inputValueCasts = [
+        InputValueSingleChildCast::class,
+        InputValueBestMatchChildCast::class,
+        InputValueSetTypeCast::class,
+        InputValueEnumCast::class,
+    ];
 
     /** @var OutValueCastInterface[] $outputValueCasts */
     private array $outputValueCasts = [
@@ -27,6 +36,18 @@ class ConfigManager
 
     /** @var CacheDriverEnum|class-string $cacheDriver */
     private string|CacheDriverEnum $cacheDriver = MemoryCache::class;
+
+    public function __construct()
+    {
+        foreach ($this->inputValueCasts as $key => $cast) {
+            $this->inputValueCasts[$key] = new $cast();
+        }
+
+        foreach ($this->outputValueCasts as $key => $cast) {
+            $this->outputValueCasts[$key] = new $cast();
+        }
+
+    }
 
     public static function getInstance(): ConfigManager
     {

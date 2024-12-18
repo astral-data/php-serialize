@@ -79,7 +79,7 @@ class DataGroupCollection
 
     public function getPropertiesName(): array
     {
-        return collect($this->properties)->map(fn ($property) => $property->getName())->toArray();
+        return array_map(fn ($property) => $property->getName(), $this->properties);
     }
 
     public function count(): int

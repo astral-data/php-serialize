@@ -53,8 +53,12 @@ class InputValueCastResolver
             ));
         }
 
-        if (is_subclass_of($cast, InputValueCastInterface::class)) {
-            return  $cast->resolve($value, $dataCollection);
+        if (!is_subclass_of($cast, InputValueCastInterface::class)) {
+            return $value;
+        }
+
+        if ($cast->match($value, $dataCollection)) {
+            return $cast->resolve($value, $dataCollection);
         }
 
         return  $value;

@@ -28,9 +28,15 @@ class InputDataFormat implements InputValueCastInterface
         $this->outFormat   = $outFormat;
     }
 
-    public function resolve(mixed $value, DataCollection $dataCollection): string
+    public function match(mixed $value, DataCollection $collection): bool
+    {
+        return true;
+    }
+
+    public function resolve(mixed $value, DataCollection $collection): string
     {
         $dateTime = DateTime::createFromFormat($this->inputFormat, (string)$value);
         return $dateTime !== false ? $dateTime->format($this->outFormat) : (string)$value;
     }
+
 }

@@ -21,7 +21,7 @@ class Context
     private array $groups = [];
 
     public function __construct(
-        private object                                  $serialize,
+        private readonly object                         $serialize,
         private readonly string                         $serializeClassName,
         private readonly CacheInterface                 $cache,
         private readonly ReflectionClassInstanceManager $reflectionClassInstanceManager,
@@ -198,9 +198,13 @@ class Context
      */
     public function from(... $payload): void
     {
-        foreach ($payload as $itemPayload) {
-            $this->propertyInputValueResolver->resolve($this->serialize, $this->getGroupCollection(), $itemPayload);
+        $payloads = [];
+        foreach ($payload as $field => $itemPayload) {
+            $values = is_array($itemPayload)  || is_object($itemPayload) ? $itemPayload : [$field => $itemPayload];
+            $payloads = array_merge($payloads, $values);
         }
+
+        $this->propertyInputValueResolver->resolve($this->serialize, $this->getGroupCollection(), $payloads);
     }
 
     public function toArray()

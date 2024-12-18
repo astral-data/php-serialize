@@ -2,20 +2,22 @@
 
 namespace Astral\Serialize;
 
-use Astral\Serialize\Resolvers\DataCollectionCastResolver;
+use phpDocumentor\Reflection\TypeResolver;
 use Astral\Serialize\Resolvers\GroupResolver;
+use phpDocumentor\Reflection\DocBlockFactory;
+use Astral\Serialize\Support\Config\ConfigManager;
+use phpDocumentor\Reflection\Types\ContextFactory;
+use Astral\Serialize\Support\Factories\CacheFactory;
 use Astral\Serialize\Resolvers\InputValueCastResolver;
-use Astral\Serialize\Resolvers\PropertyInputValueResolver;
 use Astral\Serialize\Resolvers\PropertyTypeDocResolver;
+use Astral\Serialize\Resolvers\DataCollectionCastResolver;
+use Astral\Serialize\Resolvers\PropertyInputValueResolver;
 use Astral\Serialize\Resolvers\PropertyTypesContextResolver;
 use Astral\Serialize\Support\Collections\TypeCollectionManager;
-use Astral\Serialize\Support\Config\ConfigManager;
-use Astral\Serialize\Support\Factories\CacheFactory;
-use Astral\Serialize\Support\Instance\ReflectionClassInstanceManager;
 use Astral\Serialize\Support\Instance\SerializeInstanceManager;
-use phpDocumentor\Reflection\DocBlockFactory;
-use phpDocumentor\Reflection\TypeResolver;
-use phpDocumentor\Reflection\Types\ContextFactory;
+use Astral\Serialize\Support\Instance\ReflectionClassInstanceManager;
+use Astral\Serialize\Cast\InputValue\InputValueSingleChildCast;
+use Astral\Serialize\Cast\InputValue\InputValueBestMatchChildCast;
 
 class SerializeContainer
 {
@@ -35,6 +37,10 @@ class SerializeContainer
     protected ?PropertyInputValueResolver $propertyInputValueResolver = null;
 
     protected ?InputValueCastResolver $inputValueCastResolver               = null;
+
+    protected ?InputValueBestMatchChildCast $dataCollectionBestMatchChildResolveStrategy = null;
+
+    protected ?InputValueSingleChildCast $dataCollectionSingleChildResolveStrategy = null;
 
     public static function get(): SerializeContainer
     {
@@ -94,13 +100,31 @@ class SerializeContainer
 
     public function propertyInputValueResolver(): PropertyInputValueResolver
     {
-        return $this->propertyInputValueResolver ??= new PropertyInputValueResolver(ConfigManager::getInstance(), $this->inputValueCastResolver());
+        return $this->propertyInputValueResolver ??= new PropertyInputValueResolver(
+            configManager:ConfigManager::getInstance(),
+            inputValueCastResolver:$this->inputValueCastResolver(),
+//            strategies: [
+//                $this->dataCollectionBestMatchChildResolveStrategy(),
+//                $this->dataCollectionSingleChildResolveStrategy(),
+//            ],
+        );
     }
 
     public function inputValueCastResolver(): InputValueCastResolver
     {
         return $this->inputValueCastResolver ??= new InputValueCastResolver(ConfigManager::getInstance());
     }
+
+    public function dataCollectionBestMatchChildResolveStrategy(): InputValueBestMatchChildCast
+    {
+        return $this->dataCollectionBestMatchChildResolveStrategy ??= new InputValueBestMatchChildCast();
+    }
+
+    public function dataCollectionSingleChildResolveStrategy(): InputValueSingleChildCast
+    {
+        return $this->dataCollectionSingleChildResolveStrategy ??= new InputValueSingleChildCast();
+    }
+
 
     public function serializeInstanceManager(): SerializeInstanceManager
     {
