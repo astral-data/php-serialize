@@ -4,6 +4,7 @@ namespace Astral\Serialize\Enums;
 
 enum TypeKindEnum
 {
+    case MIXED;
     case STRING;
     case INT;
     case FLOAT;
@@ -43,6 +44,7 @@ enum TypeKindEnum
             'bool'   => self::BOOLEAN,
             'array'  => self::ARRAY,
             'object' => self::OBJECT,
+            'mixed' => self::MIXED,
         };
     }
 }

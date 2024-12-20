@@ -13,7 +13,7 @@ use DateTimeInterface;
  * toArray 输出值为 固定日期格式 默认 YYYY-MM-DD HH:ii:ss的日期格式
  */
 #[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_CLASS)]
-class OutDataFormat implements OutValueCastInterface
+class OutDateFormat implements OutValueCastInterface
 {
     /** @var string 日期格式 */
     public string $format = 'Y-m-d H:i:s';
@@ -33,7 +33,7 @@ class OutDataFormat implements OutValueCastInterface
         $this->isThrow = $isThrow;
     }
 
-    public function resolve(DataCollection $dataCollection, mixed $value): mixed
+    public function resolve(DataCollection $dataCollection, mixed $value): ?string
     {
 
         if ($value instanceof DateTimeInterface) {

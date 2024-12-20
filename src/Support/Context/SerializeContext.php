@@ -1,12 +1,13 @@
 <?php
 
-namespace Astral\Serialize;
+namespace Astral\Serialize\Support\Context;
 
 use Astral\Serialize\Exceptions\NotFoundAttributePropertyResolver;
 use Astral\Serialize\Exceptions\NotFoundGroupException;
 use Astral\Serialize\Resolvers\DataCollectionCastResolver;
 use Astral\Serialize\Resolvers\GroupResolver;
 use Astral\Serialize\Resolvers\PropertyInputValueResolver;
+use Astral\Serialize\SerializeContainer;
 use Astral\Serialize\Support\Collections\DataCollection;
 use Astral\Serialize\Support\Collections\DataGroupCollection;
 use Astral\Serialize\Support\Instance\ReflectionClassInstanceManager;
@@ -16,7 +17,7 @@ use ReflectionException;
 use ReflectionProperty;
 use RuntimeException;
 
-class Context
+class SerializeContext
 {
     private array $groups = [];
 
@@ -125,21 +126,23 @@ class Context
 
         foreach ($reflectionClass->getProperties(ReflectionProperty::IS_PUBLIC) as $property) {
 
-            // group filter
             if (!$this->classGroupResolver->resolveExistsGroups($property, $this->serializeClassName, $groupName)) {
                 continue;
             }
 
+
             $dataCollection = new DataCollection(
                 parentGroupCollection: $globalDataCollection,
                 name: $property->getName(),
-                nullable: $property->getType()->allowsNull(),
+                isNullable: $property->getType()?->allowsNull() ?? true,
                 defaultValue: $property->getDefaultValue(),
                 attributes: array_merge($property->getDeclaringClass()->getAttributes(), $property->getAttributes()),
+                property: $property,
+
             );
 
             $typeCollections = SerializeContainer::get()->typeCollectionManager()->getCollectionTo($property);
-            $dataCollection->setType(...$typeCollections);
+            $dataCollection->setTypes(...$typeCollections);
             $this->dataCollectionCastResolver->resolve($dataCollection, $property);
 
             $this->assembleChildren(
@@ -177,7 +180,7 @@ class Context
             return;
         }
 
-        foreach ($dataCollection->getType() as $type) {
+        foreach ($dataCollection->getTypes() as $type) {
             if ($type->kind->existsClass()) {
                 $childCollection = $this->parseSerializeClass(
                     groupName: $groupName,
@@ -200,7 +203,7 @@ class Context
     {
         $payloads = [];
         foreach ($payload as $field => $itemPayload) {
-            $values = is_array($itemPayload)  || is_object($itemPayload) ? $itemPayload : [$field => $itemPayload];
+            $values   = is_numeric($field) && is_array($itemPayload)  || is_object($itemPayload) ? $itemPayload : [$field => $itemPayload];
             $payloads = array_merge($payloads, $values);
         }
 

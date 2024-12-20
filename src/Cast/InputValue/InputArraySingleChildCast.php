@@ -2,29 +2,29 @@
 
 namespace Astral\Serialize\Cast\InputValue;
 
+use Astral\Serialize\Contracts\Attribute\InputValueCastInterface;
 use Astral\Serialize\Enums\TypeKindEnum;
+use Astral\Serialize\Exceptions\NotFoundAttributePropertyResolver;
 use Astral\Serialize\SerializeContainer;
 use Astral\Serialize\Support\Collections\DataCollection;
 use Astral\Serialize\Support\Collections\DataGroupCollection;
-use Astral\Serialize\Contracts\Attribute\InputValueCastInterface;
-use Astral\Serialize\Exceptions\NotFoundAttributePropertyResolver;
-use Astral\Serialize\Contracts\Resolve\Strategies\ResolveStrategyInterface;
+use Astral\Serialize\Support\Context\InputValueContext;
 
-class InputValueSingleChildCast implements InputValueCastInterface
+class InputArraySingleChildCast implements InputValueCastInterface
 {
-    public function match($value, DataCollection $collection): bool
+    public function match($value, DataCollection $collection, InputValueContext $context): bool
     {
-        return is_array($value) && count($collection->getChildren()) === 1 && $this->hasObjectType($collection);
+        return $value && is_array($value) && count($collection->getChildren()) === 1 && $this->hasObjectType($collection);
     }
 
     /**
      * @throws NotFoundAttributePropertyResolver
      */
-    public function resolve($value, DataCollection $collection): mixed
+    public function resolve($value, DataCollection $collection, InputValueContext $context): mixed
     {
 
-        $child = current($collection->getChildren());
-        $childType = $collection->getType()[0];
+        $child     = current($collection->getChildren());
+        $childType = $collection->getTypes()[0];
 
         $collection->setChooseType($childType);
 
@@ -46,7 +46,7 @@ class InputValueSingleChildCast implements InputValueCastInterface
 
     private function hasObjectType(DataCollection $collection): bool
     {
-        foreach ($collection->getType() as $type) {
+        foreach ($collection->getTypes() as $type) {
             if ($type->kind->existsClass()) {
                 return true;
             }

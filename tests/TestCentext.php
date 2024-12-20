@@ -1,12 +1,11 @@
 <?php
 
-use Astral\Serialize\Context;
-use Astral\Serialize\Support\Factories\ContextFactory;
+use Astral\Serialize\Support\Context\SerializeContext;
 use Astral\Serialize\Tests\TestRequest\Other\OtherTypeDoc;
 use Astral\Serialize\Tests\TestRequest\TypeOneDoc;
 
 beforeEach(function () {
-    /** @var Context $this */
+    /** @var SerializeContext $this */
     //    $this->context = ContextFactory::build(TypeOneDoc::class, []);
 });
 
@@ -40,11 +39,14 @@ it('test parse serialize class', function () {
     // 记录测试开始前的内存使用
     $startMemory = memory_get_usage();
 
-    //    $result =  $this->context->parseSerializeClass(Context::DEFAULT_GROUP_NAME, TypeOneDoc::class);
+    //    $result =  $this->context->parseSerializeClass(SerializeContext::DEFAULT_GROUP_NAME, TypeOneDoc::class);
 
     $object  = TypeOneDoc::from(
-        ['input_name' => [new OtherTypeDoc()],'type_string' => 'test_string','type_object' => new StdClass(),'type_int' => 11],
-        type_float:0.01
+        ['input_name' => [new OtherTypeDoc()],'type_string' => 'test_string','type_object' => new StdClass(),'type_int' => 11,'type_float' => 0.02],
+        type_float:null,
+        input_name:null,
+        type_object:null,
+        type_mixed: ['abc','aaa','bbb','ccc',''],
     );
     print_r($object);
 

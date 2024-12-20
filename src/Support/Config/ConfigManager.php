@@ -2,17 +2,18 @@
 
 namespace Astral\Serialize\Support\Config;
 
-use Astral\Serialize\Cast\OutValueEnumCast;
-use Astral\Serialize\Enums\CacheDriverEnum;
-use Astral\Serialize\Support\Caching\MemoryCache;
+use Astral\Serialize\Cast\InputValue\InputValueNullCast;
+use Astral\Serialize\Cast\InputValue\InputArrayBestMatchChildCast;
+use Astral\Serialize\Cast\InputValue\InputArraySingleChildCast;
 use Astral\Serialize\Cast\InputValue\InputValueEnumCast;
-use Astral\Serialize\Cast\InputValue\InputValueSetTypeCast;
-use Astral\Serialize\Contracts\Attribute\OutValueCastInterface;
-use Astral\Serialize\Cast\InputValue\InputValueSingleChildCast;
-use Astral\Serialize\Contracts\Attribute\InputValueCastInterface;
-use Astral\Serialize\Exceptions\NotFoundAttributePropertyResolver;
-use Astral\Serialize\Cast\InputValue\InputValueBestMatchChildCast;
+use Astral\Serialize\Cast\InputValue\InputValueSetActionCast;
+use Astral\Serialize\Cast\OutValueEnumCast;
 use Astral\Serialize\Contracts\Attribute\DataCollectionCastInterface;
+use Astral\Serialize\Contracts\Attribute\InputValueCastInterface;
+use Astral\Serialize\Contracts\Attribute\OutValueCastInterface;
+use Astral\Serialize\Enums\CacheDriverEnum;
+use Astral\Serialize\Exceptions\NotFoundAttributePropertyResolver;
+use Astral\Serialize\Support\Caching\MemoryCache;
 
 class ConfigManager
 {
@@ -23,10 +24,11 @@ class ConfigManager
 
     /** @var InputValueCastInterface[] $inputValueCasts */
     private array $inputValueCasts = [
-        InputValueSingleChildCast::class,
-        InputValueBestMatchChildCast::class,
-        InputValueSetTypeCast::class,
+        InputValueNullCast::class,
+        InputArraySingleChildCast::class,
+        InputArrayBestMatchChildCast::class,
         InputValueEnumCast::class,
+        InputValueSetActionCast::class,
     ];
 
     /** @var OutValueCastInterface[] $outputValueCasts */

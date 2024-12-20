@@ -2,16 +2,16 @@
 
 namespace Astral\Serialize\Support\Factories;
 
-use Astral\Serialize\Context;
 use Astral\Serialize\SerializeContainer;
+use Astral\Serialize\Support\Context\SerializeContext;
 
 class ContextFactory
 {
     /**
      */
-    public static function build(string $className, object $object): Context
+    public static function build(string $className, object $object): SerializeContext
     {
-        return (new Context(
+        return (new SerializeContext(
             serialize:$object,
             serializeClassName:$className,
             cache:CacheFactory::build(),

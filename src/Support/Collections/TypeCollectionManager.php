@@ -40,6 +40,8 @@ class TypeCollectionManager
             return $this->processUnionType($type, $property);
         } elseif ($type instanceof ReflectionNamedType) {
             return [$this->processNamedType($type, $property)];
+        } elseif ($property->getType() === null) {
+            return [new TypeCollection(TypeKindEnum::MIXED, null)];
         }
 
         throw new ReflectionException(sprintf(

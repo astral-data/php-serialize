@@ -2,44 +2,50 @@
 
 namespace Astral\Serialize\Support\Collections;
 
+use ReflectionProperty;
 use InvalidArgumentException;
 
 class DataCollection
 {
-    /** @var TypeCollection[] */
-    private array $type;
-
-    private array $inputNames = [];
-
-    private array $outNames = [];
-
-    private string $chooseInputName;
-
-    private string $chooseOutputName;
-
-    private ?TypeCollection $chooseType;
-
-    private bool $inputIgnore = false;
-
-    private bool $outIgnore = false;
-
-    private array $tranFromResolvers = [];
-
-    private string $propertyAliasName;
-
-
-    /** @var array<class-string,DataGroupCollection> */
-    public ?array $children = null;
+    //    private array $tranFromResolvers = [];
 
     public function __construct(
         private readonly DataGroupCollection $parentGroupCollection,
         private readonly string              $name,
-        private readonly bool                $nullable,
+        private readonly bool                $isNullable,
         private readonly mixed               $defaultValue,
         private readonly array               $attributes,
+        private readonly ReflectionProperty  $property,
+        /** @var TypeCollection[] */
+        private array                        $types = [],
+        private array                        $inputNames = [],
+        private array                        $outNames = [],
+        private bool                         $inputIgnore = false,
+        private bool                         $outIgnore = false,
+        /** @var array<class-string,DataGroupCollection> */
+        public array                         $children = [],
+        private ?string                      $chooseInputName = null,
+        private ?string                      $chooseOutputName = null,
+        private ?TypeCollection              $chooseType = null,
+        //        private ?string                      $propertyAliasName = null,
     ) {
         $this->addInputName($this->name);
         $this->addOutName($this->name);
+    }
+
+    public function getProperty(): ReflectionProperty
+    {
+        return $this->property;
+    }
+
+    public function getIsNullable(): bool
+    {
+        return $this->isNullable;
+    }
+
+    public function getOutNames(): array
+    {
+        return $this->outNames;
     }
 
     /**
@@ -137,19 +143,19 @@ class DataCollection
      *
      * @return TypeCollection[]
      */
-    public function getType(): array
+    public function getTypes(): array
     {
-        return $this->type;
+        return $this->types;
     }
 
-    public function setType(TypeCollection ...$types): void
+    public function setTypes(TypeCollection ...$types): void
     {
-        $this->type = $types;
+        $this->types = $types;
     }
 
     public function getTypeTo(string $className): TypeCollection
     {
-        foreach ($this->type as $typeCollection) {
+        foreach ($this->types as $typeCollection) {
             if ($typeCollection->className === $className) {
                 return $typeCollection;
             }
@@ -194,9 +200,9 @@ class DataCollection
     {
         return [
             'name'         => $this->name,
-            'type'         => array_map(fn ($type) => $type->toArray(), $this->type),
+            'type'         => array_map(fn ($type) => $type->toArray(), $this->types),
             'defaultValue' => $this->defaultValue,
-            'nullable'     => $this->nullable,
+            'nullable'     => $this->isNullable,
             'children'     => $this->children ? array_map(fn ($child) => $child->toArray(), $this->children) : null,
         ];
     }

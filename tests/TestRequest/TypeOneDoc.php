@@ -23,13 +23,15 @@ class TypeOneDoc extends Serialize
 
     public object $type_object;
 
-    public string $type_string;
+    public ?string $type_string;
 
     public float $type_float;
 
+    public readonly mixed $type_mixed;
+
     public bool $type_bool;
 
-    public int $type_int;
+    public ?int $type_int;
 
     public ?int $default_value = 1;
 

@@ -6,11 +6,12 @@ namespace Astral\Serialize\Annotations\InputValue;
 
 use Astral\Serialize\Contracts\Attribute\InputValueCastInterface;
 use Astral\Serialize\Support\Collections\DataCollection;
+use Astral\Serialize\Support\Context\InputValueContext;
 use Attribute;
 use DateTime;
 
 #[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_CLASS)]
-class InputDataFormat implements InputValueCastInterface
+class InputDateFormat implements InputValueCastInterface
 {
     /** @var string input-format */
     public string $inputFormat;
@@ -28,15 +29,14 @@ class InputDataFormat implements InputValueCastInterface
         $this->outFormat   = $outFormat;
     }
 
-    public function match(mixed $value, DataCollection $collection): bool
+    public function match(mixed $value, DataCollection $collection, InputValueContext $context): bool
     {
-        return true;
+        return is_string($value) || is_numeric($value);
     }
 
-    public function resolve(mixed $value, DataCollection $collection): string
+    public function resolve(mixed $value, DataCollection $collection, InputValueContext $context): string
     {
         $dateTime = DateTime::createFromFormat($this->inputFormat, (string)$value);
         return $dateTime !== false ? $dateTime->format($this->outFormat) : (string)$value;
     }
-
 }

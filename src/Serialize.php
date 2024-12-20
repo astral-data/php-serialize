@@ -2,22 +2,23 @@
 
 namespace Astral\Serialize;
 
+use Astral\Serialize\Support\Context\SerializeContext;
 use Astral\Serialize\Support\Factories\ContextFactory;
 
 /**
- * @method static Context setGroups(array $groups)
- * @method static Context from(...$values)
- * @method static Context toArray()
+ * @method static SerializeContext setGroups(array $groups)
+ * @method static SerializeContext from(...$values)
+ * @method static SerializeContext toArray()
  *
- * @see Context
+ * @see SerializeContext
  */
 abstract class Serialize
 {
-    private ?Context $_context = null;
+    private ?SerializeContext $_context = null;
 
     /**
      */
-    protected function getContext(): Context
+    protected function getContext(): SerializeContext
     {
         return $this->_context ??= ContextFactory::build(static::class, $this);
     }

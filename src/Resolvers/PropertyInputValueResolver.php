@@ -2,18 +2,14 @@
 
 namespace Astral\Serialize\Resolvers;
 
-use Astral\Serialize\Enums\TypeKindEnum;
-use Astral\Serialize\Support\Collections\TypeCollection;
 use Astral\Serialize\Exceptions\NotFoundAttributePropertyResolver;
 use Astral\Serialize\Support\Collections\DataCollection;
 use Astral\Serialize\Support\Collections\DataGroupCollection;
-use Astral\Serialize\Support\Config\ConfigManager;
-use Astral\Serialize\Contracts\Resolve\Strategies\ResolveStrategyInterface;
+use Astral\Serialize\Support\Context\InputValueContext;
 
 class PropertyInputValueResolver
 {
     public function __construct(
-        private readonly ConfigManager $configManager,
         private readonly InputValueCastResolver $inputValueCastResolver,
     ) {
 
@@ -24,32 +20,33 @@ class PropertyInputValueResolver
      */
     public function resolve(string|object $serialize, DataGroupCollection $groupCollection, array|object $payload): object
     {
-
         $object  = is_string($serialize) ? new $serialize() : $serialize;
-        $payload = is_object($payload) ? (array)$payload : $payload;
+        $payload = $this->normalizePayload($payload);
+        $context = new InputValueContext($object, $payload);
+
+        $properties = array_filter(
+            $groupCollection->getProperties(),
+            fn ($property) => !$property->getInputIgnore()
+        );
 
         // 遍历所有属性集合
-        foreach ($groupCollection->getProperties() as $collection) {
-
-            if ($collection->getInputIgnore()) {
-                continue;
-            }
+        foreach ($properties as $collection) {
 
             $inputName = $this->matchInputName($collection, $payload);
             if ($inputName === false) {
                 continue;
             }
+
             $collection->setChooseInputName($inputName);
+
             $resolvedValue = &$payload[$inputName];
+            $resolvedValue = $this->inputValueCastResolver->resolve(
+                value:$resolvedValue,
+                collection:$collection,
+                context: $context,
+            );
 
-            foreach ($this->configManager->getInputValueCasts() as $cast) {
-                if ($cast->match($resolvedValue, $collection)) {
-                    $resolvedValue = $cast->resolve($resolvedValue, $collection);
-                }
-            }
-
-            $this->inputValueCastResolver->resolve($resolvedValue, $collection);
-            $object->{$collection->getName()} = $resolvedValue;
+            $collection->getProperty()->setValue($object, $resolvedValue);
         }
 
         return $object;
@@ -59,20 +56,21 @@ class PropertyInputValueResolver
     {
         $inputNames = $collection->getInputNames();
 
-        if (!$inputNames && isset($payloadKeys[$collection->getName()])) {
+        if (!$inputNames && array_key_exists($collection->getName(), $payloadKeys)) {
             return $collection->getName();
         }
 
-        if (count($inputNames) === 1 && isset($payloadKeys[current($inputNames)])) {
-            return current($inputNames);
-        }
-
         foreach ($inputNames as $name) {
-            if (isset($payloadKeys[$name])) {
+            if (array_key_exists($name, $payloadKeys)) {
                 return $name;
             }
         }
 
         return false;
+    }
+
+    private function normalizePayload(array|object $payload): array
+    {
+        return is_object($payload) ? (array)$payload : $payload;
     }
 }

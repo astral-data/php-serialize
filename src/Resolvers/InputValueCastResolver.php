@@ -6,6 +6,7 @@ use Astral\Serialize\Contracts\Attribute\InputValueCastInterface;
 use Astral\Serialize\Exceptions\NotFoundAttributePropertyResolver;
 use Astral\Serialize\Support\Collections\DataCollection;
 use Astral\Serialize\Support\Config\ConfigManager;
+use Astral\Serialize\Support\Context\InputValueContext;
 use InvalidArgumentException;
 
 class InputValueCastResolver
@@ -19,21 +20,17 @@ class InputValueCastResolver
     /**
      * @throws NotFoundAttributePropertyResolver
      */
-    public function resolve(mixed $value, DataCollection $dataCollection): mixed
+    public function resolve(mixed $value, DataCollection $collection, InputValueContext $context): mixed
     {
+        $value = $this->applyInputValueCasts($value, $collection, $context);
 
-        foreach ($this->configManager->getAttributePropertyResolver() as $cast) {
-            $cast->resolve($dataCollection);
-        }
-
-        $attributes =  $dataCollection->getAttributes();
-
+        $attributes =  $collection->getAttributes();
         if (!$attributes) {
             return $value;
         }
 
         foreach ($attributes as $attribute) {
-            $value = $this->resolveCast($attribute->newInstance(), $dataCollection, $value);
+            $value = $this->applyCast($attribute->newInstance(), $collection, $value, $context);
         }
 
         return $value;
@@ -44,7 +41,21 @@ class InputValueCastResolver
      *
      * @throws InvalidArgumentException
      */
-    private function resolveCast(object $cast, DataCollection $dataCollection, mixed $value): mixed
+    private function applyInputValueCasts(mixed $value, DataCollection $collection, InputValueContext $context): mixed
+    {
+        foreach ($this->configManager->getInputValueCasts() as $cast) {
+            $value = $this->applyCast($cast, $collection, $value, $context);
+        }
+
+        return $value;
+    }
+
+    /**
+     * Resolve the cast based on its type.
+     *
+     * @throws InvalidArgumentException
+     */
+    private function applyCast(object $cast, DataCollection $collection, mixed $value, InputValueContext $context): mixed
     {
         if (!is_object($cast)) {
             throw new InvalidArgumentException(sprintf(
@@ -57,8 +68,8 @@ class InputValueCastResolver
             return $value;
         }
 
-        if ($cast->match($value, $dataCollection)) {
-            return $cast->resolve($value, $dataCollection);
+        if ($cast->match($value, $collection, $context)) {
+            return $cast->resolve($value, $collection, $context);
         }
 
         return  $value;

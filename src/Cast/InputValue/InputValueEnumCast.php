@@ -4,27 +4,28 @@ declare(strict_types=1);
 
 namespace Astral\Serialize\Cast\InputValue;
 
-use UnitEnum;
-use BackedEnum;
+use Astral\Serialize\Contracts\Attribute\InputValueCastInterface;
 use Astral\Serialize\Enums\TypeKindEnum;
 use Astral\Serialize\Exceptions\ValueCastError;
 use Astral\Serialize\Support\Collections\DataCollection;
-use Astral\Serialize\Contracts\Attribute\InputValueCastInterface;
+use Astral\Serialize\Support\Context\InputValueContext;
+use BackedEnum;
+use UnitEnum;
 
 class InputValueEnumCast implements InputValueCastInterface
 {
-    public function match(mixed $value, DataCollection $collection): bool
+    public function match(mixed $value, DataCollection $collection, InputValueContext $context): bool
     {
-        return is_string($value) && $collection->getChooseType()?->kind == TypeKindEnum::ENUM;
+        return $value && is_string($value) && $collection->getChooseType()?->kind == TypeKindEnum::ENUM;
     }
 
     /**
      * @throws ValueCastError
      */
-    public function resolve(mixed $value, DataCollection $collection): UnitEnum
+    public function resolve(mixed $value, DataCollection $collection, InputValueContext $context): UnitEnum
     {
 
-        $type = $collection->getChooseType();
+        $type          = $collection->getChooseType();
         $enumInstance  = $this->findEnumInstance($type->className, $value);
         if ($enumInstance) {
             return $enumInstance;

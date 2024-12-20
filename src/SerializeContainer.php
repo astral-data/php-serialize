@@ -2,45 +2,46 @@
 
 namespace Astral\Serialize;
 
-use phpDocumentor\Reflection\TypeResolver;
-use Astral\Serialize\Resolvers\GroupResolver;
-use phpDocumentor\Reflection\DocBlockFactory;
-use Astral\Serialize\Support\Config\ConfigManager;
-use phpDocumentor\Reflection\Types\ContextFactory;
-use Astral\Serialize\Support\Factories\CacheFactory;
-use Astral\Serialize\Resolvers\InputValueCastResolver;
-use Astral\Serialize\Resolvers\PropertyTypeDocResolver;
+use Astral\Serialize\Cast\InputValue\InputArrayBestMatchChildCast;
+use Astral\Serialize\Cast\InputValue\InputArraySingleChildCast;
 use Astral\Serialize\Resolvers\DataCollectionCastResolver;
+use Astral\Serialize\Resolvers\GroupResolver;
+use Astral\Serialize\Resolvers\InputValueCastResolver;
 use Astral\Serialize\Resolvers\PropertyInputValueResolver;
+use Astral\Serialize\Resolvers\PropertyTypeDocResolver;
 use Astral\Serialize\Resolvers\PropertyTypesContextResolver;
 use Astral\Serialize\Support\Collections\TypeCollectionManager;
-use Astral\Serialize\Support\Instance\SerializeInstanceManager;
+use Astral\Serialize\Support\Config\ConfigManager;
+use Astral\Serialize\Support\Context\SerializeContext;
+use Astral\Serialize\Support\Factories\CacheFactory;
 use Astral\Serialize\Support\Instance\ReflectionClassInstanceManager;
-use Astral\Serialize\Cast\InputValue\InputValueSingleChildCast;
-use Astral\Serialize\Cast\InputValue\InputValueBestMatchChildCast;
+use Astral\Serialize\Support\Instance\SerializeInstanceManager;
+use phpDocumentor\Reflection\DocBlockFactory;
+use phpDocumentor\Reflection\TypeResolver;
+use phpDocumentor\Reflection\Types\ContextFactory;
 
 class SerializeContainer
 {
     protected static self $instance;
-    protected ?ContextFactory $contextFactory                                      = null;
-    protected ?Context $context                                                    = null;
-    protected ?TypeResolver $typeResolver                                          = null;
-    protected ?DocBlockFactory $docBlockFactory                                    = null;
-    protected ?TypeCollectionManager $typeCollectionManager                        = null;
-    protected ?PropertyTypesContextResolver $propertyTypesContextResolver          = null;
-    protected ?PropertyTypeDocResolver $propertyTypeDocResolver                    = null;
-    protected ?GroupResolver $classGroupResolver                                   = null;
-    protected ?ReflectionClassInstanceManager $reflectionClassInstanceManager      = null;
-    protected ?SerializeInstanceManager $serializeInstanceManager                  = null;
-    protected ?DataCollectionCastResolver $attributePropertyResolver               = null;
+    protected ?ContextFactory $contextFactory                                               = null;
+    protected ?SerializeContext $context                                                    = null;
+    protected ?TypeResolver $typeResolver                                                   = null;
+    protected ?DocBlockFactory $docBlockFactory                                             = null;
+    protected ?TypeCollectionManager $typeCollectionManager                                 = null;
+    protected ?PropertyTypesContextResolver $propertyTypesContextResolver                   = null;
+    protected ?PropertyTypeDocResolver $propertyTypeDocResolver                             = null;
+    protected ?GroupResolver $classGroupResolver                                            = null;
+    protected ?ReflectionClassInstanceManager $reflectionClassInstanceManager               = null;
+    protected ?SerializeInstanceManager $serializeInstanceManager                           = null;
+    protected ?DataCollectionCastResolver $attributePropertyResolver                        = null;
 
     protected ?PropertyInputValueResolver $propertyInputValueResolver = null;
 
     protected ?InputValueCastResolver $inputValueCastResolver               = null;
 
-    protected ?InputValueBestMatchChildCast $dataCollectionBestMatchChildResolveStrategy = null;
+    protected ?InputArrayBestMatchChildCast $dataCollectionBestMatchChildResolveStrategy = null;
 
-    protected ?InputValueSingleChildCast $dataCollectionSingleChildResolveStrategy = null;
+    protected ?InputArraySingleChildCast $dataCollectionSingleChildResolveStrategy = null;
 
     public static function get(): SerializeContainer
     {
@@ -101,12 +102,12 @@ class SerializeContainer
     public function propertyInputValueResolver(): PropertyInputValueResolver
     {
         return $this->propertyInputValueResolver ??= new PropertyInputValueResolver(
-            configManager:ConfigManager::getInstance(),
+            //            configManager:ConfigManager::getInstance(),
             inputValueCastResolver:$this->inputValueCastResolver(),
-//            strategies: [
-//                $this->dataCollectionBestMatchChildResolveStrategy(),
-//                $this->dataCollectionSingleChildResolveStrategy(),
-//            ],
+            //            strategies: [
+            //                $this->dataCollectionBestMatchChildResolveStrategy(),
+            //                $this->dataCollectionSingleChildResolveStrategy(),
+            //            ],
         );
     }
 
@@ -115,16 +116,15 @@ class SerializeContainer
         return $this->inputValueCastResolver ??= new InputValueCastResolver(ConfigManager::getInstance());
     }
 
-    public function dataCollectionBestMatchChildResolveStrategy(): InputValueBestMatchChildCast
+    public function dataCollectionBestMatchChildResolveStrategy(): InputArrayBestMatchChildCast
     {
-        return $this->dataCollectionBestMatchChildResolveStrategy ??= new InputValueBestMatchChildCast();
+        return $this->dataCollectionBestMatchChildResolveStrategy ??= new InputArrayBestMatchChildCast();
     }
 
-    public function dataCollectionSingleChildResolveStrategy(): InputValueSingleChildCast
+    public function dataCollectionSingleChildResolveStrategy(): InputArraySingleChildCast
     {
-        return $this->dataCollectionSingleChildResolveStrategy ??= new InputValueSingleChildCast();
+        return $this->dataCollectionSingleChildResolveStrategy ??= new InputArraySingleChildCast();
     }
-
 
     public function serializeInstanceManager(): SerializeInstanceManager
     {
