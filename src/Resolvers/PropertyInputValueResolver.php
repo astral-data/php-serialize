@@ -22,7 +22,7 @@ class PropertyInputValueResolver
     {
         $object  = is_string($serialize) ? new $serialize() : $serialize;
         $payload = $this->normalizePayload($payload);
-        $context = new InputValueContext($object, $payload);
+        $context = new InputValueContext($object, $payload, $this);
 
         $properties = array_filter(
             $groupCollection->getProperties(),
@@ -32,14 +32,13 @@ class PropertyInputValueResolver
         // 遍历所有属性集合
         foreach ($properties as $collection) {
 
-            $inputName = $this->matchInputName($collection, $payload);
-            if ($inputName === false) {
+            $matchInput = $this->matchInputNameAndValue($collection, $payload);
+            if ($matchInput === false) {
                 continue;
             }
 
-            $collection->setChooseInputName($inputName);
-
-            $resolvedValue = &$payload[$inputName];
+            $collection->setChooseInputName($matchInput['name']);
+            $resolvedValue = $matchInput['value'];
             $resolvedValue = $this->inputValueCastResolver->resolve(
                 value:$resolvedValue,
                 collection:$collection,
@@ -52,21 +51,51 @@ class PropertyInputValueResolver
         return $object;
     }
 
-    public function matchInputName(DataCollection $collection, array $payloadKeys): false|string
+    public function matchInputNameAndValue(DataCollection $collection, array $payloadKeys): array|false
     {
         $inputNames = $collection->getInputNames();
 
         if (!$inputNames && array_key_exists($collection->getName(), $payloadKeys)) {
-            return $collection->getName();
+            return ['name' => $collection->getName(),'value' => $payloadKeys[$collection->getName()]];
         }
 
         foreach ($inputNames as $name) {
+
             if (array_key_exists($name, $payloadKeys)) {
-                return $name;
+                return ['name' => $name,'value' => $payloadKeys[$name]];
+            }
+
+            if (str_contains($name, '.')) {
+                if (($nestedValue = $this->matchNestedKey($name, $payloadKeys)) !== false) {
+                    return ['name' => $name,'value' => $nestedValue];
+                }
             }
         }
 
-        return false;
+        return  false;
+    }
+
+    /**
+     *
+     * @param string $name
+     * @param array $payloadKeys
+     * @return mixed
+     */
+    private function matchNestedKey(string $name, array $payloadKeys): mixed
+    {
+        $keys = explode('.', $name);
+        $current = $payloadKeys;
+
+        foreach ($keys as $key) {
+
+            if (!is_array($current) || !array_key_exists($key, $current)) {
+                return false;
+            }
+
+            $current = $current[$key];
+        }
+
+        return $current;
     }
 
     private function normalizePayload(array|object $payload): array

@@ -31,7 +31,7 @@ it('test parse serialize class', function () {
     //    var_dump($array2);
 
     // 比较两个数组的值
-    $result = array_intersect(array_values($array1), $array2);
+    //    $result = array_intersect(array_values($array1), $array2);
 
     // 输出交集结果
     //    print_r($result);
@@ -46,7 +46,7 @@ it('test parse serialize class', function () {
         type_float:null,
         input_name:null,
         type_object:null,
-        type_mixed: ['abc','aaa','bbb','ccc',''],
+        type_mixed_other: ['abc' => ['bbb' => ['ccc' => 'dddd'],['abc']],'aaa','bbb','ccc',''],
     );
     print_r($object);
 

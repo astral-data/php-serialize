@@ -1,6 +1,6 @@
 <?php
 
-namespace Astral\Serialize\Cast\InputValue;
+namespace Astral\Serialize\Casts\InputValue;
 
 use Astral\Serialize\Contracts\Attribute\InputValueCastInterface;
 use Astral\Serialize\Enums\TypeKindEnum;

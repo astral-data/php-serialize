@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Astral\Serialize\Cast;
+namespace Astral\Serialize\Casts;
 
 use Astral\Serialize\Contracts\Attribute\OutValueCastInterface;
 use Astral\Serialize\Support\Collections\DataCollection;

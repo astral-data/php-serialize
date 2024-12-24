@@ -2,12 +2,12 @@
 
 namespace Astral\Serialize\Support\Config;
 
-use Astral\Serialize\Cast\InputValue\InputValueNullCast;
-use Astral\Serialize\Cast\InputValue\InputArrayBestMatchChildCast;
-use Astral\Serialize\Cast\InputValue\InputArraySingleChildCast;
-use Astral\Serialize\Cast\InputValue\InputValueEnumCast;
-use Astral\Serialize\Cast\InputValue\InputValueSetActionCast;
-use Astral\Serialize\Cast\OutValueEnumCast;
+use Astral\Serialize\Casts\InputValue\InputValueNullCast;
+use Astral\Serialize\Casts\InputValue\InputArrayBestMatchChildCast;
+use Astral\Serialize\Casts\InputValue\InputArraySingleChildCast;
+use Astral\Serialize\Casts\InputValue\InputValueEnumCast;
+use Astral\Serialize\Casts\InputValue\InputValueSetActionCast;
+use Astral\Serialize\Casts\OutValueEnumCast;
 use Astral\Serialize\Contracts\Attribute\DataCollectionCastInterface;
 use Astral\Serialize\Contracts\Attribute\InputValueCastInterface;
 use Astral\Serialize\Contracts\Attribute\OutValueCastInterface;

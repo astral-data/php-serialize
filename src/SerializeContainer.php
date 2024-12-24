@@ -2,8 +2,8 @@
 
 namespace Astral\Serialize;
 
-use Astral\Serialize\Cast\InputValue\InputArrayBestMatchChildCast;
-use Astral\Serialize\Cast\InputValue\InputArraySingleChildCast;
+use Astral\Serialize\Casts\InputValue\InputArrayBestMatchChildCast;
+use Astral\Serialize\Casts\InputValue\InputArraySingleChildCast;
 use Astral\Serialize\Resolvers\DataCollectionCastResolver;
 use Astral\Serialize\Resolvers\GroupResolver;
 use Astral\Serialize\Resolvers\InputValueCastResolver;

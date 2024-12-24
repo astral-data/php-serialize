@@ -1,7 +1,8 @@
 <?php
 
-namespace Astral\Serialize\Cast\InputValue;
+namespace Astral\Serialize\Casts\InputValue;
 
+use Astral\Serialize\Resolvers\PropertyInputValueResolver;
 use Astral\Serialize\Contracts\Attribute\InputValueCastInterface;
 use Astral\Serialize\Enums\TypeKindEnum;
 use Astral\Serialize\Exceptions\NotFoundAttributePropertyResolver;
@@ -34,10 +35,20 @@ class InputArrayBestMatchChildCast implements InputValueCastInterface
         $collection->setChooseType($childType);
 
         if ($childType->kind === TypeKindEnum::COLLECT_OBJECT) {
-            return array_map(fn ($item) => $this->resolveChild($child->getClassName(), $child, $item), $value);
+            return array_map(fn ($item) => $this->resolveChild(
+                propertyInputValueResolver: $context->propertyInputValueResolver,
+                className: $child->getClassName(),
+                child: $child,
+                value: $item
+            ), $value);
         }
 
-        return $this->resolveChild($child->getClassName(), $child, $value);
+        return $this->resolveChild(
+            propertyInputValueResolver: $context->propertyInputValueResolver,
+            className: $child->getClassName(),
+            child: $child,
+            value: $value
+        );
     }
 
     /**
@@ -93,8 +104,8 @@ class InputArrayBestMatchChildCast implements InputValueCastInterface
     /**
      * @throws NotFoundAttributePropertyResolver
      */
-    private function resolveChild(string $className, DataGroupCollection $child, $value): mixed
+    private function resolveChild(PropertyInputValueResolver $propertyInputValueResolver, string $className, DataGroupCollection $child, $value): mixed
     {
-        return SerializeContainer::get()->propertyInputValueResolver()->resolve($className, $child, $value);
+        return $propertyInputValueResolver->resolve($className, $child, $value);
     }
 }

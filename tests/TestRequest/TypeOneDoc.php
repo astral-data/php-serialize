@@ -27,6 +27,7 @@ class TypeOneDoc extends Serialize
 
     public float $type_float;
 
+    #[InputName('type_mixed_other.abc')]
     public readonly mixed $type_mixed;
 
     public bool $type_bool;
