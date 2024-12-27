@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Astral\Serialize\Casts;
 
-use ReflectionClass;
-use ReflectionException;
 use Astral\Serialize\Support\Collections\ConstructDataCollection;
 
 class InputConstructCast
@@ -26,5 +24,20 @@ class InputConstructCast
         $object->__construct(...$args);
     }
 
+    /**
+     * @param array<string,ConstructDataCollection> $constructorParameters
+     * @param array $payload
+     * @return array
+     */
+    public function getNotPromoted(array $constructorParameters, array $payload): array
+    {
+        $vols = [];
+        foreach ($constructorParameters as $param) {
+            if (!$param->isPromoted && isset($payload[$param->name])) {
+                $vols[$param->name] = $payload[$param->name];
+            }
+        }
 
+        return $vols;
+    }
 }

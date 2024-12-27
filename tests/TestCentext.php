@@ -1,10 +1,10 @@
 <?php
 
+use Astral\Serialize\Annotations\DataCollection\InputName;
 use Astral\Serialize\Serialize;
 use Astral\Serialize\Support\Context\SerializeContext;
 use Astral\Serialize\Tests\TestRequest\Other\OtherTypeDoc;
 use Astral\Serialize\Tests\TestRequest\TypeOneDoc;
-use Astral\Serialize\Annotations\DataCollection\InputName;
 
 beforeEach(function () {
     /** @var SerializeContext $this */
@@ -34,24 +34,26 @@ it('test parse serialize class', function () {
             public readonly string $type_string,
             public readonly object $type_object,
             public readonly int $type_int,
+            public int $type_null,
+            int $abc
             //            public readonly float $type_float,
             //            public readonly mixed $type_mixed_other,
             //            #[InputName('input_name')]
             //            public readonly array|object $type_collect_object,
         ) {
-
+            $this->type_null = $abc;
         }
     }
 
-//        $reflection = new ReflectionClass(TestSerialize::class);
-//        $constructor = $reflection->getConstructor();
-//        $instance = $reflection->newInstanceWithoutConstructor(); // 跳过自动调用构造函数
-//        $reflection->getProperty('type_int')->setValue($instance,'1234');
-//    //    $constructor->invokeArgs($instance, ['type_string' => 111,'type_object' => new stdClass()]); // 手动调用构造函数
-//
-//    $reflection->getProperty('type_int')->setAccessible($accessible);
-//        $instance->__construct('111', new stdClass(),11);
-//        var_dump($instance);
+    //        $reflection = new ReflectionClass(TestSerialize::class);
+    //        $constructor = $reflection->getConstructor();
+    //        $instance = $reflection->newInstanceWithoutConstructor(); // 跳过自动调用构造函数
+    //        $reflection->getProperty('type_int')->setValue($instance,'1234');
+    //    //    $constructor->invokeArgs($instance, ['type_string' => 111,'type_object' => new stdClass()]); // 手动调用构造函数
+    //
+    //    $reflection->getProperty('type_int')->setAccessible($accessible);
+    //        $instance->__construct('111', new stdClass(),11);
+    //        var_dump($instance);
 
 
     // 输出调试信息，检查两个数组内容
@@ -65,7 +67,7 @@ it('test parse serialize class', function () {
     //    print_r($result);
 
     // 记录测试开始前的内存使用
-        $startMemory = memory_get_usage();
+    $startMemory = memory_get_usage();
     //
     //    //    $result =  $this->context->parseSerializeClass(SerializeContext::DEFAULT_GROUP_NAME, TypeOneDoc::class);
     //
@@ -75,6 +77,7 @@ it('test parse serialize class', function () {
         input_name:null,
         type_object:null,
         type_mixed_other: ['abc' => ['bbb' => ['ccc' => 'dddd'],['abc']],'aaa','bbb','ccc',''],
+        abc:123
     );
     print_r($object);
 

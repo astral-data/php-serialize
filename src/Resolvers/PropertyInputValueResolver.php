@@ -2,15 +2,13 @@
 
 namespace Astral\Serialize\Resolvers;
 
-use ReflectionClass;
-use ReflectionException;
 use Astral\Serialize\Casts\InputConstructCast;
-use Astral\Serialize\Support\Instance\SerializeInstanceManager;
 use Astral\Serialize\Exceptions\NotFoundAttributePropertyResolver;
 use Astral\Serialize\Support\Collections\DataCollection;
 use Astral\Serialize\Support\Collections\GroupDataCollection;
 use Astral\Serialize\Support\Context\InputValueContext;
 use Astral\Serialize\Support\Instance\ReflectionClassInstanceManager;
+use ReflectionException;
 
 class PropertyInputValueResolver
 {
@@ -26,11 +24,11 @@ class PropertyInputValueResolver
      * @throws NotFoundAttributePropertyResolver
      * @throws ReflectionException
      */
-    public function resolve(GroupDataCollection $groupCollection, array|object $payload): object
+    public function resolve(GroupDataCollection $groupCollection, array $payload): object
     {
         $reflectionClass =  $this->reflectionClassInstanceManager->get($groupCollection->getClassName());
-        $object = $reflectionClass->newInstanceWithoutConstructor();
-        $context = new InputValueContext($groupCollection->getClassName(), $object, $payload, $this);
+        $object          = $reflectionClass->newInstanceWithoutConstructor();
+        $context         = new InputValueContext($groupCollection->getClassName(), $object, $payload, $this);
 
         // filter InputIgnore
         $properties = array_filter(
@@ -38,7 +36,7 @@ class PropertyInputValueResolver
             fn ($property) => !$property->getInputIgnore()
         );
 
-        $constructInputs = [];
+        $constructInputs =  $this->inputConstructCast->getNotPromoted($groupCollection->getConstructProperties(), $payload);
         foreach ($properties as $collection) {
 
             $matchInput = $this->matchInputNameAndValue($collection, $groupCollection, $payload);
@@ -101,7 +99,6 @@ class PropertyInputValueResolver
         return  false;
     }
 
-
     /**
      *
      * @param string $name
@@ -110,7 +107,7 @@ class PropertyInputValueResolver
      */
     private function matchNestedKey(string $name, array $payloadKeys): mixed
     {
-        $keys = explode('.', $name);
+        $keys    = explode('.', $name);
         $current = $payloadKeys;
 
         foreach ($keys as $key) {

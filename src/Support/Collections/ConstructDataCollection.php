@@ -2,9 +2,6 @@
 
 namespace Astral\Serialize\Support\Collections;
 
-use ReflectionProperty;
-use InvalidArgumentException;
-
 class ConstructDataCollection
 {
     //    private array $tranFromResolvers = [];
@@ -18,6 +15,4 @@ class ConstructDataCollection
     ) {
 
     }
-
-
 }

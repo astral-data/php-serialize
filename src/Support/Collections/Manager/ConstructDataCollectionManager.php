@@ -2,13 +2,12 @@
 
 namespace Astral\Serialize\Support\Collections\Manager;
 
-use ReflectionMethod;
-use ReflectionException;
 use Astral\Serialize\Support\Collections\ConstructDataCollection;
+use ReflectionException;
+use ReflectionMethod;
 
 class ConstructDataCollectionManager
 {
-
     /**
      * @throws ReflectionException
      */

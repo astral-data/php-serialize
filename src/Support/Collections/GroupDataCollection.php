@@ -11,7 +11,6 @@ class GroupDataCollection
         private readonly array  $constructProperties,
         /** @var DataCollection[] */
         private array           $properties = [],
-
     ) {
 
     }
@@ -97,7 +96,6 @@ class GroupDataCollection
             'properties' => array_map(fn ($property) => $property->toArray(), $this->properties),
         ];
     }
-
 
     public function count(): int
     {

@@ -2,12 +2,12 @@
 
 namespace Astral\Serialize;
 
-use ReflectionException;
-use Psr\SimpleCache\InvalidArgumentException;
+use Astral\Serialize\Exceptions\NotFoundAttributePropertyResolver;
+use Astral\Serialize\Exceptions\NotFoundGroupException;
 use Astral\Serialize\Support\Context\SerializeContext;
 use Astral\Serialize\Support\Factories\ContextFactory;
-use Astral\Serialize\Exceptions\NotFoundGroupException;
-use Astral\Serialize\Exceptions\NotFoundAttributePropertyResolver;
+use Psr\SimpleCache\InvalidArgumentException;
+use ReflectionException;
 
 /**
  * @method static SerializeContext setGroups(array $groups)
@@ -56,17 +56,17 @@ abstract class Serialize
     }
 
 
-//    /**
-//     * @throws ReflectionException
-//     */
-//    public static function __callStatic($name, $args)
-//    {
-//        $instance  = SerializeContainer::get()->reflectionClassInstanceManager()
-//                ->get(static::class)->newInstanceWithoutConstructor();
-//        $instance->getContext()->{$name}(...$args);
-//
-//        return $instance;
-//    }
+    //    /**
+    //     * @throws ReflectionException
+    //     */
+    //    public static function __callStatic($name, $args)
+    //    {
+    //        $instance  = SerializeContainer::get()->reflectionClassInstanceManager()
+    //                ->get(static::class)->newInstanceWithoutConstructor();
+    //        $instance->getContext()->{$name}(...$args);
+    //
+    //        return $instance;
+    //    }
 
     public function __debugInfo()
     {

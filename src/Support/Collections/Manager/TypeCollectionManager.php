@@ -2,16 +2,16 @@
 
 namespace Astral\Serialize\Support\Collections\Manager;
 
-use ReflectionProperty;
+use Astral\Serialize\Enums\TypeKindEnum;
+use Astral\Serialize\Resolvers\PropertyTypeDocResolver;
+use Astral\Serialize\Resolvers\PropertyTypesContextResolver;
+use Astral\Serialize\Support\Collections\TypeCollection;
+use phpDocumentor\Reflection\Type;
+use phpDocumentor\Reflection\TypeResolver;
 use ReflectionException;
 use ReflectionNamedType;
+use ReflectionProperty;
 use ReflectionUnionType;
-use phpDocumentor\Reflection\Type;
-use Astral\Serialize\Enums\TypeKindEnum;
-use phpDocumentor\Reflection\TypeResolver;
-use Astral\Serialize\Resolvers\PropertyTypeDocResolver;
-use Astral\Serialize\Support\Collections\TypeCollection;
-use Astral\Serialize\Resolvers\PropertyTypesContextResolver;
 
 class TypeCollectionManager
 {

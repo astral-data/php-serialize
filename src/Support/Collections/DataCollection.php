@@ -2,8 +2,8 @@
 
 namespace Astral\Serialize\Support\Collections;
 
-use ReflectionProperty;
 use InvalidArgumentException;
+use ReflectionProperty;
 
 class DataCollection
 {
@@ -53,7 +53,6 @@ class DataCollection
     {
         return $this->property;
     }
-
 
     public function getOutNames(): array
     {

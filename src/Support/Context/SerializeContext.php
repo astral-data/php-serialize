@@ -2,7 +2,6 @@
 
 namespace Astral\Serialize\Support\Context;
 
-use Astral\Serialize\Support\Collections\ConstructDataCollection;
 use Astral\Serialize\Exceptions\NotFoundAttributePropertyResolver;
 use Astral\Serialize\Exceptions\NotFoundGroupException;
 use Astral\Serialize\Resolvers\DataCollectionCastResolver;
@@ -11,13 +10,13 @@ use Astral\Serialize\Resolvers\PropertyInputValueResolver;
 use Astral\Serialize\SerializeContainer;
 use Astral\Serialize\Support\Collections\DataCollection;
 use Astral\Serialize\Support\Collections\GroupDataCollection;
+use Astral\Serialize\Support\Collections\Manager\ConstructDataCollectionManager;
 use Astral\Serialize\Support\Instance\ReflectionClassInstanceManager;
 use Psr\SimpleCache\CacheInterface;
 use Psr\SimpleCache\InvalidArgumentException;
 use ReflectionException;
 use ReflectionProperty;
 use RuntimeException;
-use Astral\Serialize\Support\Collections\Manager\ConstructDataCollectionManager;
 
 class SerializeContext
 {
@@ -31,7 +30,6 @@ class SerializeContext
         private readonly DataCollectionCastResolver     $dataCollectionCastResolver,
         private readonly ConstructDataCollectionManager $constructDataCollectionManager,
         private readonly PropertyInputValueResolver     $propertyInputValueResolver,
-
     ) {
     }
 

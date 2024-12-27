@@ -1,13 +1,13 @@
 <?php
 
 use Astral\Serialize\Enums\TypeKindEnum;
-use phpDocumentor\Reflection\TypeResolver;
-use Astral\Serialize\Tests\TestRequest\TypeOneDoc;
-use Astral\Serialize\Tests\TestRequest\TypeUnionDoc;
 use Astral\Serialize\Resolvers\PropertyTypeDocResolver;
-use Astral\Serialize\Support\Collections\TypeCollection;
 use Astral\Serialize\Resolvers\PropertyTypesContextResolver;
 use Astral\Serialize\Support\Collections\Manager\TypeCollectionManager;
+use Astral\Serialize\Support\Collections\TypeCollection;
+use Astral\Serialize\Tests\TestRequest\TypeOneDoc;
+use Astral\Serialize\Tests\TestRequest\TypeUnionDoc;
+use phpDocumentor\Reflection\TypeResolver;
 
 beforeEach(function () {
     /** @var TypeCollectionManager $this */

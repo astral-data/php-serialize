@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace Astral\Serialize\Casts\InputValue;
 
-use stdClass;
-use Astral\Serialize\Enums\TypeKindEnum;
 use Astral\Serialize\Contracts\Attribute\InputValueCastInterface;
+use Astral\Serialize\Enums\TypeKindEnum;
 use Astral\Serialize\Support\Collections\DataCollection;
 use Astral\Serialize\Support\Context\InputValueContext;
-use Illuminate\Support\Str;
+use stdClass;
 
 class InputValueNullCast implements InputValueCastInterface
 {
@@ -25,8 +24,7 @@ class InputValueNullCast implements InputValueCastInterface
             TypeKindEnum::ARRAY ,  TypeKindEnum::COLLECT_OBJECT => [],
             TypeKindEnum::OBJECT , TypeKindEnum::CLASS_OBJECT => new stdClass(),
             TypeKindEnum::STRING => '',
-            default => null,
+            default              => null,
         };
     }
-
 }

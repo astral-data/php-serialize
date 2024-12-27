@@ -1,25 +1,24 @@
 <?php
 
-use Astral\Serialize\Resolvers\PropertyInputValueResolver;
 use Astral\Serialize\Casts\InputValue\InputArraySingleChildCast;
 use Astral\Serialize\Enums\TypeKindEnum;
-use Astral\Serialize\Exceptions\NotFoundAttributePropertyResolver;
+use Astral\Serialize\Resolvers\PropertyInputValueResolver;
+use Astral\Serialize\SerializeContainer;
 use Astral\Serialize\Support\Collections\DataCollection;
 use Astral\Serialize\Support\Collections\GroupDataCollection;
 use Astral\Serialize\Support\Context\InputValueContext;
-use Astral\Serialize\SerializeContainer;
 use Mockery;
 
 // TODO
 
 beforeEach(function () {
-    $this->cast = new InputArraySingleChildCast();
+    $this->cast       = new InputArraySingleChildCast();
     $this->collection = Mockery::mock(DataCollection::class);
-    $this->context = Mockery::mock(InputValueContext::class);
+    $this->context    = Mockery::mock(InputValueContext::class);
 
     // 替换 SerializeContainer 为 Mock
-//    $this->serializeContainerMock = Mockery::mock(SerializeContainer::class)->makePartial();
-//    SerializeContainer::getInstanceForTest($this->serializeContainerMock);
+    //    $this->serializeContainerMock = Mockery::mock(SerializeContainer::class)->makePartial();
+    //    SerializeContainer::getInstanceForTest($this->serializeContainerMock);
 });
 
 test('match returns true for valid array and single child collection', function () {
@@ -36,7 +35,7 @@ test('match returns true for valid array and single child collection', function 
 });
 
 test('resolve correctly maps values for collect object type', function () {
-    $child = Mockery::mock(GroupDataCollection::class);
+    $child     = Mockery::mock(GroupDataCollection::class);
     $childType = (object) ['kind' => TypeKindEnum::COLLECT_OBJECT];
 
     $this->collection->shouldReceive('getChildren')->andReturn([$child]);
@@ -60,7 +59,7 @@ test('resolve correctly maps values for collect object type', function () {
 
 
 test('resolve returns single resolved value for non-collect object type', function () {
-    $child = Mockery::mock(GroupDataCollection::class);
+    $child     = Mockery::mock(GroupDataCollection::class);
     $childType = (object) ['kind' => TypeKindEnum::SINGLE_OBJECT];
 
     $this->collection->shouldReceive('getChildren')->andReturn([$child]);

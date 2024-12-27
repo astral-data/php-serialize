@@ -1,11 +1,11 @@
 <?php
 
 use Astral\Serialize\Casts\InputValue\InputValueEnumCast;
+use Astral\Serialize\Enums\TypeKindEnum;
 use Astral\Serialize\Exceptions\ValueCastError;
 use Astral\Serialize\Support\Collections\DataCollection;
-use Astral\Serialize\Support\Context\InputValueContext;
-use Astral\Serialize\Enums\TypeKindEnum;
 use Astral\Serialize\Support\Collections\TypeCollection;
+use Astral\Serialize\Support\Context\InputValueContext;
 
 enum TestEnum: string
 {
@@ -14,15 +14,15 @@ enum TestEnum: string
 }
 
 beforeEach(function () {
-    $this->cast = new InputValueEnumCast();
+    $this->cast       = new InputValueEnumCast();
     $this->collection = Mockery::mock(DataCollection::class);
-    $this->context = Mockery::mock(InputValueContext::class);
+    $this->context    = Mockery::mock(InputValueContext::class);
 });
 
 test('match returns true for valid enum value', function () {
 
-    $typeCollection = Mockery::mock(TypeCollection::class);
-    $typeCollection->kind = TypeKindEnum::ENUM;
+    $typeCollection            = Mockery::mock(TypeCollection::class);
+    $typeCollection->kind      = TypeKindEnum::ENUM;
     $typeCollection->className = TestEnum::class;
     $this->collection->shouldReceive('getChooseType')->andReturn($typeCollection);
 
@@ -33,8 +33,8 @@ test('match returns true for valid enum value', function () {
 
 test('match returns false for invalid enum kind', function () {
 
-    $typeCollection = Mockery::mock(TypeCollection::class);
-    $typeCollection->kind = TypeKindEnum::MIXED;
+    $typeCollection            = Mockery::mock(TypeCollection::class);
+    $typeCollection->kind      = TypeKindEnum::MIXED;
     $typeCollection->className = TestEnum::class;
 
     $this->collection->shouldReceive('getChooseType')->andReturn($typeCollection);
@@ -45,8 +45,8 @@ test('match returns false for invalid enum kind', function () {
 
 test('resolve returns correct enum instance for valid value', function () {
 
-    $typeCollection = Mockery::mock(TypeCollection::class);
-    $typeCollection->kind = TypeKindEnum::ENUM;
+    $typeCollection            = Mockery::mock(TypeCollection::class);
+    $typeCollection->kind      = TypeKindEnum::ENUM;
     $typeCollection->className = TestEnum::class;
     $this->collection->shouldReceive('getChooseType')->andReturn($typeCollection);
 
@@ -57,13 +57,11 @@ test('resolve returns correct enum instance for valid value', function () {
 
 test('resolve throws ValueCastError for invalid enum value', function () {
 
-    $typeCollection = Mockery::mock(TypeCollection::class);
-    $typeCollection->kind = TypeKindEnum::ENUM;
+    $typeCollection            = Mockery::mock(TypeCollection::class);
+    $typeCollection->kind      = TypeKindEnum::ENUM;
     $typeCollection->className = TestEnum::class;
     $this->collection->shouldReceive('getChooseType')->andReturn($typeCollection);
 
     $this->cast->resolve('invalid_value', $this->collection, $this->context);
 
 })->throws(ValueCastError::class, 'Enum value "invalid_value" not found in classes: TestEnum');
-
-

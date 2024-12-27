@@ -2,24 +2,23 @@
 
 namespace Astral\Serialize;
 
-use phpDocumentor\Reflection\TypeResolver;
-use Astral\Serialize\Resolvers\GroupResolver;
-use phpDocumentor\Reflection\DocBlockFactory;
 use Astral\Serialize\Casts\InputConstructCast;
-use Astral\Serialize\Support\Config\ConfigManager;
-use phpDocumentor\Reflection\Types\ContextFactory;
-use Astral\Serialize\Support\Factories\CacheFactory;
-use Astral\Serialize\Resolvers\InputValueCastResolver;
-use Astral\Serialize\Support\Context\SerializeContext;
-use Astral\Serialize\Resolvers\PropertyTypeDocResolver;
 use Astral\Serialize\Resolvers\DataCollectionCastResolver;
+use Astral\Serialize\Resolvers\GroupResolver;
+use Astral\Serialize\Resolvers\InputValueCastResolver;
 use Astral\Serialize\Resolvers\PropertyInputValueResolver;
+use Astral\Serialize\Resolvers\PropertyTypeDocResolver;
 use Astral\Serialize\Resolvers\PropertyTypesContextResolver;
-use Astral\Serialize\Support\Instance\SerializeInstanceManager;
-use Astral\Serialize\Casts\InputValue\InputArraySingleChildCast;
-use Astral\Serialize\Support\Instance\ReflectionClassInstanceManager;
-use Astral\Serialize\Support\Collections\Manager\TypeCollectionManager;
 use Astral\Serialize\Support\Collections\Manager\ConstructDataCollectionManager;
+use Astral\Serialize\Support\Collections\Manager\TypeCollectionManager;
+use Astral\Serialize\Support\Config\ConfigManager;
+use Astral\Serialize\Support\Context\SerializeContext;
+use Astral\Serialize\Support\Factories\CacheFactory;
+use Astral\Serialize\Support\Instance\ReflectionClassInstanceManager;
+use Astral\Serialize\Support\Instance\SerializeInstanceManager;
+use phpDocumentor\Reflection\DocBlockFactory;
+use phpDocumentor\Reflection\TypeResolver;
+use phpDocumentor\Reflection\Types\ContextFactory;
 
 class SerializeContainer
 {
