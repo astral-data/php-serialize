@@ -38,10 +38,10 @@ class PropertyInputValueResolver
             fn ($property) => !$property->getInputIgnore()
         );
 
-        $readonlyConstructInputs = [];
+        $constructInputs = [];
         foreach ($properties as $collection) {
 
-            $matchInput = $this->matchInputNameAndValue($collection, $payload);
+            $matchInput = $this->matchInputNameAndValue($collection, $groupCollection, $payload);
             if ($matchInput === false) {
                 continue;
             }
@@ -55,23 +55,23 @@ class PropertyInputValueResolver
                 context: $context,
             );
 
-            // readonly construct
-            if ($groupCollection->hasConstruct() && $groupCollection->hasConstructProperty($collection->getName()) && $collection->isReadonly()) {
-                $readonlyConstructInputs[$collection->getName()] = $resolvedValue;
+            // construct
+            if ($groupCollection->hasConstruct() && $groupCollection->hasConstructProperty($collection->getName())) {
+                $constructInputs[$collection->getName()] = $resolvedValue;
             } else {
                 $collection->getProperty()->setValue($object, $resolvedValue);
             }
         }
 
         if ($groupCollection->hasConstruct()) {
-            $this->inputConstructCast->resolve($groupCollection->getConstructProperties(), $object, $readonlyConstructInputs);
+            $this->inputConstructCast->resolve($groupCollection->getConstructProperties(), $object, $constructInputs);
         }
 
         return $object;
 
     }
 
-    public function matchInputNameAndValue(DataCollection $collection, array $payloadKeys): array|false
+    public function matchInputNameAndValue(DataCollection $collection, GroupDataCollection $groupCollection, array $payloadKeys): array|false
     {
         $inputNames = $collection->getInputNames();
 
@@ -90,6 +90,12 @@ class PropertyInputValueResolver
                     return ['name' => $name,'value' => $nestedValue];
                 }
             }
+        }
+
+        // construct
+        if ($groupCollection->hasConstructProperty($collection->getName())) {
+            $value = $groupCollection->getConstructProperty($collection->getName())->defaultValue ?? $collection->getDefaultValue();
+            return ['name' => $collection->getName(), 'value' => $value];
         }
 
         return  false;

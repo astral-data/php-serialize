@@ -13,9 +13,9 @@ class DataCollection
         private readonly GroupDataCollection $parentGroupCollection,
         private readonly string              $name,
         private readonly bool                $isNullable,
-        private readonly mixed               $defaultValue,
         private readonly bool                $isReadonly,
         private readonly array               $attributes,
+        private readonly mixed               $defaultValue,
         private readonly ReflectionProperty  $property,
         /** @var TypeCollection[] */
         private array                        $types = [],
@@ -32,6 +32,11 @@ class DataCollection
     ) {
         $this->addInputName($this->name);
         $this->addOutName($this->name);
+    }
+
+    public function getDefaultValue(): mixed
+    {
+        return $this->defaultValue;
     }
 
     public function isReadonly(): bool

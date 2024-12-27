@@ -13,9 +13,11 @@ class ConstructDataCollection
         public readonly string              $name,
         public readonly bool                $isPromoted,
         public readonly bool                $isOptional,
+        public readonly bool                $isNull,
+        public readonly mixed               $defaultValue,
     ) {
 
     }
-    
+
 
 }

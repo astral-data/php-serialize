@@ -144,10 +144,10 @@ class SerializeContext
                 parentGroupCollection: $globalDataCollection,
                 name: $property->getName(),
                 isNullable: $property->getType()?->allowsNull() ?? true,
-                defaultValue: $property->getDefaultValue(),
                 isReadonly: $property->isReadOnly(),
                 attributes: array_merge($property->getDeclaringClass()->getAttributes(), $property->getAttributes()),
                 property: $property,
+                defaultValue: $property->getDefaultValue(),
             );
 
             $typeCollections = SerializeContainer::get()->typeCollectionManager()->getCollectionTo($property);

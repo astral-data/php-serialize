@@ -3,10 +3,15 @@
 namespace Astral\Serialize\Support\Collections\Manager;
 
 use ReflectionMethod;
+use ReflectionException;
 use Astral\Serialize\Support\Collections\ConstructDataCollection;
 
 class ConstructDataCollectionManager
 {
+
+    /**
+     * @throws ReflectionException
+     */
     public function getCollectionTo(?ReflectionMethod $method): array
     {
         if ($method === null) {
@@ -18,9 +23,11 @@ class ConstructDataCollectionManager
         $vols = [];
         foreach ($params as $param) {
             $vols[$param->getName()] = new ConstructDataCollection(
-                name:$param->getName(),
+                name: $param->getName(),
                 isPromoted: $param->isPromoted(),
-                isOptional: $param->isOptional()
+                isOptional: $param->isOptional(),
+                isNull: $param->allowsNull(),
+                defaultValue: $param->isDefaultValueAvailable() ? $param->getDefaultValue() : null,
             );
         }
 

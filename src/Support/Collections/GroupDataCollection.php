@@ -21,6 +21,11 @@ class GroupDataCollection
         return $this->constructProperties;
     }
 
+    public function getConstructProperty(string $name): ?ConstructDataCollection
+    {
+        return $this->constructProperties[$name] ?? null;
+    }
+
     /**
      * 获取所有 DataCollection 属性
      */
