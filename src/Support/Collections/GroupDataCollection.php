@@ -2,22 +2,23 @@
 
 namespace Astral\Serialize\Support\Collections;
 
-class DataGroupCollection
+class GroupDataCollection
 {
-    private string $groupName;
+    public function __construct(
+        private readonly string $groupName,
+        private readonly string $className,
+        /** @var array<string, ConstructDataCollection> $constructProperties */
+        private readonly array  $constructProperties,
+        /** @var DataCollection[] */
+        private array           $properties = [],
 
-    /**
-     * @var class-string
-     */
-    private string $className;
+    ) {
 
-    /** @var DataCollection[] */
-    private array $properties = [];
+    }
 
-    public function __construct(string $groupName, string $className)
+    public function getConstructProperties(): array
     {
-        $this->groupName = $groupName;
-        $this->className = $className;
+        return $this->constructProperties;
     }
 
     /**
@@ -38,6 +39,11 @@ class DataGroupCollection
         return $this->className;
     }
 
+    public function getPropertiesName(): array
+    {
+        return array_map(fn ($property) => $property->getName(), $this->properties);
+    }
+
     /**
      * 添加一个 DataCollection 属性
      */
@@ -50,10 +56,20 @@ class DataGroupCollection
         }
     }
 
+    public function hasConstruct(): bool
+    {
+        return !empty($this->constructProperties);
+    }
+
+    public function hasConstructProperty(string $name): bool
+    {
+        return isset($this->constructProperties[$name]);
+    }
+
     /**
-     * 合并另一个 DataGroupCollection
+     * 合并另一个 GroupDataCollection
      */
-    public function merge(DataGroupCollection $collection): DataGroupCollection
+    public function merge(GroupDataCollection $collection): GroupDataCollection
     {
         $cloneCollection = clone $this;
         foreach ($collection->getProperties() as $property) {
@@ -77,10 +93,6 @@ class DataGroupCollection
         ];
     }
 
-    public function getPropertiesName(): array
-    {
-        return array_map(fn ($property) => $property->getName(), $this->properties);
-    }
 
     public function count(): int
     {

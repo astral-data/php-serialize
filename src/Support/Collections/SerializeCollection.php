@@ -8,7 +8,7 @@
 //class SerializeCollection {
 //    protected mixed $type;
 //
-//    /** @var DataGroupCollection[] */
+//    /** @var GroupDataCollection[] */
 //    protected array $groups = [];
 //
 //
@@ -17,7 +17,7 @@
 //        return $this->groups;
 //    }
 //
-//    public  function put(DataGroupCollection $collection): void
+//    public  function put(GroupDataCollection $collection): void
 //    {
 //        $this->groups[] = $collection;
 //    }

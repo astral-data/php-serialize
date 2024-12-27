@@ -2,13 +2,14 @@
 
 namespace Astral\Serialize\Casts\InputValue;
 
+use ReflectionException;
 use Astral\Serialize\Resolvers\PropertyInputValueResolver;
 use Astral\Serialize\Contracts\Attribute\InputValueCastInterface;
 use Astral\Serialize\Enums\TypeKindEnum;
 use Astral\Serialize\Exceptions\NotFoundAttributePropertyResolver;
 use Astral\Serialize\SerializeContainer;
 use Astral\Serialize\Support\Collections\DataCollection;
-use Astral\Serialize\Support\Collections\DataGroupCollection;
+use Astral\Serialize\Support\Collections\GroupDataCollection;
 use Astral\Serialize\Support\Context\InputValueContext;
 
 class InputArrayBestMatchChildCast implements InputValueCastInterface
@@ -37,7 +38,7 @@ class InputArrayBestMatchChildCast implements InputValueCastInterface
         if ($childType->kind === TypeKindEnum::COLLECT_OBJECT) {
             return array_map(fn ($item) => $this->resolveChild(
                 propertyInputValueResolver: $context->propertyInputValueResolver,
-                className: $child->getClassName(),
+                //                className: $child->getClassName(),
                 child: $child,
                 value: $item
             ), $value);
@@ -45,14 +46,14 @@ class InputArrayBestMatchChildCast implements InputValueCastInterface
 
         return $this->resolveChild(
             propertyInputValueResolver: $context->propertyInputValueResolver,
-            className: $child->getClassName(),
+            //            className: $child->getClassName(),
             child: $child,
             value: $value
         );
     }
 
     /**
-     * @param DataGroupCollection[] $children
+     * @param GroupDataCollection[] $children
      * @param array $value
      * @return string|null
      */
@@ -80,7 +81,7 @@ class InputArrayBestMatchChildCast implements InputValueCastInterface
         return $bestMatch;
     }
 
-    private function findChildByClass(array $children, string $className): ?DataGroupCollection
+    private function findChildByClass(array $children, string $className): ?GroupDataCollection
     {
         foreach ($children as $child) {
             if ($child->getClassName() === $className) {
@@ -103,9 +104,10 @@ class InputArrayBestMatchChildCast implements InputValueCastInterface
 
     /**
      * @throws NotFoundAttributePropertyResolver
+     * @throws ReflectionException
      */
-    private function resolveChild(PropertyInputValueResolver $propertyInputValueResolver, string $className, DataGroupCollection $child, $value): mixed
+    private function resolveChild(PropertyInputValueResolver $propertyInputValueResolver, GroupDataCollection $child, $value): mixed
     {
-        return $propertyInputValueResolver->resolve($className, $child, $value);
+        return $propertyInputValueResolver->resolve($child, $value);
     }
 }

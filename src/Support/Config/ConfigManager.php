@@ -28,7 +28,7 @@ class ConfigManager
         InputArraySingleChildCast::class,
         InputArrayBestMatchChildCast::class,
         InputValueEnumCast::class,
-        InputValueSetActionCast::class,
+//        InputValueSetActionCast::class,
     ];
 
     /** @var OutValueCastInterface[] $outputValueCasts */

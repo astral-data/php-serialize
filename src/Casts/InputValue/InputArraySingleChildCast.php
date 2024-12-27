@@ -2,12 +2,13 @@
 
 namespace Astral\Serialize\Casts\InputValue;
 
+use ReflectionException;
 use Astral\Serialize\Contracts\Attribute\InputValueCastInterface;
 use Astral\Serialize\Enums\TypeKindEnum;
 use Astral\Serialize\Exceptions\NotFoundAttributePropertyResolver;
 use Astral\Serialize\SerializeContainer;
 use Astral\Serialize\Support\Collections\DataCollection;
-use Astral\Serialize\Support\Collections\DataGroupCollection;
+use Astral\Serialize\Support\Collections\GroupDataCollection;
 use Astral\Serialize\Support\Context\InputValueContext;
 
 class InputArraySingleChildCast implements InputValueCastInterface
@@ -19,6 +20,7 @@ class InputArraySingleChildCast implements InputValueCastInterface
 
     /**
      * @throws NotFoundAttributePropertyResolver
+     * @throws ReflectionException
      */
     public function resolve($value, DataCollection $collection, InputValueContext $context): mixed
     {
@@ -30,18 +32,19 @@ class InputArraySingleChildCast implements InputValueCastInterface
 
 
         if ($childType->kind === TypeKindEnum::COLLECT_OBJECT) {
-            return array_map(fn ($item) => $this->resolveChild($child->getClassName(), $child, $item), $value);
+            return array_map(fn ($item) => $this->resolveChild($child, $item), $value);
         }
 
-        return $this->resolveChild($child->getClassName(), $child, $value);
+        return $this->resolveChild($child, $value);
     }
 
     /**
      * @throws NotFoundAttributePropertyResolver
+     * @throws ReflectionException
      */
-    private function resolveChild(string $className, DataGroupCollection $child, $value): mixed
+    private function resolveChild(GroupDataCollection $child, $value): mixed
     {
-        return SerializeContainer::get()->propertyInputValueResolver()->resolve($className, $child, $value);
+        return SerializeContainer::get()->propertyInputValueResolver()->resolve($child, $value);
     }
 
     private function hasObjectType(DataCollection $collection): bool

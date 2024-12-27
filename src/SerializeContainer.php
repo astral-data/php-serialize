@@ -2,23 +2,24 @@
 
 namespace Astral\Serialize;
 
-use Astral\Serialize\Casts\InputValue\InputArrayBestMatchChildCast;
-use Astral\Serialize\Casts\InputValue\InputArraySingleChildCast;
-use Astral\Serialize\Resolvers\DataCollectionCastResolver;
-use Astral\Serialize\Resolvers\GroupResolver;
-use Astral\Serialize\Resolvers\InputValueCastResolver;
-use Astral\Serialize\Resolvers\PropertyInputValueResolver;
-use Astral\Serialize\Resolvers\PropertyTypeDocResolver;
-use Astral\Serialize\Resolvers\PropertyTypesContextResolver;
-use Astral\Serialize\Support\Collections\TypeCollectionManager;
-use Astral\Serialize\Support\Config\ConfigManager;
-use Astral\Serialize\Support\Context\SerializeContext;
-use Astral\Serialize\Support\Factories\CacheFactory;
-use Astral\Serialize\Support\Instance\ReflectionClassInstanceManager;
-use Astral\Serialize\Support\Instance\SerializeInstanceManager;
-use phpDocumentor\Reflection\DocBlockFactory;
 use phpDocumentor\Reflection\TypeResolver;
+use Astral\Serialize\Resolvers\GroupResolver;
+use phpDocumentor\Reflection\DocBlockFactory;
+use Astral\Serialize\Casts\InputConstructCast;
+use Astral\Serialize\Support\Config\ConfigManager;
 use phpDocumentor\Reflection\Types\ContextFactory;
+use Astral\Serialize\Support\Factories\CacheFactory;
+use Astral\Serialize\Resolvers\InputValueCastResolver;
+use Astral\Serialize\Support\Context\SerializeContext;
+use Astral\Serialize\Resolvers\PropertyTypeDocResolver;
+use Astral\Serialize\Resolvers\DataCollectionCastResolver;
+use Astral\Serialize\Resolvers\PropertyInputValueResolver;
+use Astral\Serialize\Resolvers\PropertyTypesContextResolver;
+use Astral\Serialize\Support\Instance\SerializeInstanceManager;
+use Astral\Serialize\Casts\InputValue\InputArraySingleChildCast;
+use Astral\Serialize\Support\Instance\ReflectionClassInstanceManager;
+use Astral\Serialize\Support\Collections\Manager\TypeCollectionManager;
+use Astral\Serialize\Support\Collections\Manager\ConstructDataCollectionManager;
 
 class SerializeContainer
 {
@@ -39,9 +40,9 @@ class SerializeContainer
 
     protected ?InputValueCastResolver $inputValueCastResolver               = null;
 
-    protected ?InputArrayBestMatchChildCast $dataCollectionBestMatchChildResolveStrategy = null;
+    protected ?InputConstructCast $inputConstructCast = null;
 
-    protected ?InputArraySingleChildCast $dataCollectionSingleChildResolveStrategy = null;
+    protected ?ConstructDataCollectionManager $constructDataCollectionManager = null;
 
     public static function get(): SerializeContainer
     {
@@ -102,12 +103,9 @@ class SerializeContainer
     public function propertyInputValueResolver(): PropertyInputValueResolver
     {
         return $this->propertyInputValueResolver ??= new PropertyInputValueResolver(
-            //            configManager:ConfigManager::getInstance(),
+            reflectionClassInstanceManager:$this->reflectionClassInstanceManager(),
             inputValueCastResolver:$this->inputValueCastResolver(),
-            //            strategies: [
-            //                $this->dataCollectionBestMatchChildResolveStrategy(),
-            //                $this->dataCollectionSingleChildResolveStrategy(),
-            //            ],
+            inputConstructCast:$this->inputConstructCast(),
         );
     }
 
@@ -116,14 +114,14 @@ class SerializeContainer
         return $this->inputValueCastResolver ??= new InputValueCastResolver(ConfigManager::getInstance());
     }
 
-    public function dataCollectionBestMatchChildResolveStrategy(): InputArrayBestMatchChildCast
+    public function inputConstructCast(): InputConstructCast
     {
-        return $this->dataCollectionBestMatchChildResolveStrategy ??= new InputArrayBestMatchChildCast();
+        return $this->inputConstructCast ??= new InputConstructCast();
     }
 
-    public function dataCollectionSingleChildResolveStrategy(): InputArraySingleChildCast
+    public function constructDataCollectionManager(): ConstructDataCollectionManager
     {
-        return $this->dataCollectionSingleChildResolveStrategy ??= new InputArraySingleChildCast();
+        return $this->constructDataCollectionManager ??= new ConstructDataCollectionManager();
     }
 
     public function serializeInstanceManager(): SerializeInstanceManager

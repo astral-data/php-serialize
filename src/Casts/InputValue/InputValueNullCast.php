@@ -15,7 +15,7 @@ class InputValueNullCast implements InputValueCastInterface
 {
     public function match(mixed $value, DataCollection $collection, InputValueContext $context): bool
     {
-        return  $value === null && $collection->getIsNullable() === false && count($collection->getTypes()) > 0 ;
+        return  $value === null && $collection->isNullable() === false && count($collection->getTypes()) > 0 ;
     }
 
     public function resolve(mixed $value, DataCollection $collection, InputValueContext $context): mixed

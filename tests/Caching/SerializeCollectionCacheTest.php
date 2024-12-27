@@ -3,7 +3,7 @@
 namespace Astral\Serialize\Tests\Caching;
 
 use Astral\Serialize\Support\Caching\SerializeCollectionCache;
-use Astral\Serialize\Support\Collections\DataGroupCollection;
+use Astral\Serialize\Support\Collections\GroupDataCollection;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\TestCase;
 
@@ -15,7 +15,7 @@ class SerializeCollectionCacheTest extends TestCase
     public function testHasReturnsTrueForExistingCache()
     {
         $className  = 'TestClass';
-        $collection = $this->createMock(DataGroupCollection::class);
+        $collection = $this->createMock(GroupDataCollection::class);
 
         SerializeCollectionCache::put($className, $collection);
 
@@ -28,8 +28,8 @@ class SerializeCollectionCacheTest extends TestCase
     public function testOverwriteExistingCacheEntryWhenPuttingNewCollection()
     {
         $className         = 'TestClass';
-        $initialCollection = $this->createMock(DataGroupCollection::class);
-        $newCollection     = $this->createMock(DataGroupCollection::class);
+        $initialCollection = $this->createMock(GroupDataCollection::class);
+        $newCollection     = $this->createMock(GroupDataCollection::class);
 
         SerializeCollectionCache::put($className, $initialCollection);
         $this->assertSame($initialCollection, SerializeCollectionCache::get($className));
@@ -45,7 +45,7 @@ class SerializeCollectionCacheTest extends TestCase
     public function testGetReturnsCorrectDataGroupCollectionForExistingCache()
     {
         $className  = 'TestClass';
-        $collection = $this->createMock(DataGroupCollection::class);
+        $collection = $this->createMock(GroupDataCollection::class);
 
         SerializeCollectionCache::put($className, $collection);
 
@@ -60,7 +60,7 @@ class SerializeCollectionCacheTest extends TestCase
     public function testSuccessfullyAddNewDataGroupCollectionToCache()
     {
         $className  = 'TestClass';
-        $collection = $this->createMock(DataGroupCollection::class);
+        $collection = $this->createMock(GroupDataCollection::class);
 
         SerializeCollectionCache::put($className, $collection);
 
@@ -91,8 +91,8 @@ class SerializeCollectionCacheTest extends TestCase
     {
         $className1  = 'TestClass1';
         $className2  = 'TestClass2';
-        $collection1 = $this->createMock(DataGroupCollection::class);
-        $collection2 = $this->createMock(DataGroupCollection::class);
+        $collection1 = $this->createMock(GroupDataCollection::class);
+        $collection2 = $this->createMock(GroupDataCollection::class);
 
         SerializeCollectionCache::put($className1, $collection1);
         SerializeCollectionCache::put($className2, $collection2);
@@ -111,8 +111,8 @@ class SerializeCollectionCacheTest extends TestCase
     {
         $upperCaseClassName = 'TestClass';
         $lowerCaseClassName = 'testCases';
-        $collectionUpper    = $this->createMock(DataGroupCollection::class);
-        $collectionLower    = $this->createMock(DataGroupCollection::class);
+        $collectionUpper    = $this->createMock(GroupDataCollection::class);
+        $collectionLower    = $this->createMock(GroupDataCollection::class);
 
         SerializeCollectionCache::put($upperCaseClassName, $collectionUpper);
         SerializeCollectionCache::put($lowerCaseClassName, $collectionLower);
@@ -130,7 +130,7 @@ class SerializeCollectionCacheTest extends TestCase
     public function testReturnSameReferenceWhenGettingCacheMultipleTimes()
     {
         $className  = 'TestClass';
-        $collection = $this->createMock(DataGroupCollection::class);
+        $collection = $this->createMock(GroupDataCollection::class);
 
         SerializeCollectionCache::put($className, $collection);
 
@@ -152,14 +152,14 @@ class SerializeCollectionCacheTest extends TestCase
     {
         $className1  = 'TestClass1';
         $className2  = 'TestClass2';
-        $collection1 = $this->createMock(DataGroupCollection::class);
-        $collection2 = $this->createMock(DataGroupCollection::class);
+        $collection1 = $this->createMock(GroupDataCollection::class);
+        $collection2 = $this->createMock(GroupDataCollection::class);
 
         SerializeCollectionCache::put($className1, $collection1);
         SerializeCollectionCache::put($className2, $collection2);
 
         // Modify one cache entry
-        $modifiedCollection = $this->createMock(DataGroupCollection::class);
+        $modifiedCollection = $this->createMock(GroupDataCollection::class);
         SerializeCollectionCache::put($className1, $modifiedCollection);
 
         // Check if the other cache entry remains unaffected

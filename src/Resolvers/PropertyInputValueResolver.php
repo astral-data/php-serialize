@@ -2,34 +2,43 @@
 
 namespace Astral\Serialize\Resolvers;
 
+use ReflectionClass;
+use ReflectionException;
+use Astral\Serialize\Casts\InputConstructCast;
+use Astral\Serialize\Support\Instance\SerializeInstanceManager;
 use Astral\Serialize\Exceptions\NotFoundAttributePropertyResolver;
 use Astral\Serialize\Support\Collections\DataCollection;
-use Astral\Serialize\Support\Collections\DataGroupCollection;
+use Astral\Serialize\Support\Collections\GroupDataCollection;
 use Astral\Serialize\Support\Context\InputValueContext;
+use Astral\Serialize\Support\Instance\ReflectionClassInstanceManager;
 
 class PropertyInputValueResolver
 {
     public function __construct(
+        protected readonly ReflectionClassInstanceManager $reflectionClassInstanceManager,
         private readonly InputValueCastResolver $inputValueCastResolver,
+        protected readonly InputConstructCast $inputConstructCast,
     ) {
 
     }
 
     /**
      * @throws NotFoundAttributePropertyResolver
+     * @throws ReflectionException
      */
-    public function resolve(string|object $serialize, DataGroupCollection $groupCollection, array|object $payload): object
+    public function resolve(GroupDataCollection $groupCollection, array|object $payload): object
     {
-        $object  = is_string($serialize) ? new $serialize() : $serialize;
-        $payload = $this->normalizePayload($payload);
-        $context = new InputValueContext($object, $payload, $this);
+        $reflectionClass =  $this->reflectionClassInstanceManager->get($groupCollection->getClassName());
+        $object = $reflectionClass->newInstanceWithoutConstructor();
+        $context = new InputValueContext($groupCollection->getClassName(), $object, $payload, $this);
 
+        // filter InputIgnore
         $properties = array_filter(
             $groupCollection->getProperties(),
             fn ($property) => !$property->getInputIgnore()
         );
 
-        // 遍历所有属性集合
+        $readonlyConstructInputs = [];
         foreach ($properties as $collection) {
 
             $matchInput = $this->matchInputNameAndValue($collection, $payload);
@@ -39,16 +48,27 @@ class PropertyInputValueResolver
 
             $collection->setChooseInputName($matchInput['name']);
             $resolvedValue = $matchInput['value'];
+
             $resolvedValue = $this->inputValueCastResolver->resolve(
                 value:$resolvedValue,
                 collection:$collection,
                 context: $context,
             );
 
-            $collection->getProperty()->setValue($object, $resolvedValue);
+            // readonly construct
+            if ($groupCollection->hasConstruct() && $groupCollection->hasConstructProperty($collection->getName()) && $collection->isReadonly()) {
+                $readonlyConstructInputs[$collection->getName()] = $resolvedValue;
+            } else {
+                $collection->getProperty()->setValue($object, $resolvedValue);
+            }
+        }
+
+        if ($groupCollection->hasConstruct()) {
+            $this->inputConstructCast->resolve($groupCollection->getConstructProperties(), $object, $readonlyConstructInputs);
         }
 
         return $object;
+
     }
 
     public function matchInputNameAndValue(DataCollection $collection, array $payloadKeys): array|false
@@ -74,6 +94,7 @@ class PropertyInputValueResolver
 
         return  false;
     }
+
 
     /**
      *

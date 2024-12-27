@@ -5,7 +5,7 @@ use Astral\Serialize\Casts\InputValue\InputArraySingleChildCast;
 use Astral\Serialize\Enums\TypeKindEnum;
 use Astral\Serialize\Exceptions\NotFoundAttributePropertyResolver;
 use Astral\Serialize\Support\Collections\DataCollection;
-use Astral\Serialize\Support\Collections\DataGroupCollection;
+use Astral\Serialize\Support\Collections\GroupDataCollection;
 use Astral\Serialize\Support\Context\InputValueContext;
 use Astral\Serialize\SerializeContainer;
 use Mockery;
@@ -24,7 +24,7 @@ beforeEach(function () {
 
 test('match returns true for valid array and single child collection', function () {
     $this->collection->shouldReceive('getChildren')->andReturn([
-        Mockery::mock(DataGroupCollection::class)
+        Mockery::mock(GroupDataCollection::class)
     ]);
 
     $this->collection->shouldReceive('getTypes')->andReturn([
@@ -36,7 +36,7 @@ test('match returns true for valid array and single child collection', function 
 });
 
 test('resolve correctly maps values for collect object type', function () {
-    $child = Mockery::mock(DataGroupCollection::class);
+    $child = Mockery::mock(GroupDataCollection::class);
     $childType = (object) ['kind' => TypeKindEnum::COLLECT_OBJECT];
 
     $this->collection->shouldReceive('getChildren')->andReturn([$child]);
@@ -60,7 +60,7 @@ test('resolve correctly maps values for collect object type', function () {
 
 
 test('resolve returns single resolved value for non-collect object type', function () {
-    $child = Mockery::mock(DataGroupCollection::class);
+    $child = Mockery::mock(GroupDataCollection::class);
     $childType = (object) ['kind' => TypeKindEnum::SINGLE_OBJECT];
 
     $this->collection->shouldReceive('getChildren')->andReturn([$child]);

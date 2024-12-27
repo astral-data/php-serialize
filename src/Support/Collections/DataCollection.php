@@ -10,10 +10,11 @@ class DataCollection
     //    private array $tranFromResolvers = [];
 
     public function __construct(
-        private readonly DataGroupCollection $parentGroupCollection,
+        private readonly GroupDataCollection $parentGroupCollection,
         private readonly string              $name,
         private readonly bool                $isNullable,
         private readonly mixed               $defaultValue,
+        private readonly bool                $isReadonly,
         private readonly array               $attributes,
         private readonly ReflectionProperty  $property,
         /** @var TypeCollection[] */
@@ -22,7 +23,7 @@ class DataCollection
         private array                        $outNames = [],
         private bool                         $inputIgnore = false,
         private bool                         $outIgnore = false,
-        /** @var array<class-string,DataGroupCollection> */
+        /** @var array<class-string,GroupDataCollection> */
         public array                         $children = [],
         private ?string                      $chooseInputName = null,
         private ?string                      $chooseOutputName = null,
@@ -33,15 +34,21 @@ class DataCollection
         $this->addOutName($this->name);
     }
 
+    public function isReadonly(): bool
+    {
+        return $this->isReadonly;
+    }
+
+    public function isNullable(): bool
+    {
+        return $this->isNullable;
+    }
+
     public function getProperty(): ReflectionProperty
     {
         return $this->property;
     }
 
-    public function getIsNullable(): bool
-    {
-        return $this->isNullable;
-    }
 
     public function getOutNames(): array
     {
@@ -65,7 +72,7 @@ class DataCollection
         return $cloneDataCollection;
     }
 
-    public function mergeChildren(DataGroupCollection $dataGroupCollection)
+    public function mergeChildren(GroupDataCollection $dataGroupCollection)
     {
         $children = [];
         foreach ($this->getChildren() as $item) {
@@ -76,14 +83,14 @@ class DataCollection
     }
 
     /**
-     * @return array<class-string,DataGroupCollection>
+     * @return array<class-string,GroupDataCollection>
      */
     public function getChildren(): array
     {
         return $this->children;
     }
 
-    public function getParentGroupCollection(): DataGroupCollection
+    public function getParentGroupCollection(): GroupDataCollection
     {
         return $this->parentGroupCollection;
     }
@@ -167,28 +174,28 @@ class DataCollection
 
     /**
      *
-     * @param DataGroupCollection|DataGroupCollection[]|null $collection
+     * @param GroupDataCollection|GroupDataCollection[]|null $collection
      * @return void
      */
-    public function addChildren(DataGroupCollection|array|null $collection): void
+    public function addChildren(GroupDataCollection|array|null $collection): void
     {
         if (is_array($collection)) {
             foreach ($collection as $child) {
-                if ($child instanceof DataGroupCollection) {
+                if ($child instanceof GroupDataCollection) {
                     $this->addSingleChildren($child);
                 }
             }
-        } elseif ($collection instanceof DataGroupCollection) {
+        } elseif ($collection instanceof GroupDataCollection) {
             $this->addSingleChildren($collection);
         }
     }
 
     /**
      *
-     * @param DataGroupCollection $collection
+     * @param GroupDataCollection $collection
      * @return void
      */
-    private function addSingleChildren(DataGroupCollection $collection): void
+    private function addSingleChildren(GroupDataCollection $collection): void
     {
         $key = $collection->getClassName();
         if (!isset($this->children[$key])) {
