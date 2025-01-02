@@ -4,15 +4,25 @@ namespace Astral\Serialize\Support\Context;
 
 class ChooseSerializeContext
 {
-    public array $groups;
+    private array $groups;
 
     /** @var array<string,ChoosePropertyContext> $properties */
-    public array $properties;
+    private array $properties;
 
     public function __construct(
         public readonly string $serializeClass,
     ) {
 
+    }
+
+    public function getGroups(): array
+    {
+        return $this->groups;
+    }
+
+    public function setGroups(array $groups): void
+    {
+        $this->groups = array_unique(array_merge([$this->serializeClass], $groups));
     }
 
     public function addProperty(ChoosePropertyContext $context): void

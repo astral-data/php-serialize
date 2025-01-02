@@ -15,24 +15,21 @@ class DataCollection
         private readonly string              $name,
         private readonly bool                $isNullable,
         private readonly bool                $isReadonly,
-        private readonly array              $attributes,
-        private readonly mixed              $defaultValue,
-        private readonly ReflectionProperty $property,
+        private readonly array               $attributes,
+        private readonly mixed               $defaultValue,
+        private readonly ReflectionProperty  $property,
         /** @var TypeCollection[] */
-        private array                       $types = [],
+        private array                        $types = [],
         /** @var array<string,array> */
-        private array                       $inputNames = [],
+        private array                        $inputNames = [],
         /** @var array<string,array> */
-        private array                       $outNames = [],
+        private array                        $outNames = [],
         /** @var string[] */
-        private array                       $inputIgnoreGroups = [],
+        private array                        $inputIgnoreGroups = [],
         /** @var string[] */
-        private array                       $outIgnoreGroups = [],
+        private array                        $outIgnoreGroups = [],
         /** @var array<class-string,GroupDataCollection> */
-        public array                        $children = [],
-        private ?string                     $chooseInputName = null,
-        private ?string                     $chooseOutputName = null,
-        private ?TypeCollection             $chooseType = null,
+        public array                         $children = [],
         //        private ?string                      $propertyAliasName = null,
     ) {
         $this->addInputName($this->name, [$this->parentGroupCollection->getClassName()]);
@@ -114,6 +111,8 @@ class DataCollection
 
     public function isInputIgnoreByGroups(array $groups): bool
     {
+
+
         foreach ($groups as $group) {
             if (in_array($group, $this->inputIgnoreGroups)) {
                 return true;
@@ -159,7 +158,6 @@ class DataCollection
     }
 
     /**
-     *
      * @return TypeCollection[]
      */
     public function getTypes(): array
@@ -181,7 +179,6 @@ class DataCollection
         }
 
         throw new InvalidArgumentException("TypeCollection with className '$className' not found.");
-
     }
 
     /**
@@ -224,35 +221,5 @@ class DataCollection
             'nullable'     => $this->isNullable,
             'children'     => $this->children ? array_map(fn ($child) => $child->toArray(), $this->children) : null,
         ];
-    }
-
-    public function getChooseInputName(): string
-    {
-        return $this->chooseInputName;
-    }
-
-    public function setChooseInputName(string $chooseInputName): void
-    {
-        $this->chooseInputName = $chooseInputName;
-    }
-
-    public function getChooseOutputName(): string
-    {
-        return $this->chooseOutputName;
-    }
-
-    public function setChooseOutputName(string $chooseOutputName): void
-    {
-        $this->chooseOutputName = $chooseOutputName;
-    }
-
-    public function getChooseType(): ?TypeCollection
-    {
-        return $this->chooseType ?? null;
-    }
-
-    public function setChooseType(TypeCollection $chooseType): void
-    {
-        $this->chooseType = $chooseType;
     }
 }

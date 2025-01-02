@@ -50,10 +50,9 @@ class PropertyInputValueResolver
             $name = $collection->getName();
 
             $chooseContext->addProperty(new ChoosePropertyContext($name, $chooseContext));
-            $matchInput = $this->matchInputNameAndValue($chooseContext->groups, $collection, $groupCollection, $payload);
+            $matchInput = $this->matchInputNameAndValue($chooseContext, $collection, $groupCollection, $payload);
 
-            if ($matchInput === false
-                || ($collection->isInputIgnoreByGroups($chooseContext->groups)  && !$groupCollection->hasConstructProperty($name))) {
+            if ($matchInput === false) {
                 continue;
             }
 
@@ -74,8 +73,6 @@ class PropertyInputValueResolver
             }
         }
 
-
-
         if ($groupCollection->hasConstruct()) {
             $this->inputConstructCast->resolve($groupCollection->getConstructProperties(), $object, $constructInputs);
         }
@@ -84,11 +81,12 @@ class PropertyInputValueResolver
 
     }
 
-    public function matchInputNameAndValue(array $groups, DataCollection $collection, GroupDataCollection $groupCollection, array $payloadKeys): array|false
+    public function matchInputNameAndValue(ChooseSerializeContext $chooseContext, DataCollection $collection, GroupDataCollection $groupCollection, array $payloadKeys): array|false
     {
+        $groups = $chooseContext->getGroups();
         $inputNames = $collection->getInputNamesByGroups($groups);
 
-        return !$this->groupResolver->resolveExistsGroupsByDataCollection($collection, $groups)
+        return !$this->groupResolver->resolveExistsGroupsByDataCollection($collection, $groups, $chooseContext->serializeClass) || $collection->isInputIgnoreByGroups($groups)
             ? $this->getConstructPropertyValue($groupCollection, $collection, null)
             : $this->findMatch($inputNames ?: [$collection->getName()], $payloadKeys)
             ?? $this->getConstructPropertyValue($groupCollection, $collection, $collection->getDefaultValue());

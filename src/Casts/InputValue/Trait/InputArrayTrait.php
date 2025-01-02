@@ -52,7 +52,7 @@ trait InputArrayTrait
     private function createChooseContext(InputValueContext $context, DataCollection $collection, $key = null): ChooseSerializeContext
     {
         $chooseContext         = new ChooseSerializeContext($context->chooseSerializeContext->serializeClass);
-        $chooseContext->groups = $context->chooseSerializeContext->groups;
+        $chooseContext->setGroups($context->chooseSerializeContext->getGroups());
 
         if ($key !== null) {
             $context->chooseSerializeContext

@@ -17,16 +17,18 @@ class InputIgnore implements DataCollectionCastInterface
 
     public function __construct(string|int|UnitEnum ...$groups)
     {
-        $this->$groups = array_map(function ($name) {
+        $this->groups = array_map(function ($name) {
             if ($name instanceof UnitEnum) {
                 return $name->name;
             }
             return (string) $name;
         }, $groups);
+
+
     }
 
     public function resolve(DataCollection $dataCollection, ReflectionProperty|null $property = null): void
     {
-        $dataCollection->setInputIgnoreGroups($this->groups ?: [$dataCollection->getParentGroupCollection()->getClassName()]);
+        $dataCollection->setInputIgnoreGroups($this->groups ?? [$dataCollection->getParentGroupCollection()->getClassName()]);
     }
 }

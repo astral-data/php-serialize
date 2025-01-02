@@ -18,6 +18,7 @@ use ReflectionException;
 use ReflectionProperty;
 use RuntimeException;
 
+
 class SerializeContext
 {
     private array $groups = [];
@@ -204,6 +205,7 @@ class SerializeContext
     }
 
     /**
+     * @return object => $this->serializeClassName
      * @throws NotFoundAttributePropertyResolver
      * @throws ReflectionException
      * @throws NotFoundGroupException
@@ -211,14 +213,13 @@ class SerializeContext
      */
     public function from(... $payload): object
     {
-
         $payloads = [];
         foreach ($payload as $field => $itemPayload) {
             $values   = is_numeric($field) && is_array($itemPayload) ? $itemPayload : [$field => $itemPayload];
             $payloads = array_merge($payloads, $values);
         }
 
-        $this->chooseSerializeContext->groups = $this->getGroups();
+        $this->chooseSerializeContext->setGroups($this->getGroups());
         return $this->propertyInputValueResolver->resolve($this->chooseSerializeContext, $this->getGroupCollection(), $payloads);
     }
 
