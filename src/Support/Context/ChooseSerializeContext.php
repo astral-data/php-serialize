@@ -9,6 +9,11 @@ class ChooseSerializeContext
     /** @var array<string,ChoosePropertyContext> $properties */
     public array $properties;
 
+    public function __construct(
+        public readonly string $serializeClass,
+    ) {
+
+    }
 
     public function addProperty(ChoosePropertyContext $context): void
     {
@@ -19,5 +24,4 @@ class ChooseSerializeContext
     {
         return $this->properties[$name] ?? null;
     }
-
 }

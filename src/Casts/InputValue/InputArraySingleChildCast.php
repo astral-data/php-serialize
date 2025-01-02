@@ -2,13 +2,11 @@
 
 namespace Astral\Serialize\Casts\InputValue;
 
-use Astral\Serialize\Support\Context\ChooseSerializeContext;
 use Astral\Serialize\Casts\InputValue\Trait\InputArrayTrait;
 use Astral\Serialize\Contracts\Attribute\InputValueCastInterface;
 use Astral\Serialize\Enums\TypeKindEnum;
 use Astral\Serialize\Exceptions\NotFoundAttributePropertyResolver;
 use Astral\Serialize\Support\Collections\DataCollection;
-use Astral\Serialize\Support\Collections\GroupDataCollection;
 use Astral\Serialize\Support\Context\InputValueContext;
 use ReflectionException;
 
@@ -30,7 +28,7 @@ class InputArraySingleChildCast implements InputValueCastInterface
      */
     public function resolve(mixed $value, DataCollection $collection, InputValueContext $context): mixed
     {
-        $child = current($collection->getChildren());
+        $child     = current($collection->getChildren());
         $childType = $collection->getTypes()[0];
 
         $context->chooseSerializeContext->getProperty($collection->getName())->setType($childType);
@@ -41,5 +39,4 @@ class InputArraySingleChildCast implements InputValueCastInterface
 
         return $this->resolveSingle($value, $child, $collection, $context);
     }
-
 }

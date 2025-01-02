@@ -22,7 +22,6 @@ class SerializeContext
 {
     private array $groups = [];
 
-
     public function __construct(
         private readonly string                         $serializeClassName,
         private readonly ChooseSerializeContext         $chooseSerializeContext,
@@ -33,7 +32,7 @@ class SerializeContext
         private readonly ConstructDataCollectionManager $constructDataCollectionManager,
         private readonly PropertyInputValueResolver     $propertyInputValueResolver,
     ) {
-        $this->groups = [$this->serializeClassName];
+
     }
 
     /**
@@ -99,7 +98,7 @@ class SerializeContext
 
     private function getCacheKey(): string
     {
-        return 'SerializeContext:'.$this->serializeClassName.':'.implode('|', $this->getGroups());
+        return 'SerializeContext:' . $this->serializeClassName . ':' . implode('|', $this->getGroups());
     }
 
     /**
@@ -115,7 +114,7 @@ class SerializeContext
             throw new RuntimeException("Maximum nesting level of $maxDepth exceeded while parsing $className.");
         }
 
-        $cacheKey = 'SerializeContextGroupClass:'.$className;
+        $cacheKey         = 'SerializeContextGroupClass:' . $className;
         $cachedCollection = $this->cache->get($cacheKey);
         if ($cachedCollection) {
             foreach ($cachedCollection->getProperties() as $property) {
@@ -139,9 +138,9 @@ class SerializeContext
         foreach ($reflectionClass->getProperties(ReflectionProperty::IS_PUBLIC) as $property) {
 
 
-//            if (!$this->groupResolver->resolveExistsGroupsByProperty($property, $this->serializeClassName, $this->getGroups())) {
-//                continue;
-//            }
+            //            if (!$this->groupResolver->resolveExistsGroupsByProperty($property, $this->serializeClassName, $this->getGroups())) {
+            //                continue;
+            //            }
 
             $dataCollection = new DataCollection(
                 groups: $this->groupResolver->getGroupsTo($property),

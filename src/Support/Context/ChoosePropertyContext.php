@@ -2,13 +2,13 @@
 
 namespace Astral\Serialize\Support\Context;
 
-use Astral\Serialize\Support\Collections\TypeCollection;
 use Astral\Serialize\Support\Collections\DataCollection;
+use Astral\Serialize\Support\Collections\TypeCollection;
 
 class ChoosePropertyContext
 {
-    private ?string $inputName = null;
-    private ?string $outputName = null;
+    private ?string $inputName    = null;
+    private ?string $outputName   = null;
     private ?TypeCollection $type = null;
 
     /** @var ChooseSerializeContext[] $children */
@@ -70,7 +70,4 @@ class ChoosePropertyContext
 
         return $this->children[$key];
     }
-
-
-
 }

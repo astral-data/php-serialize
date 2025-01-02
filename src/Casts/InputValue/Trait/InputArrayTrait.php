@@ -2,12 +2,12 @@
 
 namespace Astral\Serialize\Casts\InputValue\Trait;
 
-use ReflectionException;
-use Astral\Serialize\Support\Context\InputValueContext;
-use Astral\Serialize\Support\Collections\DataCollection;
-use Astral\Serialize\Support\Context\ChooseSerializeContext;
-use Astral\Serialize\Support\Collections\GroupDataCollection;
 use Astral\Serialize\Exceptions\NotFoundAttributePropertyResolver;
+use Astral\Serialize\Support\Collections\DataCollection;
+use Astral\Serialize\Support\Collections\GroupDataCollection;
+use Astral\Serialize\Support\Context\ChooseSerializeContext;
+use Astral\Serialize\Support\Context\InputValueContext;
+use ReflectionException;
 
 trait InputArrayTrait
 {
@@ -19,12 +19,11 @@ trait InputArrayTrait
     {
         $resolved = [];
         foreach ($value as $key => $item) {
-            $chooseContext = $this->createChooseContext($context, $collection, $key);
+            $chooseContext  = $this->createChooseContext($context, $collection, $key);
             $resolved[$key] = $this->resolveChild($child, $item, $context, $chooseContext);
         }
         return $resolved;
     }
-
 
     /**
      * @throws NotFoundAttributePropertyResolver
@@ -52,7 +51,7 @@ trait InputArrayTrait
      */
     private function createChooseContext(InputValueContext $context, DataCollection $collection, $key = null): ChooseSerializeContext
     {
-        $chooseContext = new ChooseSerializeContext();
+        $chooseContext         = new ChooseSerializeContext($context->chooseSerializeContext->serializeClass);
         $chooseContext->groups = $context->chooseSerializeContext->groups;
 
         if ($key !== null) {

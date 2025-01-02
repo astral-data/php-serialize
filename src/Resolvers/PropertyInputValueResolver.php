@@ -2,13 +2,12 @@
 
 namespace Astral\Serialize\Resolvers;
 
-use Psr\SimpleCache\InvalidArgumentException;
 use Astral\Serialize\Casts\InputConstructCast;
-use Astral\Serialize\Support\Context\ChoosePropertyContext;
-use Astral\Serialize\Support\Context\ChooseSerializeContext;
 use Astral\Serialize\Exceptions\NotFoundAttributePropertyResolver;
 use Astral\Serialize\Support\Collections\DataCollection;
 use Astral\Serialize\Support\Collections\GroupDataCollection;
+use Astral\Serialize\Support\Context\ChoosePropertyContext;
+use Astral\Serialize\Support\Context\ChooseSerializeContext;
 use Astral\Serialize\Support\Context\InputValueContext;
 use Astral\Serialize\Support\Instance\ReflectionClassInstanceManager;
 use ReflectionException;
@@ -68,13 +67,14 @@ class PropertyInputValueResolver
                 context: $context,
             );
 
-            // construct
             if ($groupCollection->hasConstruct() && $groupCollection->hasConstructProperty($name)) {
                 $constructInputs[$name] = $resolvedValue;
             } else {
                 $collection->getProperty()->setValue($object, $resolvedValue);
             }
         }
+
+
 
         if ($groupCollection->hasConstruct()) {
             $this->inputConstructCast->resolve($groupCollection->getConstructProperties(), $object, $constructInputs);
@@ -88,30 +88,29 @@ class PropertyInputValueResolver
     {
         $inputNames = $collection->getInputNamesByGroups($groups);
 
-        // 检查组和构造属性，优先返回
         return !$this->groupResolver->resolveExistsGroupsByDataCollection($collection, $groups)
             ? $this->getConstructPropertyValue($groupCollection, $collection, null)
-            : $this->findMatch($inputNames, $payloadKeys)
+            : $this->findMatch($inputNames ?: [$collection->getName()], $payloadKeys)
             ?? $this->getConstructPropertyValue($groupCollection, $collection, $collection->getDefaultValue());
     }
 
-    /**
-     * 查找匹配的输入名或嵌套键
-     */
     private function findMatch(array $inputNames, array $payloadKeys): ?array
     {
         foreach ($inputNames as $name) {
-            $value = $payloadKeys[$name] ?? (str_contains($name, '.') ? $this->matchNestedKey($name, $payloadKeys) : false);
-            if ($value !== false) {
-                return ['name' => $name, 'value' => $value];
+            if (array_key_exists($name, $payloadKeys)) {
+                return ['name' => $name,'value' => $payloadKeys[$name]];
+            }
+
+            if (str_contains($name, '.')) {
+                if (($nestedValue = $this->matchNestedKey($name, $payloadKeys)) !== false) {
+                    return ['name' => $name,'value' => $nestedValue];
+                }
             }
         }
+
         return null;
     }
 
-    /**
-     * 获取构造属性值
-     */
     private function getConstructPropertyValue(GroupDataCollection $groupCollection, DataCollection $collection, mixed $defaultValue): array|false
     {
         $constructProperty = $groupCollection->getConstructProperty($collection->getName());

@@ -3,12 +3,10 @@
 namespace Astral\Serialize\Support\Collections\Manager;
 
 use Astral\Serialize\Support\Collections\ConstructDataCollection;
-use ReflectionException;
 use ReflectionMethod;
 
 class ConstructDataCollectionManager
 {
-
     public function getCollectionTo(?ReflectionMethod $method): array
     {
         if ($method === null) {

@@ -18,7 +18,7 @@ class InputConstructCast
     {
         $args = [];
         foreach ($constructorParameters as $param) {
-            $args[] = $readonlyVols[$param->name] ?? $object->{$param->name};
+            $args[] =  array_key_exists($param->name, $readonlyVols) ? $readonlyVols[$param->name] : $object->{$param->name};
         }
 
         $object->__construct(...$args);

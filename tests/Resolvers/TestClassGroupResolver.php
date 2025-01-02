@@ -1,6 +1,5 @@
 <?php
 
-use Astral\Serialize\Exceptions\NotFoundGroupException;
 use Astral\Serialize\Resolvers\GroupResolver;
 use Psr\SimpleCache\CacheInterface;
 

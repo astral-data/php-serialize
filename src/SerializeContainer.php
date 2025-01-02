@@ -30,7 +30,7 @@ class SerializeContainer
     protected ?TypeCollectionManager $typeCollectionManager                                 = null;
     protected ?PropertyTypesContextResolver $propertyTypesContextResolver                   = null;
     protected ?PropertyTypeDocResolver $propertyTypeDocResolver                             = null;
-    protected ?GroupResolver $groupResolver                                            = null;
+    protected ?GroupResolver $groupResolver                                                 = null;
     protected ?ReflectionClassInstanceManager $reflectionClassInstanceManager               = null;
     protected ?SerializeInstanceManager $serializeInstanceManager                           = null;
     protected ?DataCollectionCastResolver $attributePropertyResolver                        = null;

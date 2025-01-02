@@ -4,11 +4,11 @@ namespace Astral\Serialize\Resolvers;
 
 use Astral\Serialize\Annotations\Groups;
 use Astral\Serialize\Exceptions\NotFoundGroupException;
+use Astral\Serialize\Support\Collections\DataCollection;
 use Psr\SimpleCache\CacheInterface;
 use Psr\SimpleCache\InvalidArgumentException;
 use ReflectionClass;
 use ReflectionProperty;
-use Astral\Serialize\Support\Collections\DataCollection;
 
 class GroupResolver
 {
@@ -44,7 +44,7 @@ class GroupResolver
      */
     public function resolveExistsGroupsByDataCollection(DataCollection $collection, array $groups): bool
     {
-        if (!$collection->getGroups()) {
+        if (!$groups) {
             return true;
         }
 
@@ -62,7 +62,7 @@ class GroupResolver
      */
     public function getDefaultGroups(ReflectionClass $reflection): array
     {
-        $cacheKey = 'default_groups:'.$reflection->getName();
+        $cacheKey = 'default_groups:' . $reflection->getName();
         if ($this->cache->has($cacheKey)) {
             return $this->cache->get($cacheKey);
         }
@@ -101,9 +101,8 @@ class GroupResolver
         return $groupNames;
     }
 
-
     public function getCacheKey(ReflectionClass|ReflectionProperty $reflection): string
     {
-        return 'group:'.$reflection instanceof ReflectionClass ? $reflection->getName() : $reflection->getDeclaringClass()->getName() . ':' . $reflection->getName();
+        return 'group:' . $reflection instanceof ReflectionClass ? $reflection->getName() : $reflection->getDeclaringClass()->getName() . ':' . $reflection->getName();
     }
 }

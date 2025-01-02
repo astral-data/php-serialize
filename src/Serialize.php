@@ -22,7 +22,7 @@ abstract class Serialize
      */
     protected function getContext(): SerializeContext
     {
-        return $this->_context ??= ContextFactory::build(static::class, $this);
+        return $this->_context ??= ContextFactory::build(static::class);
     }
 
     protected function setContext(SerializeContext $context): static
@@ -60,7 +60,6 @@ abstract class Serialize
 
         return $instance;
     }
-
 
     public function __debugInfo()
     {

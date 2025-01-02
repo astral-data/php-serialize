@@ -18,7 +18,6 @@ class GroupDataCollection
     /**
      * @return ConstructDataCollection[]
      */
-
     public function getConstructProperties(): array
     {
         return $this->constructProperties;
@@ -36,7 +35,6 @@ class GroupDataCollection
     {
         return $this->properties;
     }
-
 
     public function getDefaultGroups(): array
     {
@@ -79,7 +77,6 @@ class GroupDataCollection
     {
         return isset($this->constructProperties[$name]);
     }
-
 
     public function count(): int
     {

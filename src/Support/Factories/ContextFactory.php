@@ -3,18 +3,18 @@
 namespace Astral\Serialize\Support\Factories;
 
 use Astral\Serialize\SerializeContainer;
-use Astral\Serialize\Support\Context\SerializeContext;
 use Astral\Serialize\Support\Context\ChooseSerializeContext;
+use Astral\Serialize\Support\Context\SerializeContext;
 
 class ContextFactory
 {
     /**
      */
-    public static function build(string $className, ?object $object = null): SerializeContext
+    public static function build(string $className): SerializeContext
     {
         return (new SerializeContext(
             serializeClassName: $className,
-            chooseSerializeContext:new ChooseSerializeContext(),
+            chooseSerializeContext:new ChooseSerializeContext($className),
             cache: CacheFactory::build(),
             reflectionClassInstanceManager: SerializeContainer::get()->reflectionClassInstanceManager(),
             groupResolver: SerializeContainer::get()->groupResolver(),
