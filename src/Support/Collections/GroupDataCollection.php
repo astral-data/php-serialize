@@ -5,7 +5,7 @@ namespace Astral\Serialize\Support\Collections;
 class GroupDataCollection
 {
     public function __construct(
-        private readonly string $groupName,
+        private readonly array  $defaultGroups,
         private readonly string $className,
         /** @var array<string, ConstructDataCollection> $constructProperties */
         private readonly array  $constructProperties,
@@ -14,6 +14,10 @@ class GroupDataCollection
     ) {
 
     }
+
+    /**
+     * @return ConstructDataCollection[]
+     */
 
     public function getConstructProperties(): array
     {
@@ -31,6 +35,12 @@ class GroupDataCollection
     public function getProperties(): array
     {
         return $this->properties;
+    }
+
+
+    public function getDefaultGroups(): array
+    {
+        return $this->defaultGroups;
     }
 
     public function getGroupName(): string
@@ -70,32 +80,6 @@ class GroupDataCollection
         return isset($this->constructProperties[$name]);
     }
 
-    /**
-     * 合并另一个 GroupDataCollection
-     */
-    public function merge(GroupDataCollection $collection): GroupDataCollection
-    {
-        $cloneCollection = clone $this;
-        foreach ($collection->getProperties() as $property) {
-            $name = $property->getName();
-            if (!isset($cloneCollection->properties[$name])) {
-                $cloneCollection->properties[$name] = $property;
-            } else {
-                $cloneCollection->properties[$name] = $property->merge($property);
-            }
-        }
-
-        return $cloneCollection;
-    }
-
-    public function toArray(): array
-    {
-        return [
-            'groupName'  => $this->groupName,
-            'className'  => $this->className,
-            'properties' => array_map(fn ($property) => $property->toArray(), $this->properties),
-        ];
-    }
 
     public function count(): int
     {

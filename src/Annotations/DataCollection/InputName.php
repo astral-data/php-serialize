@@ -15,22 +15,14 @@ use ReflectionProperty;
 #[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_CLASS)]
 class InputName implements DataCollectionCastInterface
 {
-    public string $name;
-
-    public array $groups;
-
-    public function __construct(string $name, array|string $groups = [])
+    public function __construct(public readonly string $name, public array|string $groups = [])
     {
-
-        $this->name   = $name;
         $this->groups = is_string($groups) ? (array)$groups : $groups;
     }
 
     public function resolve(DataCollection $dataCollection, ReflectionProperty|null $property = null): void
     {
-        if (!$this->groups || in_array($dataCollection->getParentGroupCollection()->getGroupName(), $this->groups)) {
-            $dataCollection->addInputName($this->name);
-        }
+        $dataCollection->addInputName($this->name, $this->groups ?: [$dataCollection->getParentGroupCollection()->getClassName()]);
 
     }
 }

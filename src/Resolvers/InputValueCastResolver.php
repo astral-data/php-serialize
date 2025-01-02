@@ -22,7 +22,7 @@ class InputValueCastResolver
      */
     public function resolve(mixed $value, DataCollection $collection, InputValueContext $context): mixed
     {
-        $value = $this->applyInputValueCasts($value, $collection, $context);
+        $value = $this->applyInputValueCastsByConfigManager($value, $collection, $context);
 
         $attributes =  $collection->getAttributes();
         if (!$attributes) {
@@ -41,7 +41,7 @@ class InputValueCastResolver
      *
      * @throws InvalidArgumentException
      */
-    private function applyInputValueCasts(mixed $value, DataCollection $collection, InputValueContext $context): mixed
+    private function applyInputValueCastsByConfigManager(mixed $value, DataCollection $collection, InputValueContext $context): mixed
     {
         foreach ($this->configManager->getInputValueCasts() as $cast) {
             $value = $this->applyCast($cast, $collection, $value, $context);

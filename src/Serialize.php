@@ -10,8 +10,6 @@ use Psr\SimpleCache\InvalidArgumentException;
 use ReflectionException;
 
 /**
- * @method static SerializeContext setGroups(array $groups)
-// * @method static SerializeContext from(...$values)
  * @method static SerializeContext toArray()
  *
  * @see SerializeContext
@@ -34,6 +32,19 @@ abstract class Serialize
     }
 
     /**
+     * @throws ReflectionException
+     * @throws NotFoundGroupException
+     * @throws InvalidArgumentException
+     */
+    public static function setGroups(array $groups): SerializeContext
+    {
+        $serializeContext = ContextFactory::build(static::class);
+        $serializeContext->setGroups($groups);
+
+        return $serializeContext;
+    }
+
+    /**
      * @throws NotFoundAttributePropertyResolver
      * @throws ReflectionException
      * @throws NotFoundGroupException
@@ -41,6 +52,7 @@ abstract class Serialize
      */
     public static function from(...$payload): static
     {
+
         $serializeContext = ContextFactory::build(static::class);
         /** @var static $instance */
         $instance =  $serializeContext->from(...$payload);
@@ -49,24 +61,6 @@ abstract class Serialize
         return $instance;
     }
 
-    public function __call($name, $args)
-    {
-        $this->getContext()->{$name}(...$args);
-        return $this;
-    }
-
-
-    //    /**
-    //     * @throws ReflectionException
-    //     */
-    //    public static function __callStatic($name, $args)
-    //    {
-    //        $instance  = SerializeContainer::get()->reflectionClassInstanceManager()
-    //                ->get(static::class)->newInstanceWithoutConstructor();
-    //        $instance->getContext()->{$name}(...$args);
-    //
-    //        return $instance;
-    //    }
 
     public function __debugInfo()
     {

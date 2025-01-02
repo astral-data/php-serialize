@@ -35,11 +35,11 @@ it('test parse serialize class', function () {
             public readonly object $type_object,
             public readonly int $type_int,
             public int $type_null,
-            int $abc
-            //            public readonly float $type_float,
-            //            public readonly mixed $type_mixed_other,
-            //            #[InputName('input_name')]
-            //            public readonly array|object $type_collect_object,
+            public readonly float $type_float,
+            public readonly mixed $type_mixed_other,
+            #[InputName('input_name')]
+            public readonly array|object $type_collect_object,
+            int $abc,
         ) {
             $this->type_null = $abc;
         }

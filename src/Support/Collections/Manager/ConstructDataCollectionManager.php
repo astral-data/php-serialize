@@ -8,9 +8,7 @@ use ReflectionMethod;
 
 class ConstructDataCollectionManager
 {
-    /**
-     * @throws ReflectionException
-     */
+
     public function getCollectionTo(?ReflectionMethod $method): array
     {
         if ($method === null) {

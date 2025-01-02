@@ -2,6 +2,8 @@
 
 namespace Astral\Serialize\Casts\InputValue;
 
+use Astral\Serialize\Support\Context\ChooseSerializeContext;
+use Astral\Serialize\Casts\InputValue\Trait\InputArrayTrait;
 use Astral\Serialize\Contracts\Attribute\InputValueCastInterface;
 use Astral\Serialize\Enums\TypeKindEnum;
 use Astral\Serialize\Exceptions\NotFoundAttributePropertyResolver;
@@ -13,13 +15,20 @@ use ReflectionException;
 
 class InputArrayBestMatchChildCast implements InputValueCastInterface
 {
+    use InputArrayTrait;
+
     public function match($value, DataCollection $collection, InputValueContext $context): bool
     {
         return $value && is_array($value) && count($collection->getChildren()) > 1 && $this->hasObjectType($collection);
     }
 
     /**
+     * @param $value
+     * @param DataCollection $collection
+     * @param InputValueContext $context
+     * @return mixed
      * @throws NotFoundAttributePropertyResolver
+     * @throws ReflectionException
      */
     public function resolve($value, DataCollection $collection, InputValueContext $context): mixed
     {
@@ -32,23 +41,15 @@ class InputArrayBestMatchChildCast implements InputValueCastInterface
 
         $child     = $this->findChildByClass($children, $bestMatchClass);
         $childType = $collection->getTypeTo($child->getClassName());
-        $collection->setChooseType($childType);
+
+        $context->chooseSerializeContext->getProperty($collection->getName())->setType($childType);
 
         if ($childType->kind === TypeKindEnum::COLLECT_OBJECT) {
-            return array_map(fn ($item) => $this->resolveChild(
-                propertyInputValueResolver: $context->propertyInputValueResolver,
-                //                className: $child->getClassName(),
-                child: $child,
-                value: $item
-            ), $value);
+            return $this->resolveArray($value, $child, $collection, $context);
         }
 
-        return $this->resolveChild(
-            propertyInputValueResolver: $context->propertyInputValueResolver,
-            //            className: $child->getClassName(),
-            child: $child,
-            value: $value
-        );
+        return $this->resolveSingle($value, $child, $collection, $context);
+
     }
 
     /**
@@ -89,24 +90,5 @@ class InputArrayBestMatchChildCast implements InputValueCastInterface
         }
 
         return null;
-    }
-
-    private function hasObjectType(DataCollection $collection): bool
-    {
-        foreach ($collection->getTypes() as $type) {
-            if ($type->kind->existsClass()) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * @throws NotFoundAttributePropertyResolver
-     * @throws ReflectionException
-     */
-    private function resolveChild(PropertyInputValueResolver $propertyInputValueResolver, GroupDataCollection $child, $value): mixed
-    {
-        return $propertyInputValueResolver->resolve($child, $value);
     }
 }

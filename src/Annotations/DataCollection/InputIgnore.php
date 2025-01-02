@@ -25,15 +25,10 @@ class InputIgnore implements DataCollectionCastInterface
         }, $groups);
     }
 
-    private function shouldIgnore(string $groupName): bool
-    {
-        return in_array($groupName, $this->groups, true);
-    }
+
 
     public function resolve(DataCollection $dataCollection, ReflectionProperty|null $property = null): void
     {
-        if ($this->shouldIgnore($dataCollection->getParentGroupCollection()->getGroupName())) {
-            $dataCollection->setInputIgnore(true);
-        }
+        $dataCollection->setInputIgnoreGroups($this->groups ?: [$dataCollection->getParentGroupCollection()->getClassName()]);
     }
 }

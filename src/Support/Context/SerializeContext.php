@@ -22,26 +22,29 @@ class SerializeContext
 {
     private array $groups = [];
 
+
     public function __construct(
         private readonly string                         $serializeClassName,
+        private readonly ChooseSerializeContext         $chooseSerializeContext,
         private readonly CacheInterface                 $cache,
         private readonly ReflectionClassInstanceManager $reflectionClassInstanceManager,
-        private readonly GroupResolver                  $classGroupResolver,
+        private readonly GroupResolver                  $groupResolver,
         private readonly DataCollectionCastResolver     $dataCollectionCastResolver,
         private readonly ConstructDataCollectionManager $constructDataCollectionManager,
         private readonly PropertyInputValueResolver     $propertyInputValueResolver,
     ) {
+        $this->groups = [$this->serializeClassName];
     }
 
     /**
-     * @throws NotFoundGroupException
      * @throws InvalidArgumentException
      * @throws ReflectionException
+     * @throws NotFoundGroupException
      */
     public function setGroups(array $groups): static
     {
         $reflectionClass = $this->reflectionClassInstanceManager->get($this->serializeClassName);
-        $this->classGroupResolver->resolveExistsGroups($reflectionClass, $this->serializeClassName, $groups);
+        $this->groupResolver->resolveExistsGroupsByClass($reflectionClass, $this->serializeClassName, $groups);
         $this->groups = $groups;
 
         return $this;
@@ -49,7 +52,6 @@ class SerializeContext
 
     public function getGroups(): array
     {
-        $this->groups = $this->groups ?: [$this->serializeClassName];
         return $this->groups;
     }
 
@@ -81,19 +83,23 @@ class SerializeContext
      */
     public function getGroupCollection(): GroupDataCollection
     {
-        $cachedCollection = null;
-        foreach ($this->getGroups() as $group) {
-            if ($this->cache->has($this->serializeClassName . ':' . $group)) {
-                /** @var GroupDataCollection $cachedCollection */
-                $cachedCollection = $this->cache->get($this->serializeClassName . ':' . $group);
-            } else {
-                /** @var GroupDataCollection $cachedCollection */
-                $cachedCollection = $this->parseSerializeClass($group, $this->serializeClassName);
-                $this->cache->set($this->serializeClassName . ':' . $group, $cachedCollection); // 将解析结果缓存
-            }
+        $cacheKey = $this->getCacheKey();
+
+        if ($this->cache->has($cacheKey)) {
+            /** @var GroupDataCollection */
+            return $this->cache->get($cacheKey);
         }
 
+        /** @var GroupDataCollection $cachedCollection */
+        $cachedCollection = $this->parseSerializeClass($this->serializeClassName);
+        $this->cache->set($cacheKey, $cachedCollection); // 将解析结果缓存
+
         return $cachedCollection;
+    }
+
+    private function getCacheKey(): string
+    {
+        return 'SerializeContext:'.$this->serializeClassName.':'.implode('|', $this->getGroups());
     }
 
     /**
@@ -102,19 +108,19 @@ class SerializeContext
      * @throws NotFoundGroupException
      * @throws NotFoundAttributePropertyResolver
      */
-    public function parseSerializeClass(string $groupName, string $className, int $maxDepth = 10, int $currentDepth = 0): ?GroupDataCollection
+    public function parseSerializeClass(string $className, int $maxDepth = 10, int $currentDepth = 0): ?GroupDataCollection
     {
         // max depth
         if ($currentDepth > $maxDepth) {
             throw new RuntimeException("Maximum nesting level of $maxDepth exceeded while parsing $className.");
         }
 
-        $cachedCollection = $this->cache->get($className . ':' . $groupName);
+        $cacheKey = 'SerializeContextGroupClass:'.$className;
+        $cachedCollection = $this->cache->get($cacheKey);
         if ($cachedCollection) {
             foreach ($cachedCollection->getProperties() as $property) {
                 $this->assembleChildren(
                     dataCollection: $property,
-                    groupName: $groupName,
                     maxDepth: $maxDepth,
                     currentDepth: $currentDepth
                 );
@@ -122,30 +128,30 @@ class SerializeContext
             return $cachedCollection;
         }
 
-
-
         $reflectionClass      = $this->reflectionClassInstanceManager->get($className);
 
         $globalDataCollection = new GroupDataCollection(
-            groupName: $groupName,
+            defaultGroups: $this->groupResolver->getDefaultGroups($reflectionClass),
             className: $className,
             constructProperties: $this->constructDataCollectionManager->getCollectionTo($reflectionClass->getConstructor())
         );
 
         foreach ($reflectionClass->getProperties(ReflectionProperty::IS_PUBLIC) as $property) {
 
-            if (!$this->classGroupResolver->resolveExistsGroups($property, $this->serializeClassName, $groupName)) {
-                continue;
-            }
+
+//            if (!$this->groupResolver->resolveExistsGroupsByProperty($property, $this->serializeClassName, $this->getGroups())) {
+//                continue;
+//            }
 
             $dataCollection = new DataCollection(
+                groups: $this->groupResolver->getGroupsTo($property),
                 parentGroupCollection: $globalDataCollection,
                 name: $property->getName(),
                 isNullable: $property->getType()?->allowsNull() ?? true,
                 isReadonly: $property->isReadOnly(),
                 attributes: array_merge($property->getDeclaringClass()->getAttributes(), $property->getAttributes()),
+                defaultValue: $property->hasDefaultValue() ? $property->getDefaultValue() : null,
                 property: $property,
-                defaultValue: $property->getDefaultValue(),
             );
 
             $typeCollections = SerializeContainer::get()->typeCollectionManager()->getCollectionTo($property);
@@ -154,7 +160,6 @@ class SerializeContext
 
             $this->assembleChildren(
                 dataCollection: $dataCollection,
-                groupName: $groupName,
                 maxDepth: $maxDepth,
                 currentDepth: $currentDepth
             );
@@ -163,7 +168,7 @@ class SerializeContext
         }
 
         // cache
-        $this->cache->set($className . ':' . $groupName, $globalDataCollection);
+        $this->cache->set($cacheKey, $globalDataCollection);
 
         return $globalDataCollection;
     }
@@ -178,19 +183,18 @@ class SerializeContext
      */
     private function assembleChildren(
         DataCollection $dataCollection,
-        string $groupName,
         int $maxDepth,
         int $currentDepth
     ): void {
 
-        if ($dataCollection->getInputIgnore()) {
+        if ($dataCollection->isInputIgnoreByGroups($this->getGroups())) {
             return;
         }
 
         foreach ($dataCollection->getTypes() as $type) {
             if ($type->kind->existsClass()) {
                 $childCollection = $this->parseSerializeClass(
-                    groupName: $groupName,
+                    //                    groupName: $groupName,
                     className: $type->className,
                     maxDepth: $maxDepth,
                     currentDepth: $currentDepth + 1
@@ -208,13 +212,15 @@ class SerializeContext
      */
     public function from(... $payload): object
     {
+
         $payloads = [];
         foreach ($payload as $field => $itemPayload) {
-            $values   = is_numeric($field) && is_array($itemPayload)  || is_object($itemPayload) ? $itemPayload : [$field => $itemPayload];
+            $values   = is_numeric($field) && is_array($itemPayload) ? $itemPayload : [$field => $itemPayload];
             $payloads = array_merge($payloads, $values);
         }
 
-        return $this->propertyInputValueResolver->resolve($this->getGroupCollection(), $payloads);
+        $this->chooseSerializeContext->groups = $this->getGroups();
+        return $this->propertyInputValueResolver->resolve($this->chooseSerializeContext, $this->getGroupCollection(), $payloads);
     }
 
     public function toArray()

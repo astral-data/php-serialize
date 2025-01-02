@@ -2,7 +2,10 @@
 
 namespace Astral\Serialize\Resolvers;
 
+use Psr\SimpleCache\InvalidArgumentException;
 use Astral\Serialize\Casts\InputConstructCast;
+use Astral\Serialize\Support\Context\ChoosePropertyContext;
+use Astral\Serialize\Support\Context\ChooseSerializeContext;
 use Astral\Serialize\Exceptions\NotFoundAttributePropertyResolver;
 use Astral\Serialize\Support\Collections\DataCollection;
 use Astral\Serialize\Support\Collections\GroupDataCollection;
@@ -16,6 +19,7 @@ class PropertyInputValueResolver
         protected readonly ReflectionClassInstanceManager $reflectionClassInstanceManager,
         private readonly InputValueCastResolver $inputValueCastResolver,
         protected readonly InputConstructCast $inputConstructCast,
+        protected readonly GroupResolver $groupResolver,
     ) {
 
     }
@@ -24,27 +28,38 @@ class PropertyInputValueResolver
      * @throws NotFoundAttributePropertyResolver
      * @throws ReflectionException
      */
-    public function resolve(GroupDataCollection $groupCollection, array $payload): object
+    public function resolve(ChooseSerializeContext $chooseContext, GroupDataCollection $groupCollection, array $payload): object
     {
+
         $reflectionClass =  $this->reflectionClassInstanceManager->get($groupCollection->getClassName());
         $object          = $reflectionClass->newInstanceWithoutConstructor();
-        $context         = new InputValueContext($groupCollection->getClassName(), $object, $payload, $this);
 
-        // filter InputIgnore
-        $properties = array_filter(
-            $groupCollection->getProperties(),
-            fn ($property) => !$property->getInputIgnore()
+        $context         = new InputValueContext(
+            className: $groupCollection->getClassName(),
+            classInstance: $object,
+            payload: $payload,
+            propertyInputValueResolver: $this,
+            chooseSerializeContext: $chooseContext,
         );
 
+        $properties = $groupCollection->getProperties();
+
         $constructInputs =  $this->inputConstructCast->getNotPromoted($groupCollection->getConstructProperties(), $payload);
+
         foreach ($properties as $collection) {
 
-            $matchInput = $this->matchInputNameAndValue($collection, $groupCollection, $payload);
-            if ($matchInput === false) {
+            $name = $collection->getName();
+
+            $chooseContext->addProperty(new ChoosePropertyContext($name, $chooseContext));
+            $matchInput = $this->matchInputNameAndValue($chooseContext->groups, $collection, $groupCollection, $payload);
+
+            if ($matchInput === false
+                || ($collection->isInputIgnoreByGroups($chooseContext->groups)  && !$groupCollection->hasConstructProperty($name))) {
                 continue;
             }
 
-            $collection->setChooseInputName($matchInput['name']);
+            $chooseContext->getProperty($name)->setInputName($matchInput['name']);
+
             $resolvedValue = $matchInput['value'];
 
             $resolvedValue = $this->inputValueCastResolver->resolve(
@@ -54,8 +69,8 @@ class PropertyInputValueResolver
             );
 
             // construct
-            if ($groupCollection->hasConstruct() && $groupCollection->hasConstructProperty($collection->getName())) {
-                $constructInputs[$collection->getName()] = $resolvedValue;
+            if ($groupCollection->hasConstruct() && $groupCollection->hasConstructProperty($name)) {
+                $constructInputs[$name] = $resolvedValue;
             } else {
                 $collection->getProperty()->setValue($object, $resolvedValue);
             }
@@ -69,34 +84,40 @@ class PropertyInputValueResolver
 
     }
 
-    public function matchInputNameAndValue(DataCollection $collection, GroupDataCollection $groupCollection, array $payloadKeys): array|false
+    public function matchInputNameAndValue(array $groups, DataCollection $collection, GroupDataCollection $groupCollection, array $payloadKeys): array|false
     {
-        $inputNames = $collection->getInputNames();
+        $inputNames = $collection->getInputNamesByGroups($groups);
 
-        if (!$inputNames && array_key_exists($collection->getName(), $payloadKeys)) {
-            return ['name' => $collection->getName(),'value' => $payloadKeys[$collection->getName()]];
-        }
+        // 检查组和构造属性，优先返回
+        return !$this->groupResolver->resolveExistsGroupsByDataCollection($collection, $groups)
+            ? $this->getConstructPropertyValue($groupCollection, $collection, null)
+            : $this->findMatch($inputNames, $payloadKeys)
+            ?? $this->getConstructPropertyValue($groupCollection, $collection, $collection->getDefaultValue());
+    }
 
+    /**
+     * 查找匹配的输入名或嵌套键
+     */
+    private function findMatch(array $inputNames, array $payloadKeys): ?array
+    {
         foreach ($inputNames as $name) {
-
-            if (array_key_exists($name, $payloadKeys)) {
-                return ['name' => $name,'value' => $payloadKeys[$name]];
-            }
-
-            if (str_contains($name, '.')) {
-                if (($nestedValue = $this->matchNestedKey($name, $payloadKeys)) !== false) {
-                    return ['name' => $name,'value' => $nestedValue];
-                }
+            $value = $payloadKeys[$name] ?? (str_contains($name, '.') ? $this->matchNestedKey($name, $payloadKeys) : false);
+            if ($value !== false) {
+                return ['name' => $name, 'value' => $value];
             }
         }
+        return null;
+    }
 
-        // construct
-        if ($groupCollection->hasConstructProperty($collection->getName())) {
-            $value = $groupCollection->getConstructProperty($collection->getName())->defaultValue ?? $collection->getDefaultValue();
-            return ['name' => $collection->getName(), 'value' => $value];
-        }
-
-        return  false;
+    /**
+     * 获取构造属性值
+     */
+    private function getConstructPropertyValue(GroupDataCollection $groupCollection, DataCollection $collection, mixed $defaultValue): array|false
+    {
+        $constructProperty = $groupCollection->getConstructProperty($collection->getName());
+        return $constructProperty
+            ? ['name' => $collection->getName(), 'value' => $constructProperty->defaultValue ?? $defaultValue]
+            : false;
     }
 
     /**

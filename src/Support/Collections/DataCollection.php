@@ -10,28 +10,38 @@ class DataCollection
     //    private array $tranFromResolvers = [];
 
     public function __construct(
+        private readonly array               $groups,
         private readonly GroupDataCollection $parentGroupCollection,
         private readonly string              $name,
         private readonly bool                $isNullable,
         private readonly bool                $isReadonly,
-        private readonly array               $attributes,
-        private readonly mixed               $defaultValue,
-        private readonly ReflectionProperty  $property,
+        private readonly array              $attributes,
+        private readonly mixed              $defaultValue,
+        private readonly ReflectionProperty $property,
         /** @var TypeCollection[] */
-        private array                        $types = [],
-        private array                        $inputNames = [],
-        private array                        $outNames = [],
-        private bool                         $inputIgnore = false,
-        private bool                         $outIgnore = false,
+        private array                       $types = [],
+        /** @var array<string,array> */
+        private array                       $inputNames = [],
+        /** @var array<string,array> */
+        private array                       $outNames = [],
+        /** @var string[] */
+        private array                       $inputIgnoreGroups = [],
+        /** @var string[] */
+        private array                       $outIgnoreGroups = [],
         /** @var array<class-string,GroupDataCollection> */
-        public array                         $children = [],
-        private ?string                      $chooseInputName = null,
-        private ?string                      $chooseOutputName = null,
-        private ?TypeCollection              $chooseType = null,
+        public array                        $children = [],
+        private ?string                     $chooseInputName = null,
+        private ?string                     $chooseOutputName = null,
+        private ?TypeCollection             $chooseType = null,
         //        private ?string                      $propertyAliasName = null,
     ) {
-        $this->addInputName($this->name);
+        $this->addInputName($this->name, [$this->parentGroupCollection->getClassName()]);
         $this->addOutName($this->name);
+    }
+
+    public function getGroups(): array
+    {
+        return $this->groups;
     }
 
     public function getDefaultValue(): mixed
@@ -57,33 +67,6 @@ class DataCollection
     public function getOutNames(): array
     {
         return $this->outNames;
-    }
-
-    /**
-     * 合并另一个 DataCollection
-     */
-    public function merge(DataCollection $dataCollection): DataCollection
-    {
-        $cloneDataCollection = clone $this;
-        $cloneDataCollection->mergeInputIgnore($dataCollection->inputIgnore);
-        $cloneDataCollection->mergeInputName($dataCollection->inputNames);
-        $cloneDataCollection->mergeInputTranFromCollections($dataCollection->inputTranFromCollections);
-        $cloneDataCollection->mergeOutIgnore($dataCollection->outIgnore);
-        $cloneDataCollection->mergeOutName($dataCollection->outNames);
-        $cloneDataCollection->mergeOoutTranFromCollections($dataCollection->outTranFromCollections);
-        $cloneDataCollection->mergeChildren($dataCollection->children);
-
-        return $cloneDataCollection;
-    }
-
-    public function mergeChildren(GroupDataCollection $dataGroupCollection)
-    {
-        $children = [];
-        foreach ($this->getChildren() as $item) {
-
-        }
-
-        //        return $dataGroupCollection->merge($dataGroupCollection->)
     }
 
     /**
@@ -114,31 +97,56 @@ class DataCollection
         return $this->inputNames;
     }
 
-    public function getInputIgnore(): bool
+    public function getInputNamesByGroups(array $groups): array
     {
-        return $this->inputIgnore;
+        $vols = [];
+        foreach ($groups as $group) {
+            $vols =  isset($this->inputNames[$group]) ? array_merge($vols, $this->inputNames[$group]) : $vols;
+        }
+
+        return $vols;
     }
 
-    public function setOutIgnore(bool $val): self
+    public function getInputIgnoreGroups(): array
     {
-        $this->outIgnore = $val;
+        return $this->inputIgnoreGroups;
+    }
+
+    public function isInputIgnoreByGroups(array $groups): bool
+    {
+        foreach ($groups as $group) {
+            if (in_array($group, $this->inputIgnoreGroups)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function setOutIgnoreGroups(array $vols): self
+    {
+        $this->outIgnoreGroups = array_merge($this->outIgnoreGroups, $vols);
+
         return $this;
     }
 
-    public function getOutIgnore(): bool
+    public function getOutIgnoreGroups(): array
     {
-        return $this->outIgnore;
+        return $this->outIgnoreGroups;
     }
 
-    public function setInputIgnore(bool $val): self
+    public function setInputIgnoreGroups(array $vols): self
     {
-        $this->inputIgnore = $val;
+        $this->inputIgnoreGroups = array_merge($this->inputIgnoreGroups, $vols);
         return $this;
     }
 
-    public function addInputName($name): self
+    public function addInputName($name, array $groups): self
     {
-        $this->inputNames[$name] = $name;
+
+        foreach ($groups as $group) {
+            $this->inputNames[$group][$name] ??= $name;
+        }
 
         return $this;
     }

@@ -40,4 +40,9 @@ class InputConstructCast
 
         return $vols;
     }
+
+    public function getParams()
+    {
+
+    }
 }

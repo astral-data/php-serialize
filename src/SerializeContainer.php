@@ -30,7 +30,7 @@ class SerializeContainer
     protected ?TypeCollectionManager $typeCollectionManager                                 = null;
     protected ?PropertyTypesContextResolver $propertyTypesContextResolver                   = null;
     protected ?PropertyTypeDocResolver $propertyTypeDocResolver                             = null;
-    protected ?GroupResolver $classGroupResolver                                            = null;
+    protected ?GroupResolver $groupResolver                                            = null;
     protected ?ReflectionClassInstanceManager $reflectionClassInstanceManager               = null;
     protected ?SerializeInstanceManager $serializeInstanceManager                           = null;
     protected ?DataCollectionCastResolver $attributePropertyResolver                        = null;
@@ -82,9 +82,9 @@ class SerializeContainer
         );
     }
 
-    public function classGroupResolver(): GroupResolver
+    public function groupResolver(): GroupResolver
     {
-        return $this->classGroupResolver ??= new GroupResolver(
+        return $this->groupResolver ??= new GroupResolver(
             CacheFactory::build()
         );
     }
@@ -105,6 +105,7 @@ class SerializeContainer
             reflectionClassInstanceManager:$this->reflectionClassInstanceManager(),
             inputValueCastResolver:$this->inputValueCastResolver(),
             inputConstructCast:$this->inputConstructCast(),
+            groupResolver: $this->groupResolver(),
         );
     }
 

@@ -8,6 +8,7 @@ use Psr\SimpleCache\CacheInterface;
 use Psr\SimpleCache\InvalidArgumentException;
 use ReflectionClass;
 use ReflectionProperty;
+use Astral\Serialize\Support\Collections\DataCollection;
 
 class GroupResolver
 {
@@ -18,14 +19,12 @@ class GroupResolver
     }
 
     /**
-     * @throws NotFoundGroupException
      * @throws InvalidArgumentException
+     * @throws NotFoundGroupException
      */
-    public function resolveExistsGroups(ReflectionClass|ReflectionProperty $reflection, string $defaultGroup, string|array $groups): bool
+    public function resolveExistsGroupsByClass(ReflectionClass $reflection, string $defaultGroup, array $groups): bool
     {
-
-        $groups          = (array) $groups;
-        $availableGroups = array_merge([$defaultGroup], $this->getGroupsTo($reflection));
+        $availableGroups = array_merge([$defaultGroup], $this->getDefaultGroups($reflection));
         $invalidGroups   = array_filter($groups, fn ($group) => !in_array($group, $availableGroups, true));
 
         if ($invalidGroups) {
@@ -37,7 +36,47 @@ class GroupResolver
             ));
         }
 
+
         return true;
+    }
+
+    /**
+     */
+    public function resolveExistsGroupsByDataCollection(DataCollection $collection, array $groups): bool
+    {
+        if (!$collection->getGroups()) {
+            return true;
+        }
+
+        foreach ($groups as $group) {
+            if (in_array($group, $collection->getGroups())) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @throws InvalidArgumentException
+     */
+    public function getDefaultGroups(ReflectionClass $reflection): array
+    {
+        $cacheKey = 'default_groups:'.$reflection->getName();
+        if ($this->cache->has($cacheKey)) {
+            return $this->cache->get($cacheKey);
+        }
+
+        $groups = $this->getGroupsTo($reflection);
+
+        foreach ($reflection->getProperties() as $property) {
+            $groups =   array_merge($groups, $this->getGroupsTo($property));
+        }
+
+        $groups = array_unique($groups);
+        $this->cache->set($cacheKey, $groups);
+
+        return $groups;
     }
 
     /**
@@ -56,13 +95,15 @@ class GroupResolver
             return [];
         }
 
-        $this->cache->set($cacheKey, $attributes[0]->newInstance()->names);
+        $groupNames = $attributes[0]->newInstance()->names;
+        $this->cache->set($cacheKey, $groupNames);
 
-        return $attributes[0]->newInstance()->names;
+        return $groupNames;
     }
+
 
     public function getCacheKey(ReflectionClass|ReflectionProperty $reflection): string
     {
-        return $reflection instanceof ReflectionClass ? $reflection->getName() : $reflection->getDeclaringClass() . ':' . $reflection->getName();
+        return 'group:'.$reflection instanceof ReflectionClass ? $reflection->getName() : $reflection->getDeclaringClass()->getName() . ':' . $reflection->getName();
     }
 }

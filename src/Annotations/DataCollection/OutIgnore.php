@@ -19,15 +19,8 @@ class OutIgnore implements DataCollectionCastInterface
         $this->groups = $groups;
     }
 
-    private function shouldIgnore(string $groupName): bool
-    {
-        return in_array($groupName, $this->groups, true);
-    }
-
     public function resolve(DataCollection $dataCollection, ReflectionProperty|null $property = null): void
     {
-        if ($this->shouldIgnore($dataCollection->getParentGroupCollection()->getGroupName())) {
-            $dataCollection->setOutIgnore(true);
-        }
+        $dataCollection->setOutIgnoreGroups($this->groups);
     }
 }

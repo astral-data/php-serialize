@@ -11,6 +11,7 @@ class InputValueContext
         public readonly object $classInstance,
         public readonly array $payload,
         public readonly PropertyInputValueResolver $propertyInputValueResolver,
+        public readonly ChooseSerializeContext $chooseSerializeContext,
     ) {
 
     }

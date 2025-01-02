@@ -15,8 +15,10 @@ it('throws NotFoundGroupException when groups do not exist', function () {
     $reflection = $this->createMock(ReflectionClass::class);
     $reflection->method('getAttributes')->willReturn([]);
 
-    $resolver->resolveExistsGroups($reflection, ['nonexistent']);
-})->throws(NotFoundGroupException::class);
+    $result = $resolver->resolveExistsGroupsByProperty($reflection, 'test', ['nonexistent']);
+
+    expect($result)->toBeFalse();
+});
 
 it('returns true when groups exist', function () {
     $mockCache = mock(CacheInterface::class);
@@ -45,7 +47,7 @@ it('returns true when groups exist', function () {
     ]);
 
     $resolver = new GroupResolver($mockCache);
-    $result   = $resolver->resolveExistsGroups($reflection, ['group1']);
+    $result   = $resolver->resolveExistsGroupsByProperty($reflection, 'test', ['group1']);
 
     expect($result)->toBeTrue();
 });
@@ -59,7 +61,7 @@ it('returns cached groups when available', function () {
 
     $reflection = $this->createMock(ReflectionClass::class);
 
-    $result = $resolver->resolveExistsGroups($reflection, ['cached_group1']);
+    $result = $resolver->resolveExistsGroupsByProperty($reflection, 'test', ['cached_group1']);
 
     expect($result)->toBeTrue();
 });
