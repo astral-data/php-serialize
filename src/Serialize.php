@@ -20,7 +20,7 @@ abstract class Serialize
 
     /**
      */
-    public function getContext(): SerializeContext
+    public function getContext(): ?SerializeContext
     {
         return $this->_context;
     }

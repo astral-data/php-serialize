@@ -1,10 +1,12 @@
 <?php
 
+use Astral\Serialize\Annotations\DataCollection\OutName;
 use Astral\Serialize\Annotations\DataCollection\InputName;
 use Astral\Serialize\Serialize;
 use Astral\Serialize\Support\Context\SerializeContext;
 use Astral\Serialize\Tests\TestRequest\Other\OtherTypeDoc;
 use Astral\Serialize\Tests\TestRequest\TypeOneDoc;
+use Astral\Serialize\Annotations\DataCollection\OutIgnore;
 
 beforeEach(function () {
     /** @var SerializeContext $this */
@@ -35,7 +37,9 @@ it('test parse serialize class', function () {
             public readonly object $type_object,
             public readonly int $type_int,
             public int $type_null,
+            #[OutName('out_type_float', TestSerialize::class)]
             public readonly float $type_float,
+            #[OutIgnore(TestSerialize::class)]
             public readonly mixed $type_mixed_other,
             #[InputName('input_name')]
             public readonly array|object $type_collect_object,
@@ -79,7 +83,8 @@ it('test parse serialize class', function () {
         type_mixed_other: ['abc' => ['bbb' => ['ccc' => 'dddd'],['abc']],'aaa','bbb','ccc',''],
         abc:123
     );
-    print_r($object);
+
+    print_r($object->toArray());
 
 
     // 记录测试结束后的内存使用

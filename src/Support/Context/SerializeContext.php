@@ -56,26 +56,26 @@ class SerializeContext
     {
         return $this->groups;
     }
+//
+//    public function getSerializeClassName(): string
+//    {
+//        return $this->serializeClassName;
+//    }
 
-    public function getSerializeClassName(): string
-    {
-        return $this->serializeClassName;
-    }
-
-    /**
-     * @throws ReflectionException
-     * @throws InvalidArgumentException
-     * @throws NotFoundGroupException
-     * @throws NotFoundAttributePropertyResolver
-     */
-    public function getCollection(): GroupDataCollection
-    {
-        if ($this->cache->has($this->serializeClassName)) {
-            return $this->cache->get($this->serializeClassName);
-        }
-
-        return $this->getGroupCollection();
-    }
+//    /**
+//     * @throws ReflectionException
+//     * @throws InvalidArgumentException
+//     * @throws NotFoundGroupException
+//     * @throws NotFoundAttributePropertyResolver
+//     */
+//    public function getCollection(): GroupDataCollection
+//    {
+//        if ($this->cache->has($this->serializeClassName)) {
+//            return $this->cache->get($this->serializeClassName);
+//        }
+//
+//        return $this->getGroupCollection();
+//    }
 
     /**
      * @throws ReflectionException
@@ -140,11 +140,6 @@ class SerializeContext
 
         foreach ($reflectionClass->getProperties(ReflectionProperty::IS_PUBLIC) as $property) {
 
-
-            //            if (!$this->groupResolver->resolveExistsGroupsByProperty($property, $this->serializeClassName, $this->getGroups())) {
-            //                continue;
-            //            }
-
             $dataCollection = new DataCollection(
                 groups: $this->groupResolver->getGroupsTo($property),
                 parentGroupCollection: $globalDataCollection,
@@ -196,7 +191,6 @@ class SerializeContext
         foreach ($dataCollection->getTypes() as $type) {
             if ($type->kind->existsClass()) {
                 $childCollection = $this->parseSerializeClass(
-                    //                    groupName: $groupName,
                     className: $type->className,
                     maxDepth: $maxDepth,
                     currentDepth: $currentDepth + 1
@@ -233,14 +227,15 @@ class SerializeContext
 
     }
 
+
     /**
      * @throws NotFoundAttributePropertyResolver
      * @throws ReflectionException
-     * @throws NotFoundGroupException
      * @throws InvalidArgumentException
+     * @throws NotFoundGroupException
      */
     public function toArray(object $object): array
     {
-        return $this->propertyToArrayResolver->resolve($this->chooseSerializeContext, $this->getCollection(), $object);
+        return $this->propertyToArrayResolver->resolve($this->chooseSerializeContext, $this->getGroupCollection(), $object);
     }
 }

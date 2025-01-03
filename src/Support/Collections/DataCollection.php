@@ -97,7 +97,7 @@ class DataCollection
     public function getInputNamesByGroups(array $groups, string $defaultGroup): array
     {
         if (count($groups) == 1 && current($groups) === $defaultGroup) {
-            return $this->inputNames['default'];
+            return $this->inputNames[$defaultGroup] ?? $this->inputNames['default'];
         }
 
         $vols = [];
@@ -132,7 +132,7 @@ class DataCollection
     public function getOutNamesByGroups(array $groups, string $defaultGroup): array
     {
         if (count($groups) == 1 && current($groups) === $defaultGroup) {
-            return $this->outNames['default'];
+            return $this->outNames[$defaultGroup] ?? $this->outNames['default'];
         }
 
         $vols = [];
