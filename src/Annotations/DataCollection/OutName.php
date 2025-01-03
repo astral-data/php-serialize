@@ -30,5 +30,4 @@ class OutName implements DataCollectionCastInterface
     {
         $dataCollection->addOutName($this->name, $this->groups ?: null);
     }
-
 }

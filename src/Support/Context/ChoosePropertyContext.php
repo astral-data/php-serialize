@@ -8,7 +8,7 @@ use Astral\Serialize\Support\Collections\TypeCollection;
 class ChoosePropertyContext
 {
     private ?string $inputName    = null;
-    private ?array $outputName   = null;
+    private ?array $outputName    = null;
     private ?TypeCollection $type = null;
 
     /** @var ChooseSerializeContext[] $children */

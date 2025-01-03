@@ -2,9 +2,8 @@
 
 namespace Astral\Serialize\Contracts\Attribute;
 
-use Astral\Serialize\Support\Context\OutContext;
-use Astral\Serialize\Support\Context\InputValueContext;
 use Astral\Serialize\Support\Collections\DataCollection;
+use Astral\Serialize\Support\Context\OutContext;
 
 interface OutValueCastInterface
 {

@@ -243,14 +243,14 @@ class DataCollection
         }
     }
 
-//    public function toArray(): array
-//    {
-//        return [
-//            'name'         => $this->name,
-//            'type'         => array_map(fn ($type) => $type->toArray(), $this->types),
-//            'defaultValue' => $this->defaultValue,
-//            'nullable'     => $this->isNullable,
-//            'children'     => $this->children ? array_map(fn ($child) => $child->toArray(), $this->children) : null,
-//        ];
-//    }
+    //    public function toArray(): array
+    //    {
+    //        return [
+    //            'name'         => $this->name,
+    //            'type'         => array_map(fn ($type) => $type->toArray(), $this->types),
+    //            'defaultValue' => $this->defaultValue,
+    //            'nullable'     => $this->isNullable,
+    //            'children'     => $this->children ? array_map(fn ($child) => $child->toArray(), $this->children) : null,
+    //        ];
+    //    }
 }
