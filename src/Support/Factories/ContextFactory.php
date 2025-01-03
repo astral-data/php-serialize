@@ -21,6 +21,7 @@ class ContextFactory
             dataCollectionCastResolver: SerializeContainer::get()->attributePropertyResolver(),
             constructDataCollectionManager: SerializeContainer::get()->constructDataCollectionManager(),
             propertyInputValueResolver: SerializeContainer::get()->propertyInputValueResolver(),
+            propertyToArrayResolver:  SerializeContainer::get()->propertyToArrayResolver(),
         ));
     }
 }

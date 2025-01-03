@@ -3,6 +3,8 @@
 namespace Astral\Serialize;
 
 use Astral\Serialize\Casts\InputConstructCast;
+use Astral\Serialize\Resolvers\OutValueCastResolver;
+use Astral\Serialize\Resolvers\PropertyToArrayResolver;
 use Astral\Serialize\Resolvers\DataCollectionCastResolver;
 use Astral\Serialize\Resolvers\GroupResolver;
 use Astral\Serialize\Resolvers\InputValueCastResolver;
@@ -24,6 +26,7 @@ class SerializeContainer
 {
     protected static self $instance;
     protected ?ContextFactory $contextFactory                                               = null;
+
     protected ?SerializeContext $context                                                    = null;
     protected ?TypeResolver $typeResolver                                                   = null;
     protected ?DocBlockFactory $docBlockFactory                                             = null;
@@ -37,7 +40,11 @@ class SerializeContainer
 
     protected ?PropertyInputValueResolver $propertyInputValueResolver = null;
 
+    protected ?PropertyToArrayResolver $propertyToArrayResolver = null;
+
     protected ?InputValueCastResolver $inputValueCastResolver               = null;
+
+    protected ?OutValueCastResolver $outValueCastResolver               = null;
 
     protected ?InputConstructCast $inputConstructCast = null;
 
@@ -122,6 +129,20 @@ class SerializeContainer
     public function constructDataCollectionManager(): ConstructDataCollectionManager
     {
         return $this->constructDataCollectionManager ??= new ConstructDataCollectionManager();
+    }
+
+    public function propertyToArrayResolver(): PropertyToArrayResolver
+    {
+        return $this->propertyToArrayResolver ??= new PropertyToArrayResolver(
+            reflectionClassInstanceManager:$this->reflectionClassInstanceManager(),
+            outValueCastResolver:$this->outValueCastResolver(),
+            groupResolver: $this->groupResolver(),
+        );
+    }
+
+    public function outValueCastResolver(): OutValueCastResolver
+    {
+        return $this->outValueCastResolver ??= new OutValueCastResolver(ConfigManager::getInstance());
     }
 
     public function serializeInstanceManager(): SerializeInstanceManager
