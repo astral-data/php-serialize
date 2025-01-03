@@ -12,7 +12,7 @@ use ReflectionProperty;
 /**
  * toArray输出的属性名称
  */
-#[Attribute(Attribute::TARGET_PROPERTY)]
+#[Attribute(Attribute::TARGET_PROPERTY | Attribute::IS_REPEATABLE)]
 class OutName implements DataCollectionCastInterface
 {
     public string $name;
