@@ -85,8 +85,8 @@ class PropertyInputValueResolver
     {
 
         $defaultGroup = $chooseContext->serializeClass;
-        $groups = $chooseContext->getGroups();
-        $inputNames = $collection->getInputNamesByGroups($groups, $defaultGroup);
+        $groups       = $chooseContext->getGroups();
+        $inputNames   = $collection->getInputNamesByGroups($groups, $defaultGroup);
 
         return !$this->groupResolver->resolveExistsGroupsByDataCollection($collection, $groups, $defaultGroup) || $collection->isInputIgnoreByGroups($groups)
             ? $this->getConstructPropertyValue($groupCollection, $collection, null)

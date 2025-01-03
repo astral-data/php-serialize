@@ -20,12 +20,12 @@ abstract class Serialize
 
     /**
      */
-    protected function getContext(): SerializeContext
+    public function getContext(): SerializeContext
     {
-        return $this->_context ??= ContextFactory::build(static::class);
+        return $this->_context;
     }
 
-    protected function setContext(SerializeContext $context): static
+    public function setContext(SerializeContext $context): static
     {
         $this->_context = $context;
         return  $this;
@@ -42,6 +42,17 @@ abstract class Serialize
         $serializeContext->setGroups($groups);
 
         return $serializeContext;
+    }
+
+    /**
+     * @throws ReflectionException
+     * @throws NotFoundAttributePropertyResolver
+     * @throws NotFoundGroupException
+     * @throws InvalidArgumentException
+     */
+    public function toArray(): array
+    {
+        return $this->getContext()->toArray($this);
     }
 
     /**

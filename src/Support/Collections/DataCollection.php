@@ -105,7 +105,7 @@ class DataCollection
             $vols =  isset($this->inputNames[$group]) ? array_merge($vols, $this->inputNames[$group]) : $vols;
         }
 
-        return $vols;
+        return array_unique($vols);
     }
 
     public function getInputIgnoreGroups(): array
@@ -115,10 +115,38 @@ class DataCollection
 
     public function isInputIgnoreByGroups(array $groups): bool
     {
-
-
         foreach ($groups as $group) {
             if (in_array($group, $this->inputIgnoreGroups)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function getOutIgnoreGroups(): array
+    {
+        return $this->outIgnoreGroups;
+    }
+
+    public function getOutNamesByGroups(array $groups, string $defaultGroup): array
+    {
+        if (count($groups) == 1 && current($groups) === $defaultGroup) {
+            return $this->outNames['default'];
+        }
+
+        $vols = [];
+        foreach ($groups as $group) {
+            $vols =  isset($this->outNames[$group]) ? array_merge($vols, $this->outNames[$group]) : $vols;
+        }
+
+        return  array_unique($vols);
+    }
+
+    public function isOutIgnoreByGroups(array $groups): bool
+    {
+        foreach ($groups as $group) {
+            if (in_array($group, $this->outIgnoreGroups)) {
                 return true;
             }
         }
@@ -131,11 +159,6 @@ class DataCollection
         $this->outIgnoreGroups = array_merge($this->outIgnoreGroups, $vols);
 
         return $this;
-    }
-
-    public function getOutIgnoreGroups(): array
-    {
-        return $this->outIgnoreGroups;
     }
 
     public function setInputIgnoreGroups(array $vols): self
@@ -154,9 +177,13 @@ class DataCollection
         return $this;
     }
 
-    public function addOutName($name): self
+    public function addOutName($name, array|null $groups = null): self
     {
-        $this->outNames[$name] = $name;
+        $groups = $groups ?? ['default'];
+
+        foreach ($groups as $group) {
+            $this->outNames[$group][$name] ??= $name;
+        }
 
         return $this;
     }
@@ -216,14 +243,14 @@ class DataCollection
         }
     }
 
-    public function toArray(): array
-    {
-        return [
-            'name'         => $this->name,
-            'type'         => array_map(fn ($type) => $type->toArray(), $this->types),
-            'defaultValue' => $this->defaultValue,
-            'nullable'     => $this->isNullable,
-            'children'     => $this->children ? array_map(fn ($child) => $child->toArray(), $this->children) : null,
-        ];
-    }
+//    public function toArray(): array
+//    {
+//        return [
+//            'name'         => $this->name,
+//            'type'         => array_map(fn ($type) => $type->toArray(), $this->types),
+//            'defaultValue' => $this->defaultValue,
+//            'nullable'     => $this->isNullable,
+//            'children'     => $this->children ? array_map(fn ($child) => $child->toArray(), $this->children) : null,
+//        ];
+//    }
 }

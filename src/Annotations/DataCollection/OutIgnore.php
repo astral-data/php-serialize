@@ -21,6 +21,7 @@ class OutIgnore implements DataCollectionCastInterface
 
     public function resolve(DataCollection $dataCollection, ReflectionProperty|null $property = null): void
     {
-        $dataCollection->setOutIgnoreGroups($this->groups);
+        $dataCollection->setOutIgnoreGroups($this->groups ?? [$dataCollection->getParentGroupCollection()->getClassName()]);
     }
+
 }

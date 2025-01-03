@@ -2,14 +2,16 @@
 
 namespace Astral\Serialize\Resolvers;
 
+use Astral\Serialize\Contracts\Attribute\OutValueCastInterface;
 use Astral\Serialize\Contracts\Attribute\InputValueCastInterface;
 use Astral\Serialize\Exceptions\NotFoundAttributePropertyResolver;
 use Astral\Serialize\Support\Collections\DataCollection;
 use Astral\Serialize\Support\Config\ConfigManager;
 use Astral\Serialize\Support\Context\InputValueContext;
+use Astral\Serialize\Support\Context\OutContext;
 use InvalidArgumentException;
 
-class InputValueCastResolver
+class OutValueCastResolver
 {
     public function __construct(
         private readonly ConfigManager $configManager
@@ -20,7 +22,7 @@ class InputValueCastResolver
     /**
      * @throws NotFoundAttributePropertyResolver
      */
-    public function resolve(mixed $value, DataCollection $collection, InputValueContext $context): mixed
+    public function resolve(mixed $value, DataCollection $collection, OutContext $context): mixed
     {
         $value = $this->applyCastsByConfigManager($value, $collection, $context);
 
@@ -41,9 +43,9 @@ class InputValueCastResolver
      *
      * @throws InvalidArgumentException
      */
-    private function applyCastsByConfigManager(mixed $value, DataCollection $collection, InputValueContext $context): mixed
+    private function applyCastsByConfigManager(mixed $value, DataCollection $collection, OutContext $context): mixed
     {
-        foreach ($this->configManager->getInputValueCasts() as $cast) {
+        foreach ($this->configManager->getOutValueCasts() as $cast) {
             $value = $this->applyCast($cast, $collection, $value, $context);
         }
 
@@ -55,7 +57,7 @@ class InputValueCastResolver
      *
      * @throws InvalidArgumentException
      */
-    private function applyCast(object $cast, DataCollection $collection, mixed $value, InputValueContext $context): mixed
+    private function applyCast(object $cast, DataCollection $collection, mixed $value, OutContext $context): mixed
     {
         if (!is_object($cast)) {
             throw new InvalidArgumentException(sprintf(
@@ -64,7 +66,7 @@ class InputValueCastResolver
             ));
         }
 
-        if (!is_subclass_of($cast, InputValueCastInterface::class)) {
+        if (!is_subclass_of($cast, OutValueCastInterface::class)) {
             return $value;
         }
 

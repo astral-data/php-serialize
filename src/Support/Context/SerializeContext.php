@@ -2,6 +2,8 @@
 
 namespace Astral\Serialize\Support\Context;
 
+use Astral\Serialize\Serialize;
+use Astral\Serialize\Resolvers\PropertyToArrayResolver;
 use Astral\Serialize\Exceptions\NotFoundAttributePropertyResolver;
 use Astral\Serialize\Exceptions\NotFoundGroupException;
 use Astral\Serialize\Resolvers\DataCollectionCastResolver;
@@ -18,7 +20,6 @@ use ReflectionException;
 use ReflectionProperty;
 use RuntimeException;
 
-
 class SerializeContext
 {
     private array $groups = [];
@@ -32,6 +33,7 @@ class SerializeContext
         private readonly DataCollectionCastResolver     $dataCollectionCastResolver,
         private readonly ConstructDataCollectionManager $constructDataCollectionManager,
         private readonly PropertyInputValueResolver     $propertyInputValueResolver,
+        private readonly PropertyToArrayResolver        $propertyToArrayResolver,
     ) {
 
     }
@@ -220,10 +222,25 @@ class SerializeContext
         }
 
         $this->chooseSerializeContext->setGroups($this->getGroups());
-        return $this->propertyInputValueResolver->resolve($this->chooseSerializeContext, $this->getGroupCollection(), $payloads);
+
+        $object = $this->propertyInputValueResolver->resolve($this->chooseSerializeContext, $this->getGroupCollection(), $payloads);
+
+        if ($object instanceof Serialize && $object->getContext() === null) {
+            $object->setContext($this);
+        }
+
+        return $object;
+
     }
 
-    public function toArray()
+    /**
+     * @throws NotFoundAttributePropertyResolver
+     * @throws ReflectionException
+     * @throws NotFoundGroupException
+     * @throws InvalidArgumentException
+     */
+    public function toArray(object $object): array
     {
+        return $this->propertyToArrayResolver->resolve($this->chooseSerializeContext, $this->getCollection(), $object);
     }
 }

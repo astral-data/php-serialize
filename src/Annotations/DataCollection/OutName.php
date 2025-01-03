@@ -28,6 +28,7 @@ class OutName implements DataCollectionCastInterface
 
     public function resolve(DataCollection $dataCollection, ReflectionProperty|null $property = null): void
     {
-        $dataCollection->addOutName($this->name);
+        $dataCollection->addOutName($this->name, $this->groups ?: null);
     }
+
 }
