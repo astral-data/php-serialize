@@ -22,7 +22,6 @@ class InputName implements DataCollectionCastInterface
 
     public function resolve(DataCollection $dataCollection, ReflectionProperty|null $property = null): void
     {
-        $dataCollection->addInputName($this->name, $this->groups ?: [$dataCollection->getParentGroupCollection()->getClassName()]);
-
+        $dataCollection->addInputName($this->name, $this->groups ?: null);
     }
 }

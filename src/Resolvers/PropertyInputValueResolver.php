@@ -83,10 +83,12 @@ class PropertyInputValueResolver
 
     public function matchInputNameAndValue(ChooseSerializeContext $chooseContext, DataCollection $collection, GroupDataCollection $groupCollection, array $payloadKeys): array|false
     {
-        $groups = $chooseContext->getGroups();
-        $inputNames = $collection->getInputNamesByGroups($groups);
 
-        return !$this->groupResolver->resolveExistsGroupsByDataCollection($collection, $groups, $chooseContext->serializeClass) || $collection->isInputIgnoreByGroups($groups)
+        $defaultGroup = $chooseContext->serializeClass;
+        $groups = $chooseContext->getGroups();
+        $inputNames = $collection->getInputNamesByGroups($groups, $defaultGroup);
+
+        return !$this->groupResolver->resolveExistsGroupsByDataCollection($collection, $groups, $defaultGroup) || $collection->isInputIgnoreByGroups($groups)
             ? $this->getConstructPropertyValue($groupCollection, $collection, null)
             : $this->findMatch($inputNames ?: [$collection->getName()], $payloadKeys)
             ?? $this->getConstructPropertyValue($groupCollection, $collection, $collection->getDefaultValue());
@@ -94,6 +96,7 @@ class PropertyInputValueResolver
 
     private function findMatch(array $inputNames, array $payloadKeys): ?array
     {
+
         foreach ($inputNames as $name) {
             if (array_key_exists($name, $payloadKeys)) {
                 return ['name' => $name,'value' => $payloadKeys[$name]];

@@ -16,7 +16,7 @@ class InputValueEnumCast implements InputValueCastInterface
 {
     public function match(mixed $value, DataCollection $collection, InputValueContext $context): bool
     {
-        return $value && is_string($value) && $collection->getChooseType()?->kind == TypeKindEnum::ENUM;
+        return $value && is_string($value) && $context->chooseSerializeContext->getProperty($collection->getName())->getType()?->kind == TypeKindEnum::ENUM;
     }
 
     /**
@@ -25,7 +25,7 @@ class InputValueEnumCast implements InputValueCastInterface
     public function resolve(mixed $value, DataCollection $collection, InputValueContext $context): UnitEnum
     {
 
-        $type          = $collection->getChooseType();
+        $type          = $context->chooseSerializeContext->getProperty($collection->getName())->getType();
         $enumInstance  = $this->findEnumInstance($type->className, $value);
         if ($enumInstance) {
             return $enumInstance;

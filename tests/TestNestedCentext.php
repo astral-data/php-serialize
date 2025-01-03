@@ -39,7 +39,6 @@ beforeEach(function () {
 
     }
 
-
 });
 
 it('test parse nested serialize class', function () {

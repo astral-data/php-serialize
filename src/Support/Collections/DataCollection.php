@@ -32,7 +32,7 @@ class DataCollection
         public array                         $children = [],
         //        private ?string                      $propertyAliasName = null,
     ) {
-        $this->addInputName($this->name, [$this->parentGroupCollection->getClassName()]);
+        $this->addInputName($this->name);
         $this->addOutName($this->name);
     }
 
@@ -94,8 +94,12 @@ class DataCollection
         return $this->inputNames;
     }
 
-    public function getInputNamesByGroups(array $groups): array
+    public function getInputNamesByGroups(array $groups, string $defaultGroup): array
     {
+        if (count($groups) == 1 && current($groups) === $defaultGroup) {
+            return $this->inputNames['default'];
+        }
+
         $vols = [];
         foreach ($groups as $group) {
             $vols =  isset($this->inputNames[$group]) ? array_merge($vols, $this->inputNames[$group]) : $vols;
@@ -140,13 +144,13 @@ class DataCollection
         return $this;
     }
 
-    public function addInputName($name, array $groups): self
+    public function addInputName($name, array|null $groups = null): self
     {
+        $groups = $groups ?? ['default'];
 
         foreach ($groups as $group) {
             $this->inputNames[$group][$name] ??= $name;
         }
-
         return $this;
     }
 
