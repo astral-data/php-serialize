@@ -9,11 +9,6 @@ use Astral\Serialize\Support\Factories\ContextFactory;
 use Psr\SimpleCache\InvalidArgumentException;
 use ReflectionException;
 
-/**
- * @method static SerializeContext toArray()
- *
- * @see SerializeContext
- */
 abstract class Serialize
 {
     private ?SerializeContext $_context = null;
@@ -32,16 +27,17 @@ abstract class Serialize
     }
 
     /**
+     * @param array<string> $groups
+     * @return SerializeContext<static>
      * @throws ReflectionException
      * @throws NotFoundGroupException
      * @throws InvalidArgumentException
      */
     public static function setGroups(array $groups): SerializeContext
     {
+        /** @var SerializeContext<static> $serializeContext */
         $serializeContext = ContextFactory::build(static::class);
-        $serializeContext->setGroups($groups);
-
-        return $serializeContext;
+        return $serializeContext->setGroups($groups);
     }
 
     /**

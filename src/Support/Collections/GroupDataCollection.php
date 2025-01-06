@@ -2,10 +2,14 @@
 
 namespace Astral\Serialize\Support\Collections;
 
+/**
+ * @template T
+ */
 class GroupDataCollection
 {
     public function __construct(
         private readonly array  $defaultGroups,
+        /** @var class-string<T> $className */
         private readonly string $className,
         /** @var array<string, ConstructDataCollection> $constructProperties */
         private readonly array  $constructProperties,
@@ -41,11 +45,6 @@ class GroupDataCollection
         return $this->defaultGroups;
     }
 
-    public function getGroupName(): string
-    {
-        return $this->groupName;
-    }
-
     public function getClassName(): string
     {
         return $this->className;
@@ -54,6 +53,11 @@ class GroupDataCollection
     public function getPropertiesName(): array
     {
         return array_map(fn ($property) => $property->getName(), $this->properties);
+    }
+
+    public function getPropertiesInputNamesByGroups(array $groups, string $defaultGroup): array
+    {
+        return array_map(fn ($property) => $property->getInputNamesByGroups($groups, $defaultGroup), $this->properties);
     }
 
     /**

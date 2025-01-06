@@ -3,32 +3,10 @@
 use Astral\Serialize\Annotations\DataCollection\OutName;
 use Astral\Serialize\Annotations\DataCollection\InputName;
 use Astral\Serialize\Serialize;
-use Astral\Serialize\Support\Context\SerializeContext;
 use Astral\Serialize\Tests\TestRequest\Other\OtherTypeDoc;
-use Astral\Serialize\Tests\TestRequest\TypeOneDoc;
 use Astral\Serialize\Annotations\DataCollection\OutIgnore;
 
-beforeEach(function () {
-    /** @var SerializeContext $this */
-    //    $this->context = ContextFactory::build(TypeOneDoc::class, []);
-});
-
 it('test parse serialize class', function () {
-
-
-    // 定义第一个关联数组
-    $array1 = [
-        'type_collect_object' => 'type_collect_object',
-        'input_name'          => 'input_name'
-    ];
-
-    // 定义第二个索引数组
-    $array2 = [
-        'input_name',
-        'type_string',
-        'type_object',
-        'type_int'
-    ];
 
     class TestSerialize extends Serialize
     {
@@ -55,7 +33,7 @@ it('test parse serialize class', function () {
 
     // 记录测试开始前的内存使用
     $startMemory = memory_get_usage();
-    
+
     $object  = TestSerialize::from(
         ['input_name' => [new OtherTypeDoc()],'type_string' => 'test_string','type_object' => new StdClass(),'type_int' => 11,'type_float' => 0.02],
         type_float:null,

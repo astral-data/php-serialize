@@ -2,6 +2,9 @@
 
 namespace Astral\Serialize\Support\Context;
 
+/**
+ * @template T
+ */
 class ChooseSerializeContext
 {
     private array $groups;
@@ -10,6 +13,7 @@ class ChooseSerializeContext
     private array $properties;
 
     public function __construct(
+        /** @var class-string<T> $serializeClass */
         public readonly string $serializeClass,
     ) {
 

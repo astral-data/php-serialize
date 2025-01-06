@@ -20,11 +20,15 @@ use ReflectionException;
 use ReflectionProperty;
 use RuntimeException;
 
+/**
+ * @template T
+ */
 class SerializeContext
 {
     private array $groups = [];
 
     public function __construct(
+        /** @var class-string<T> */
         private readonly string                         $serializeClassName,
         private readonly ChooseSerializeContext         $chooseSerializeContext,
         private readonly CacheInterface                 $cache,
@@ -39,9 +43,11 @@ class SerializeContext
     }
 
     /**
+     * @param array $groups
+     * @return SerializeContext<static>
      * @throws InvalidArgumentException
-     * @throws ReflectionException
      * @throws NotFoundGroupException
+     * @throws ReflectionException
      */
     public function setGroups(array $groups): static
     {
@@ -52,30 +58,13 @@ class SerializeContext
         return $this;
     }
 
+    /**
+     * @return array<string>
+     */
     public function getGroups(): array
     {
         return $this->groups;
     }
-//
-//    public function getSerializeClassName(): string
-//    {
-//        return $this->serializeClassName;
-//    }
-
-//    /**
-//     * @throws ReflectionException
-//     * @throws InvalidArgumentException
-//     * @throws NotFoundGroupException
-//     * @throws NotFoundAttributePropertyResolver
-//     */
-//    public function getCollection(): GroupDataCollection
-//    {
-//        if ($this->cache->has($this->serializeClassName)) {
-//            return $this->cache->get($this->serializeClassName);
-//        }
-//
-//        return $this->getGroupCollection();
-//    }
 
     /**
      * @throws ReflectionException
@@ -201,13 +190,13 @@ class SerializeContext
     }
 
     /**
-     * @return object => $this->serializeClassName
+     * @return T
      * @throws NotFoundAttributePropertyResolver
      * @throws ReflectionException
      * @throws NotFoundGroupException
      * @throws InvalidArgumentException
      */
-    public function from(... $payload): object
+    public function from(mixed ...$payload): object
     {
         $payloads = [];
         foreach ($payload as $field => $itemPayload) {
@@ -217,6 +206,7 @@ class SerializeContext
 
         $this->chooseSerializeContext->setGroups($this->getGroups());
 
+        /** @var T $object */
         $object = $this->propertyInputValueResolver->resolve($this->chooseSerializeContext, $this->getGroupCollection(), $payloads);
 
         if ($object instanceof Serialize && $object->getContext() === null) {

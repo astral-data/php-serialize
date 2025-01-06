@@ -6,9 +6,14 @@ use Astral\Serialize\SerializeContainer;
 use Astral\Serialize\Support\Context\ChooseSerializeContext;
 use Astral\Serialize\Support\Context\SerializeContext;
 
+/**
+ * @template T
+ */
 class ContextFactory
 {
     /**
+     * @param class-string<T> $className
+     * @return SerializeContext<T>
      */
     public static function build(string $className): SerializeContext
     {

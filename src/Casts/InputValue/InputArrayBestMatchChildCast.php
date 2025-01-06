@@ -17,6 +17,7 @@ class InputArrayBestMatchChildCast implements InputValueCastInterface
 
     public function match($value, DataCollection $collection, InputValueContext $context): bool
     {
+        var_dump($collection->getName(), $collection->getTypes());
         return $value && is_array($value) && count($collection->getChildren()) > 1 && $this->hasObjectType($collection);
     }
 
@@ -33,12 +34,15 @@ class InputArrayBestMatchChildCast implements InputValueCastInterface
         $children       = $collection->getChildren();
         $bestMatchClass = $this->getBestMatchClass($children, $value);
 
+        print_r($collection->getTypes());
+
         if (!$bestMatchClass) {
             return $value;
         }
 
         $child     = $this->findChildByClass($children, $bestMatchClass);
         $childType = $collection->getTypeTo($child->getClassName());
+
 
         $context->chooseSerializeContext->getProperty($collection->getName())->setType($childType);
 
@@ -62,9 +66,10 @@ class InputArrayBestMatchChildCast implements InputValueCastInterface
         $bestMatch    = null;
         $highestScore = -1;
 
+
         foreach ($children as $child) {
             $score = 0;
-            foreach ($child->getPropertiesName() as $property) {
+            foreach ($child->getPropertiesInputNamesByGroups() as $property) {
                 if (isset($valueKeys[$property])) {
                     $score++;
                 }
