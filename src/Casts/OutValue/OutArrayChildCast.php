@@ -15,7 +15,7 @@ class OutArrayChildCast implements OutValueCastInterface
 {
     public function match($value, DataCollection $collection, OutContext $context): bool
     {
-        return in_array($context->chooseSerializeContext->getProperty($collection->getName())->getType()->kind, [TypeKindEnum::COLLECT_OBJECT,TypeKindEnum::OBJECT]);
+        return in_array($context->chooseSerializeContext->getProperty($collection->getName())->getType()->kind, [TypeKindEnum::COLLECT_SINGLE_OBJECT,TypeKindEnum::OBJECT]);
     }
 
     /**
@@ -32,7 +32,7 @@ class OutArrayChildCast implements OutValueCastInterface
 
         $choose = $context->chooseSerializeContext->getProperty($collection->getName())->getChildren();
 
-        if ($childType->kind === TypeKindEnum::COLLECT_OBJECT) {
+        if ($childType->kind === TypeKindEnum::COLLECT_SINGLE_OBJECT) {
             return $this->resolveArray($value, $child, $context, $choose);
         }
 

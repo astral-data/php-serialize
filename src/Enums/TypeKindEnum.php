@@ -12,13 +12,14 @@ enum TypeKindEnum
     case ARRAY;
     case OBJECT;
     case CLASS_OBJECT;
-    case COLLECT_OBJECT;
+    case COLLECT_SINGLE_OBJECT;
+    case COLLECT_UNION_OBJECT;
     case ENUM;
     case DATE;
 
     public function existsClass(): bool
     {
-        return $this === self::CLASS_OBJECT || $this === self::COLLECT_OBJECT;
+        return $this === self::CLASS_OBJECT || $this === self::COLLECT_SINGLE_OBJECT || $this === self::COLLECT_UNION_OBJECT;
     }
 
     public function isPrimitive(): bool
@@ -31,8 +32,10 @@ enum TypeKindEnum
 
         if ($className && enum_exists($className)) {
             return self::ENUM;
+        } elseif ($className && $type == 'array_union' && class_exists($className)) {
+            return self::COLLECT_UNION_OBJECT;
         } elseif ($className && $type == 'array' && class_exists($className)) {
-            return self::COLLECT_OBJECT;
+            return self::COLLECT_SINGLE_OBJECT;
         } elseif ($className && class_exists($className) && $type != 'array') {
             return self::CLASS_OBJECT;
         }

@@ -16,6 +16,9 @@ beforeEach(function () {
 
 it('tests one property reflections not parsing doc', function () {
     $reflectionProperty = new ReflectionProperty(TypeOneDoc::class, 'type_collect_object');
+
+    var_dump($reflectionProperty->getType());
+
     $result             = $this->typeManager->processNamedType($reflectionProperty->getType(), $reflectionProperty);
     expect($result)->toBeInstanceOf(TypeCollection::class)
         ->and($result->kind)->toBe(TypeKindEnum::ARRAY)
@@ -24,7 +27,7 @@ it('tests one property reflections not parsing doc', function () {
     $reflectionProperty = new ReflectionProperty(TypeOneDoc::class, 'type_class_object_doc');
     $result             = $this->typeManager->processNamedType($reflectionProperty->getType(), $reflectionProperty);
     expect($result)->toBeInstanceOf(TypeCollection::class)
-        ->and($result->kind)->toBe(TypeKindEnum::OBJECT)
+        ->and($result->kind)->toBe(TypeKindEnum::MIXED)
         ->and($result->className)->toBeNull();
 });
 
@@ -80,6 +83,7 @@ it('tests union property reflections and type parsing', function () {
     $reflectionProperty = new ReflectionProperty(TypeUnionDoc::class, 'union_data');
     $result             = $this->typeManager->processUnionType($reflectionProperty->getType(), $reflectionProperty);
 
+
     expect($result)->toBeArray()->toHaveCount(3);
 
     foreach ($result as $key => $item) {
@@ -97,6 +101,22 @@ it('tests union property reflections and type parsing', function () {
 });
 
 it('tests union doc property reflections and type parsing', function () {
+
+    $reflectionProperty = new ReflectionProperty(TypeUnionDoc::class, 'mixed_array');
+    $result             = $this->typeManager->getCollectionTo($reflectionProperty);
+    expect($result)->toBeArray()->toHaveCount(2);
+    foreach ($result as $key => $item) {
+        expect($item)->toBeInstanceOf(TypeCollection::class);
+        match ($key) {
+            0 => expect($item->kind)->toBe(TypeKindEnum::COLLECT_UNION_OBJECT)
+                ->and($item->className)->toBe('Astral\Serialize\Tests\TestTypeDoc\Other\OtherTypeDoc'),
+            1 => expect($item->kind)->toBe(TypeKindEnum::COLLECT_UNION_OBJECT)
+                ->and($item->className)->toBe('Astral\Serialize\Tests\TestTypeDoc\Both\BothTypeDoc'),
+            default => expect(false)->toBeTrue("Unexpected element at index {$key}")
+        };
+    }
+
+
     $reflectionProperty = new ReflectionProperty(TypeUnionDoc::class, 'union_data_doc');
     $result             = $this->typeManager->getCollectionTo($reflectionProperty);
     expect($result)->toBeArray()->toHaveCount(2);
@@ -105,7 +125,7 @@ it('tests union doc property reflections and type parsing', function () {
         match ($key) {
             0 => expect($item->kind)->toBe(TypeKindEnum::CLASS_OBJECT)
                 ->and($item->className)->toBe('Astral\Serialize\Tests\TestTypeDoc\Other\OtherTypeDoc'),
-            1 => expect($item->kind)->toBe(TypeKindEnum::COLLECT_OBJECT)
+            1 => expect($item->kind)->toBe(TypeKindEnum::COLLECT_SINGLE_OBJECT)
                 ->and($item->className)->toBe('Astral\Serialize\Tests\TestTypeDoc\Both\BothTypeDoc'),
             default => expect(false)->toBeTrue("Unexpected element at index {$key}")
         };
@@ -113,8 +133,9 @@ it('tests union doc property reflections and type parsing', function () {
 
     $reflectionProperty = new ReflectionProperty(TypeOneDoc::class, 'type_class_object_doc');
     $result             = $this->typeManager->getCollectionTo($reflectionProperty);
+
     expect($result)->toBeArray()->toHaveCount(1)
         ->and($result[0])->toBeInstanceOf(Astral\Serialize\Support\Collections\TypeCollection::class)
-        ->and($result[0]->kind)->toBe(Astral\Serialize\Enums\TypeKindEnum::CLASS_OBJECT)
-        ->and($result[0]->className)->toBe('Astral\Serialize\Tests\TestTypeDoc\Both\BothTypeDoc');
+        ->and($result[0]->kind)->toBe(Astral\Serialize\Enums\TypeKindEnum::MIXED)
+        ->and($result[0]->className)->toBeNull();
 });

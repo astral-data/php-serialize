@@ -21,7 +21,7 @@ class InputValueNullCast implements InputValueCastInterface
     {
         return match ($collection->getTypes()[0]->kind) {
             TypeKindEnum::FLOAT , TypeKindEnum::INT => 0,
-            TypeKindEnum::ARRAY ,  TypeKindEnum::COLLECT_OBJECT => [],
+            TypeKindEnum::ARRAY ,  TypeKindEnum::COLLECT_SINGLE_OBJECT => [],
             TypeKindEnum::OBJECT , TypeKindEnum::CLASS_OBJECT => new stdClass(),
             TypeKindEnum::STRING => '',
             default              => null,

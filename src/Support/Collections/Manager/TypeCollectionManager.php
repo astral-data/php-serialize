@@ -102,11 +102,14 @@ class TypeCollectionManager
     {
         $collections = [];
         foreach ($typesDocBlock as $type) {
-            ['typeName' => $typeName, 'className' => $className] = $this->propertyTypeDocResolver->resolve($type);
-            $collections[]                                       = new TypeCollection(
-                kind: TypeKindEnum::getNameTo($typeName, $className),
-                className: $className
-            );
+            ['typeName' => $typeName, 'classNames' => $classNames] = $this->propertyTypeDocResolver->resolve($type);
+
+            foreach ($classNames as $className) {
+                $collections[]  = new TypeCollection(
+                    kind: TypeKindEnum::getNameTo($typeName, $className),
+                    className: $className
+                );
+            }
         }
 
         return $collections;

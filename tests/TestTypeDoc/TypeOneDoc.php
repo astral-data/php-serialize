@@ -14,12 +14,14 @@ class TypeOneDoc extends Serialize
     #[InputName('input_name')]
     #[OutIgnore]
     /** @var OtherTypeDoc[] $type_collect_object */
-    public array|object $type_collect_object;
+    public array $type_collect_object;
 
     /** @var BothTypeDoc $type_class_object_doc */
-    public object|string $type_class_object_doc;
+    public mixed $type_class_object_doc;
 
     public OtherTypeDoc $type_class_object;
+
+
 
     public object $type_object;
 

@@ -10,6 +10,9 @@ class TypeUnionDoc
     /** @var OtherTypeDoc[]|BothTypeDoc[] */
     public array $union_vols;
 
+    /** @var array<OtherTypeDoc|BothTypeDoc> */
+    public array $mixed_array;
+
     /** @var OtherTypeDoc|BothTypeDoc[] */
     public object|array $union_data_doc;
 

@@ -6,12 +6,12 @@ use phpDocumentor\Reflection\Type;
 use phpDocumentor\Reflection\Types\Array_;
 use phpDocumentor\Reflection\Types\Mixed_;
 use phpDocumentor\Reflection\Types\Object_;
+use phpDocumentor\Reflection\Types\AggregatedType;
 
 class PropertyTypeDocResolver
 {
     public function resolve(Type $type): array
     {
-        var_dump($type);
         return match (true) {
             $type instanceof Array_  => $this->resolveArrayType($type),
             $type instanceof Object_ => $this->resolveObjectType($type),
@@ -23,21 +23,32 @@ class PropertyTypeDocResolver
     protected function resolveArrayType(Array_ $type): array
     {
         $valueType = $type->getValueType();
-        $className = $valueType instanceof Object_
-            ? $valueType->getFqsen()->__toString()
-            : (string)$valueType;
+
+        if ($valueType instanceof  Object_) {
+            $className =   ltrim($valueType->getFqsen()->__toString(), '\\');
+        } elseif ($valueType instanceof AggregatedType) {
+            $className = [];
+            foreach ($valueType as $type) {
+                $className[] = ltrim($type instanceof Object_
+                    ? $type->getFqsen()->__toString()
+                    : (string)$valueType, '\\');
+            }
+        } else {
+            $className =  ltrim((string)$valueType, '\\');
+        }
 
         return [
-            'typeName'  => 'array',
-            'className' => ltrim($className, '\\'),
+            'typeName'  => is_array($className) ? 'array_union' : 'array',
+            'classNames' => is_array($className) ? $className : [$className],
         ];
+
     }
 
     protected function resolveObjectType(Object_ $type): array
     {
         return [
             'typeName'  => 'object',
-            'className' => ltrim($type->getFqsen()->__toString(), '\\'),
+            'classNames' => [ltrim($type->getFqsen()->__toString(), '\\')],
         ];
     }
 
@@ -45,7 +56,7 @@ class PropertyTypeDocResolver
     {
         return [
             'typeName'  => 'string',
-            'className' => null,
+            'classNames' => [null],
         ];
     }
 
@@ -53,7 +64,7 @@ class PropertyTypeDocResolver
     {
         return [
             'typeName'  => (string)$type,
-            'className' => null,
+            'classNames' => [null],
         ];
     }
 }

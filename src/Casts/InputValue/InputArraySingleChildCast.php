@@ -33,7 +33,7 @@ class InputArraySingleChildCast implements InputValueCastInterface
 
         $context->chooseSerializeContext->getProperty($collection->getName())->setType($childType);
 
-        if ($childType->kind === TypeKindEnum::COLLECT_OBJECT) {
+        if ($childType->kind === TypeKindEnum::COLLECT_SINGLE_OBJECT) {
             return $this->resolveArray($value, $child, $collection, $context);
         }
 
