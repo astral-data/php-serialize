@@ -70,8 +70,7 @@ it('test parse array nested serialize class', function () {
         ],
 
     ]);
-    
-    var_dump($res);
+
     
     $res = ArrayBestMatchSerialize::from(vols:[
         'ArrayBestMatchOne' => [

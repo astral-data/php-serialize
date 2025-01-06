@@ -11,6 +11,7 @@ class PropertyTypeDocResolver
 {
     public function resolve(Type $type): array
     {
+        var_dump($type);
         return match (true) {
             $type instanceof Array_  => $this->resolveArrayType($type),
             $type instanceof Object_ => $this->resolveObjectType($type),

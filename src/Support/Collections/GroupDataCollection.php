@@ -57,7 +57,11 @@ class GroupDataCollection
 
     public function getPropertiesInputNamesByGroups(array $groups, string $defaultGroup): array
     {
-        return array_map(fn ($property) => $property->getInputNamesByGroups($groups, $defaultGroup), $this->properties);
+        $inputNames = [];
+        foreach ($this->properties as $property) {
+            $inputNames = array_merge($inputNames, $property->getInputNamesByGroups($groups, $defaultGroup));
+        }
+        return array_values(array_unique($inputNames));
     }
 
     /**

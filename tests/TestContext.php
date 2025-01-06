@@ -3,7 +3,7 @@
 use Astral\Serialize\Annotations\DataCollection\OutName;
 use Astral\Serialize\Annotations\DataCollection\InputName;
 use Astral\Serialize\Serialize;
-use Astral\Serialize\Tests\TestRequest\Other\OtherTypeDoc;
+use Astral\Serialize\Tests\TestTypeDoc\Other\OtherTypeDoc;
 use Astral\Serialize\Annotations\DataCollection\OutIgnore;
 
 it('test parse serialize class', function () {

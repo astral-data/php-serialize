@@ -17,7 +17,6 @@ class InputArrayBestMatchChildCast implements InputValueCastInterface
 
     public function match($value, DataCollection $collection, InputValueContext $context): bool
     {
-        var_dump($collection->getName(), $collection->getTypes());
         return $value && is_array($value) && count($collection->getChildren()) > 1 && $this->hasObjectType($collection);
     }
 
@@ -32,9 +31,7 @@ class InputArrayBestMatchChildCast implements InputValueCastInterface
     public function resolve($value, DataCollection $collection, InputValueContext $context): mixed
     {
         $children       = $collection->getChildren();
-        $bestMatchClass = $this->getBestMatchClass($children, $value);
-
-        print_r($collection->getTypes());
+        $bestMatchClass = $this->getBestMatchClass($children, $context, $value);
 
         if (!$bestMatchClass) {
             return $value;
@@ -59,17 +56,17 @@ class InputArrayBestMatchChildCast implements InputValueCastInterface
      * @param array $value
      * @return string|null
      */
-    private function getBestMatchClass(array $children, array $value): ?string
+    private function getBestMatchClass(array $children, InputValueContext $context, array $value): ?string
     {
-        // 根据属性名匹配计算得分
-        $valueKeys    = array_flip(array_keys($value));
+        $valueKeys    = array_flip(array_keys(current($value)));
         $bestMatch    = null;
         $highestScore = -1;
 
-
+        $groups = $context->chooseSerializeContext->getGroups();
+        $defaultGroup = $context->chooseSerializeContext->serializeClass;
         foreach ($children as $child) {
             $score = 0;
-            foreach ($child->getPropertiesInputNamesByGroups() as $property) {
+            foreach ($child->getPropertiesInputNamesByGroups($groups, $defaultGroup) as $property) {
                 if (isset($valueKeys[$property])) {
                     $score++;
                 }

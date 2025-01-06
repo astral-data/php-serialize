@@ -1,7 +1,7 @@
 <?php
 
 use Astral\Serialize\Resolvers\PropertyTypesContextResolver;
-use Astral\Serialize\Tests\TestRequest\TypeOneDoc;
+use Astral\Serialize\Tests\TestTypeDoc\TypeOneDoc;
 use phpDocumentor\Reflection\Fqsen;
 use phpDocumentor\Reflection\Types\Object_;
 

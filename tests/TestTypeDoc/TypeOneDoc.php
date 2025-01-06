@@ -1,13 +1,13 @@
 <?php
 
-namespace Astral\Serialize\Tests\TestRequest;
+namespace Astral\Serialize\Tests\TestTypeDoc;
 
 use Astral\Serialize\Annotations\DataCollection\InputName;
 use Astral\Serialize\Annotations\DataCollection\OutIgnore;
 use Astral\Serialize\Serialize;
-use Astral\Serialize\Tests\TestRequest\Both\BothTypeDoc;
-use Astral\Serialize\Tests\TestRequest\Other\OtherTypeDoc;
-use Astral\Serialize\Tests\TestRequest\Other\ReqOtherEnum;
+use Astral\Serialize\Tests\TestTypeDoc\Both\BothTypeDoc;
+use Astral\Serialize\Tests\TestTypeDoc\Other\OtherTypeDoc;
+use Astral\Serialize\Tests\TestTypeDoc\Other\ReqOtherEnum;
 
 class TypeOneDoc extends Serialize
 {

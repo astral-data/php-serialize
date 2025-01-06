@@ -1,6 +1,6 @@
 <?php
 
-namespace Astral\Serialize\Tests\TestRequest\Both;
+namespace Astral\Serialize\Tests\TestTypeDoc\Both;
 
 class BothTypeDoc
 {

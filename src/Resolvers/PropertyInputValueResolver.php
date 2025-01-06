@@ -33,7 +33,6 @@ class PropertyInputValueResolver
      */
     public function resolve(ChooseSerializeContext $chooseContext, GroupDataCollection $groupCollection, array $payload)
     {
-
         /** @var T $reflectionClass */
         $reflectionClass =  $this->reflectionClassInstanceManager->get($groupCollection->getClassName());
         $object          = $reflectionClass->newInstanceWithoutConstructor();
@@ -101,7 +100,6 @@ class PropertyInputValueResolver
 
     private function findMatch(array $inputNames, array $payloadKeys): ?array
     {
-
         foreach ($inputNames as $name) {
             if (array_key_exists($name, $payloadKeys)) {
                 return ['name' => $name,'value' => $payloadKeys[$name]];

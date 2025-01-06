@@ -1,6 +1,6 @@
 <?php
 
-namespace Astral\Serialize\Tests\TestRequest;
+namespace Astral\Serialize\Tests\TestTypeDoc;
 
 enum ReqEnum
 {
