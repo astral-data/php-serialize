@@ -6,7 +6,6 @@ use Astral\Serialize\Annotations\DataCollection\InputName;
 use Astral\Serialize\Annotations\DataCollection\InputIgnore;
 
 beforeAll(function () {
-
     class ArrayBestMatchOne
     {
         public string $name_one;
@@ -17,7 +16,6 @@ beforeAll(function () {
     {
         public string $name_two;
         public int $id_two;
-
     }
 
     class ArrayBestMatchThree
@@ -33,11 +31,11 @@ beforeAll(function () {
         /** @var array<string,ArrayBestMatchOne|ArrayBestMatchTwo|ArrayBestMatchThree> */
         public array $vols_1;
 
-        /** @var (ArrayBestMatchOne|ArrayBestMatchTwo)[] */
-        public array $vols_2;
-
         /** @var ArrayBestMatchOne[]|ArrayBestMatchTwo[]|ArrayBestMatchThree[] */
         public array $vols_3;
+
+        /** @var (ArrayBestMatchOne|ArrayBestMatchTwo)[] */
+        public array $vols_2;
 
         /** @var ArrayBestMatchOne[]|ArrayBestMatchTwo|ArrayBestMatchThree */
         public array|object $vols_4;
@@ -78,6 +76,41 @@ it('test  array only one serialize nested serialize class', function () {
         ->and($res->vols_1[1]->id_two)->toBe(2)
         ->and($res->vols_1[2]->name_two)->toBe('ArrayBestMatchTwo-3')
         ->and($res->vols_1[2]->id_two)->toBe(3);
+});
+
+it('test array only one  serialize nested serialize class', function () {
+
+    $res = ArrayBestMatchSerialize::from(vols_3:[
+        [
+            'name_two' => 'ArrayBestMatchTwo-1',
+            'id_two' => 1,
+        ],
+        [
+            'name_two' => 'ArrayBestMatchTwo-2',
+            'id_two' => 2,
+        ],
+        [
+            'name_two' => 'ArrayBestMatchTwo-3',
+            'id_two' => 3,
+        ],
+
+    ]);
+
+    expect($res)->toBeInstanceOf(ArrayBestMatchSerialize::class)
+        ->and($res->vols_3)->toBeArray();
+
+
+    foreach ($res->vols_3 as $date) {
+        expect($date)->toBeInstanceOf(ArrayBestMatchTwo::class);
+    }
+
+    expect($res->vols_3)->toHaveCount(3)
+        ->and($res->vols_3[0]->name_two)->toBe('ArrayBestMatchTwo-1')
+        ->and($res->vols_3[0]->id_two)->toBe(1)
+        ->and($res->vols_3[1]->name_two)->toBe('ArrayBestMatchTwo-2')
+        ->and($res->vols_3[1]->id_two)->toBe(2)
+        ->and($res->vols_3[2]->name_two)->toBe('ArrayBestMatchTwo-3')
+        ->and($res->vols_3[2]->id_two)->toBe(3);
 });
 
 it('test array analyzer serialize nested serialize class', function () {

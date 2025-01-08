@@ -1,15 +1,16 @@
 <?php
 
-use ___PHPSTORM_HELPERS\object;
+use Astral\Serialize\Exceptions\ValueCastError;
 use Astral\Serialize\Annotations\DataCollection\OutName;
 use Astral\Serialize\Annotations\DataCollection\InputName;
 use Astral\Serialize\Serialize;
-use Astral\Serialize\Tests\TestTypeDoc\Other\OtherTypeDoc;
 use Astral\Serialize\Annotations\DataCollection\OutIgnore;
 
 beforeAll(function () {
     class TestFromSerialize extends Serialize
     {
+        public $withoutType;
+
         public function __construct(
             public readonly string $type_string,
             public readonly object $type_object,
@@ -35,7 +36,14 @@ beforeAll(function () {
 it('test parse serialize class', function () {
 
     $object  = TestFromSerialize::from(
-        ['input_name' => [new OtherTypeDoc()],'type_string' => 'test_string','type_object' => new StdClass(),'type_int' => 11,'type_float' => 0.02],
+        [
+            'input_name' => [ fn () => new stdClass()],
+            'type_string' => 'test_string',
+            'type_object' => new StdClass(),
+            'type_int' => 11,
+            'type_float' => 0.02,
+            'withoutType' => 'hhh',
+        ],
         type_float:null,
         input_name:null,
         type_object:null,

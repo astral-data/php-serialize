@@ -41,7 +41,7 @@ class InputObjectBestMatchChildCast implements InputValueCastInterface
             return $value;
         }
 
-        $child     = $this->findChildByClass($children, $bestMatchClass);
+        $child     = $children[$bestMatchClass];
         $collection->getTypeTo($child->getClassName());
 
         return $this->resolveSingle($value, $child, $collection, $context);
@@ -85,17 +85,6 @@ class InputObjectBestMatchChildCast implements InputValueCastInterface
         }
 
         return $bestMatch;
-    }
-
-    private function findChildByClass(array $children, string $className): ?GroupDataCollection
-    {
-        foreach ($children as $child) {
-            if ($child->getClassName() === $className) {
-                return $child;
-            }
-        }
-
-        return null;
     }
 
     private function hasObjectType(DataCollection $collection): bool

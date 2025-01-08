@@ -16,28 +16,37 @@ class InputValueEnumCast implements InputValueCastInterface
 {
     public function match(mixed $value, DataCollection $collection, InputValueContext $context): bool
     {
-        return $value && is_string($value) && $context->chooseSerializeContext->getProperty($collection->getName())->getType()?->kind == TypeKindEnum::ENUM;
+        return $value && is_string($value) && $this->hasEnumType($collection);
     }
 
     /**
      * @throws ValueCastError
      */
-    public function resolve(mixed $value, DataCollection $collection, InputValueContext $context): UnitEnum
+    public function resolve(mixed $value, DataCollection $collection, InputValueContext $context): UnitEnum|string
     {
 
-        $type          = $context->chooseSerializeContext->getProperty($collection->getName())->getType();
-        $enumInstance  = $this->findEnumInstance($type->className, $value);
-        if ($enumInstance) {
-            return $enumInstance;
+        $types = $collection->getTypes();
+        foreach ($types as $type) {
+            if ($type->kind != TypeKindEnum::ENUM) {
+                continue;
+            }
+            $enumInstance  = $this->findEnumInstance($type->className, $value);
+            if ($enumInstance) {
+                return $enumInstance;
+            }
         }
 
-        throw new ValueCastError(
-            sprintf(
-                'Enum value "%s" not found in classes: %s',
-                $value,
-                $type->className
-            )
-        );
+        if (count($types) == 1) {
+            throw new ValueCastError(
+                sprintf(
+                    'Enum value "%s" not found in EnumClass: %s',
+                    $value,
+                    current($types)?->className
+                )
+            );
+        }
+
+        return $value;
     }
 
     /**
@@ -59,5 +68,15 @@ class InputValueEnumCast implements InputValueCastInterface
         }
 
         return null;
+    }
+
+    private function hasEnumType(DataCollection $collection): bool
+    {
+        foreach ($collection->getTypes() as $type) {
+            if ($type->kind == TypeKindEnum::ENUM) {
+                return true;
+            }
+        }
+        return false;
     }
 }

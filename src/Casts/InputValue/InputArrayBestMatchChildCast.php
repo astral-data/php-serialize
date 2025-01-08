@@ -35,19 +35,16 @@ class InputArrayBestMatchChildCast implements InputValueCastInterface
 
         $resolved = [];
         $bestClass = [];
-        $bestChildren = [];
         foreach ($value as $key => $item) {
             $cacheKey = md5(implode('|', array_keys($item)));
 
             $bestClass[$cacheKey] ??= $this->getBestMatchClass($collection, $children, $context, $item);
-            $bestChildren[$cacheKey] ??= $bestClass[$cacheKey] !== null
-                ? $this->findChildByClass($children, $bestClass[$cacheKey])
-                : null;
 
             if ($bestClass[$cacheKey] === null) {
                 $resolved[$key] = $item;
             } else {
-                $resolved[$key] = $this->resolveSingle($item, $bestChildren[$cacheKey], $collection, $context);
+                $bestChild = $children[$bestClass[$cacheKey]];
+                $resolved[$key] = $this->resolveSingle($item, $bestChild, $collection, $context);
             }
         }
         return $resolved;
@@ -92,19 +89,5 @@ class InputArrayBestMatchChildCast implements InputValueCastInterface
         }
 
         return $bestMatch;
-    }
-
-
-
-
-    private function findChildByClass(array $children, string $className): ?GroupDataCollection
-    {
-        foreach ($children as $child) {
-            if ($child->getClassName() === $className) {
-                return $child;
-            }
-        }
-
-        return null;
     }
 }

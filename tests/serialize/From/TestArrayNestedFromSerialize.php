@@ -137,17 +137,4 @@ it('test parse array nested serialize class', function () {
     $thirdNestedThree = $secondNestedTwo->otherNestedThree[0];
     expect($thirdNestedThree->name_three)->toBe('OtherNestedThree-name-three');
 
-//    $endMemory = memory_get_usage();
-//
-//    $peakMemory = memory_get_peak_usage();
-//
-//    $memoryUsed = $endMemory - $startMemory;
-//
-//    echo sprintf(
-//        "Start Memory: %.2f MB\nEnd Memory: %.2f MB\nMemory Used: %.2f MB\nPeak Memory: %.2f MB\n",
-//        $startMemory / 1024 / 1024,
-//        $endMemory   / 1024 / 1024,
-//        $memoryUsed  / 1024 / 1024,
-//        $peakMemory  / 1024 / 1024
-//    );
 });

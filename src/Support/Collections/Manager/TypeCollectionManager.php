@@ -34,7 +34,7 @@ class TypeCollectionManager
 
         $typeDocBlock = $this->propertyTypesContextResolver->resolveTypeFromDocBlock($property);
 
-        if ($typeDocBlock && ($type instanceof ReflectionUnionType || in_array($type->getName(), ['array', 'object']))) {
+        if ($typeDocBlock && ($type instanceof ReflectionUnionType || in_array($type?->getName(), ['array', 'object']))) {
             return $this->processDocCommentNamedType($typeDocBlock);
         } elseif ($type instanceof ReflectionUnionType) {
             return $this->processUnionType($type, $property);
