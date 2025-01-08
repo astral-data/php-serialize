@@ -11,14 +11,16 @@ use Astral\Serialize\Support\Collections\GroupDataCollection;
 use Astral\Serialize\Support\Context\InputValueContext;
 use ReflectionException;
 
-class InputArrayBestMatchChildCast implements InputValueCastInterface
+class InputObjectBestMatchChildCast implements InputValueCastInterface
 {
     use InputArrayTrait;
 
     // 对象数组  唯一数组  联合数组
     public function match($value, DataCollection $collection, InputValueContext $context): bool
     {
-        return $value && is_array($value) && $this->getDimension($value) === 2 && count($collection->getChildren()) > 1 && $this->hasCollectObjectType($collection);
+        return $value
+            && (is_object($value) || is_array($value) && $this->getDimension($value) === 1)
+            && count($collection->getChildren()) > 1 && $this->hasObjectType($collection);
     }
 
     /**
@@ -31,26 +33,18 @@ class InputArrayBestMatchChildCast implements InputValueCastInterface
      */
     public function resolve($value, DataCollection $collection, InputValueContext $context): mixed
     {
+
         $children       = $collection->getChildren();
+        $bestMatchClass = $this->getBestMatchClass($collection, $children, $context, (array)$value);
 
-        $resolved = [];
-        $bestClass = [];
-        $bestChildren = [];
-        foreach ($value as $key => $item) {
-            $cacheKey = md5(implode('|', array_keys($item)));
-
-            $bestClass[$cacheKey] ??= $this->getBestMatchClass($collection, $children, $context, $item);
-            $bestChildren[$cacheKey] ??= $bestClass[$cacheKey] !== null
-                ? $this->findChildByClass($children, $bestClass[$cacheKey])
-                : null;
-
-            if ($bestClass[$cacheKey] === null) {
-                $resolved[$key] = $item;
-            } else {
-                $resolved[$key] = $this->resolveSingle($item, $bestChildren[$cacheKey], $collection, $context);
-            }
+        if (!$bestMatchClass) {
+            return $value;
         }
-        return $resolved;
+
+        $child     = $this->findChildByClass($children, $bestMatchClass);
+        $collection->getTypeTo($child->getClassName());
+
+        return $this->resolveSingle($value, $child, $collection, $context);
 
     }
 
@@ -64,16 +58,15 @@ class InputArrayBestMatchChildCast implements InputValueCastInterface
      */
     private function getBestMatchClass(DataCollection $collection, array $children, InputValueContext $context, array $value): ?string
     {
-
         $valueKeys    = array_flip(array_keys($value));
         $bestMatch    = null;
-        $highestScore = 0;
+        $highestScore = -1;
 
         $groups = $context->chooseSerializeContext->getGroups();
         $defaultGroup = $context->chooseSerializeContext->serializeClass;
 
         foreach ($collection->getTypes() as $type) {
-            if (!$type->kind->isCollect()) {
+            if ($type->kind != TypeKindEnum::CLASS_OBJECT) {
                 continue;
             }
 
@@ -94,9 +87,6 @@ class InputArrayBestMatchChildCast implements InputValueCastInterface
         return $bestMatch;
     }
 
-
-
-
     private function findChildByClass(array $children, string $className): ?GroupDataCollection
     {
         foreach ($children as $child) {
@@ -106,5 +96,15 @@ class InputArrayBestMatchChildCast implements InputValueCastInterface
         }
 
         return null;
+    }
+
+    private function hasObjectType(DataCollection $collection): bool
+    {
+        foreach ($collection->getTypes() as $type) {
+            if ($type->kind == TypeKindEnum::CLASS_OBJECT) {
+                return true;
+            }
+        }
+        return false;
     }
 }

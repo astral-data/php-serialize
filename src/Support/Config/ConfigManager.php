@@ -8,6 +8,7 @@ use Astral\Serialize\Casts\InputValue\InputValueEnumCast;
 use Astral\Serialize\Casts\InputValue\InputValueNullCast;
 use Astral\Serialize\Casts\OutValue\OutArrayChildCast;
 use Astral\Serialize\Casts\OutValue\OutValueEnumCast;
+use Astral\Serialize\Casts\InputValue\InputObjectBestMatchChildCast;
 use Astral\Serialize\Contracts\Attribute\DataCollectionCastInterface;
 use Astral\Serialize\Contracts\Attribute\InputValueCastInterface;
 use Astral\Serialize\Contracts\Attribute\OutValueCastInterface;
@@ -25,6 +26,7 @@ class ConfigManager
     /** @var InputValueCastInterface[] $inputValueCasts */
     private array $inputValueCasts = [
         InputValueNullCast::class,
+        InputObjectBestMatchChildCast::class,
         InputArraySingleChildCast::class,
         InputArrayBestMatchChildCast::class,
         InputValueEnumCast::class,

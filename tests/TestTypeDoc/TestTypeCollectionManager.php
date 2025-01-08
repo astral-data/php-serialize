@@ -119,7 +119,8 @@ it('tests union doc property reflections and type parsing', function () {
 
     $reflectionProperty = new ReflectionProperty(TypeUnionDoc::class, 'union_data_doc');
     $result             = $this->typeManager->getCollectionTo($reflectionProperty);
-    expect($result)->toBeArray()->toHaveCount(2);
+
+    expect($result)->toBeArray()->toHaveCount(4);
     foreach ($result as $key => $item) {
         expect($item)->toBeInstanceOf(TypeCollection::class);
         match ($key) {

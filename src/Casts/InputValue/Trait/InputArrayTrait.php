@@ -2,6 +2,7 @@
 
 namespace Astral\Serialize\Casts\InputValue\Trait;
 
+use Astral\Serialize\Enums\TypeKindEnum;
 use Astral\Serialize\Exceptions\NotFoundAttributePropertyResolver;
 use Astral\Serialize\Support\Collections\DataCollection;
 use Astral\Serialize\Support\Collections\GroupDataCollection;
@@ -67,21 +68,23 @@ trait InputArrayTrait
         return $chooseContext;
     }
 
-    private function hasObjectType(DataCollection $collection): bool
+    private function hasCollectObjectType(DataCollection $collection): bool
     {
         foreach ($collection->getTypes() as $type) {
-            if ($type->kind->existsClass()) {
+            if ($type->kind->existsCollectClass()) {
                 return true;
             }
         }
         return false;
     }
 
-    //    /**
-    //     * Check if the collection contains an object type.
-    //     */
-    //    private function hasObjectType(DataCollection $collection): bool
-    //    {
-    //        return array_reduce($collection->getTypes(), fn ($carry, $type) => $carry || $type->kind->existsClass(), false);
-    //    }
+    public function getDimension(array $array): int
+    {
+        foreach ($array as $value) {
+            if (is_array($value)) {
+                return 2;
+            }
+        }
+        return 1;
+    }
 }

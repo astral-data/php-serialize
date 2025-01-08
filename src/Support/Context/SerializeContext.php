@@ -178,7 +178,7 @@ class SerializeContext
         }
 
         foreach ($dataCollection->getTypes() as $type) {
-            if ($type->kind->existsClass()) {
+            if ($type->kind->existsCollectClass()) {
                 $childCollection = $this->parseSerializeClass(
                     className: $type->className,
                     maxDepth: $maxDepth,

@@ -13,7 +13,7 @@ class TypeUnionDoc
     /** @var array<OtherTypeDoc|BothTypeDoc> */
     public array $mixed_array;
 
-    /** @var OtherTypeDoc|BothTypeDoc[] */
+    /** @var OtherTypeDoc|BothTypeDoc[]|array<OtherTypeDoc|BothTypeDoc> */
     public object|array $union_data_doc;
 
     public OtherTypeDoc|BothTypeDoc|string $union_data;

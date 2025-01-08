@@ -17,9 +17,14 @@ enum TypeKindEnum
     case ENUM;
     case DATE;
 
-    public function existsClass(): bool
+    public function existsCollectClass(): bool
     {
         return $this === self::CLASS_OBJECT || $this === self::COLLECT_SINGLE_OBJECT || $this === self::COLLECT_UNION_OBJECT;
+    }
+
+    public function isCollect(): bool
+    {
+        return $this === self::COLLECT_UNION_OBJECT || $this === self::COLLECT_SINGLE_OBJECT;
     }
 
     public function isPrimitive(): bool

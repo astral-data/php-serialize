@@ -18,7 +18,7 @@ class InputArraySingleChildCast implements InputValueCastInterface
     {
         return is_array($value)
             && count($collection->getChildren()) === 1
-            && $this->hasObjectType($collection);
+            && $this->hasCollectObjectType($collection);
     }
 
     /**
@@ -33,7 +33,7 @@ class InputArraySingleChildCast implements InputValueCastInterface
 
         $context->chooseSerializeContext->getProperty($collection->getName())->setType($childType);
 
-        if ($childType->kind === TypeKindEnum::COLLECT_SINGLE_OBJECT) {
+        if ($childType->kind->isCollect()) {
             return $this->resolveArray($value, $child, $collection, $context);
         }
 
