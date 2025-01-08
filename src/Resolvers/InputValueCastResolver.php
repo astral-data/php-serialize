@@ -17,9 +17,6 @@ class InputValueCastResolver
 
     }
 
-    /**
-     * @throws NotFoundAttributePropertyResolver
-     */
     public function resolve(mixed $value, DataCollection $collection, InputValueContext $context): mixed
     {
         $value = $this->applyCastsByConfigManager($value, $collection, $context);

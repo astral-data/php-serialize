@@ -21,9 +21,6 @@ class PropertyToArrayResolver
     }
 
 
-    /**
-     * @throws NotFoundAttributePropertyResolver
-     */
     public function resolve(ChooseSerializeContext $chooseContext, GroupDataCollection $groupCollection, object $object): array
     {
 

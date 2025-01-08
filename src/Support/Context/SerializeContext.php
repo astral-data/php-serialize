@@ -47,7 +47,6 @@ class SerializeContext
      * @return SerializeContext<static>
      * @throws InvalidArgumentException
      * @throws NotFoundGroupException
-     * @throws ReflectionException
      */
     public function setGroups(array $groups): static
     {
@@ -67,10 +66,7 @@ class SerializeContext
     }
 
     /**
-     * @throws ReflectionException
      * @throws InvalidArgumentException
-     * @throws NotFoundGroupException
-     * @throws NotFoundAttributePropertyResolver
      */
     public function getGroupCollection(): GroupDataCollection
     {
@@ -93,11 +89,9 @@ class SerializeContext
         return 'SerializeContext:' . $this->serializeClassName . ':' . implode('|', $this->getGroups());
     }
 
+
     /**
-     * @throws ReflectionException
      * @throws InvalidArgumentException
-     * @throws NotFoundGroupException
-     * @throws NotFoundAttributePropertyResolver
      */
     public function parseSerializeClass(string $className, int $maxDepth = 10, int $currentDepth = 0): ?GroupDataCollection
     {
@@ -159,13 +153,9 @@ class SerializeContext
         return $globalDataCollection;
     }
 
+
     /**
-     * Children
-     *
-     * @throws ReflectionException
      * @throws InvalidArgumentException
-     * @throws NotFoundGroupException
-     * @throws NotFoundAttributePropertyResolver
      */
     private function assembleChildren(
         DataCollection $dataCollection,
@@ -190,11 +180,10 @@ class SerializeContext
     }
 
     /**
+     * @param mixed ...$payload
      * @return T
-     * @throws NotFoundAttributePropertyResolver
-     * @throws ReflectionException
-     * @throws NotFoundGroupException
      * @throws InvalidArgumentException
+     * @throws ReflectionException
      */
     public function from(mixed ...$payload): object
     {
@@ -219,10 +208,7 @@ class SerializeContext
 
 
     /**
-     * @throws NotFoundAttributePropertyResolver
-     * @throws ReflectionException
      * @throws InvalidArgumentException
-     * @throws NotFoundGroupException
      */
     public function toArray(object $object): array
     {

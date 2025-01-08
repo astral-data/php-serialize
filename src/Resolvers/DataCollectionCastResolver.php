@@ -17,10 +17,8 @@ class DataCollectionCastResolver
 
     }
 
-    /**
-     * @throws NotFoundAttributePropertyResolver
-     */
-    public function resolve(DataCollection $dataCollection, ReflectionProperty $property): void
+
+    public function resolve(DataCollection $dataCollection): void
     {
 
         foreach ($this->configManager->getAttributePropertyResolver() as $cast) {

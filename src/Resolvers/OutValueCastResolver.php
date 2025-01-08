@@ -17,9 +17,7 @@ class OutValueCastResolver
 
     }
 
-    /**
-     * @throws NotFoundAttributePropertyResolver
-     */
+
     public function resolve(mixed $value, DataCollection $collection, OutContext $context): mixed
     {
         $value = $this->applyCastsByConfigManager($value, $collection, $context);

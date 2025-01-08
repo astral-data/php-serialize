@@ -9,12 +9,10 @@ class ReflectionClassInstanceManager
 {
     private array $instances = [];
 
-    /**
-     * @throws ReflectionException
-     */
+
     public function get(string $className): ReflectionClass
     {
-        if (!isset($this->instances[$className])) {
+        if (!isset($this->instances[$className]) && class_exists($className)) {
             $this->instances[$className] = new ReflectionClass($className);
         }
 

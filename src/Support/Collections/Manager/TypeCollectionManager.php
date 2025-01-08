@@ -26,7 +26,7 @@ class TypeCollectionManager
      *
      * @param ReflectionProperty $property
      * @return TypeCollection[]
-     * @throws ReflectionException
+//     * @throws ReflectionException
      */
     public function getCollectionTo(ReflectionProperty $property): array
     {
@@ -40,15 +40,15 @@ class TypeCollectionManager
             return $this->processUnionType($type, $property);
         } elseif ($type instanceof ReflectionNamedType) {
             return [$this->processNamedType($type, $property)];
-        } elseif ($property->getType() === null) {
-            return [new TypeCollection(TypeKindEnum::MIXED, null)];
         }
 
-        throw new ReflectionException(sprintf(
-            'Property "%s" in class "%s" does not have a valid type.',
-            $property->getName(),
-            $property->getDeclaringClass()->getName()
-        ));
+        return [new TypeCollection(TypeKindEnum::MIXED, null)];
+
+//        throw new ReflectionException(sprintf(
+//            'Property "%s" in class "%s" does not have a valid type.',
+//            $property->getName(),
+//            $property->getDeclaringClass()->getName()
+//        ));
     }
 
     /**

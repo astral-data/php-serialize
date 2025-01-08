@@ -12,9 +12,7 @@ use Astral\Serialize\Support\Context\InputValueContext;
 use Astral\Serialize\Support\Instance\ReflectionClassInstanceManager;
 use ReflectionException;
 
-/**
- * @template T
- */
+
 class PropertyInputValueResolver
 {
     public function __construct(
@@ -26,14 +24,13 @@ class PropertyInputValueResolver
 
     }
 
+
     /**
-     * @throws NotFoundAttributePropertyResolver
      * @throws ReflectionException
-     * @return T
      */
     public function resolve(ChooseSerializeContext $chooseContext, GroupDataCollection $groupCollection, array $payload)
     {
-        /** @var T $reflectionClass */
+
         $reflectionClass =  $this->reflectionClassInstanceManager->get($groupCollection->getClassName());
         $object          = $reflectionClass->newInstanceWithoutConstructor();
 
