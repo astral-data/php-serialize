@@ -6,7 +6,7 @@ use Astral\Serialize\Support\Context\SerializeContext;
 use Astral\Serialize\Annotations\DataCollection\InputName;
 use Astral\Serialize\Annotations\DataCollection\InputIgnore;
 
-beforeEach(function () {
+beforeAll(function () {
 
     class OtherArrayNestedOne
     {
@@ -137,21 +137,17 @@ it('test parse array nested serialize class', function () {
     $thirdNestedThree = $secondNestedTwo->otherNestedThree[0];
     expect($thirdNestedThree->name_three)->toBe('OtherNestedThree-name-three');
 
-    // 记录测试结束后的内存使用
-    $endMemory = memory_get_usage();
-
-    // 记录峰值内存
-    $peakMemory = memory_get_peak_usage();
-
-    // 计算使用内存
-    $memoryUsed = $endMemory - $startMemory;
-
-    // 输出内存使用情况
-    echo sprintf(
-        "Start Memory: %.2f MB\nEnd Memory: %.2f MB\nMemory Used: %.2f MB\nPeak Memory: %.2f MB\n",
-        $startMemory / 1024 / 1024,
-        $endMemory   / 1024 / 1024,
-        $memoryUsed  / 1024 / 1024,
-        $peakMemory  / 1024 / 1024
-    );
+//    $endMemory = memory_get_usage();
+//
+//    $peakMemory = memory_get_peak_usage();
+//
+//    $memoryUsed = $endMemory - $startMemory;
+//
+//    echo sprintf(
+//        "Start Memory: %.2f MB\nEnd Memory: %.2f MB\nMemory Used: %.2f MB\nPeak Memory: %.2f MB\n",
+//        $startMemory / 1024 / 1024,
+//        $endMemory   / 1024 / 1024,
+//        $memoryUsed  / 1024 / 1024,
+//        $peakMemory  / 1024 / 1024
+//    );
 });

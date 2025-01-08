@@ -5,7 +5,7 @@ use Astral\Serialize\Serialize;
 use Astral\Serialize\Support\Context\SerializeContext;
 use Astral\Serialize\Annotations\DataCollection\InputIgnore;
 
-beforeEach(function () {
+beforeAll(function () {
 
     class OtherNestedOne
     {
