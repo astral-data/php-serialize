@@ -2,18 +2,13 @@
 
 namespace Astral\Serialize;
 
-use ReflectionException;
-use Astral\Serialize\Exceptions\NotFoundGroupException;
 use Astral\Serialize\Support\Context\SerializeContext;
 use Astral\Serialize\Support\Factories\ContextFactory;
-use Psr\SimpleCache\InvalidArgumentException;
 
 abstract class Serialize
 {
     private ?SerializeContext $_context = null;
 
-    /**
-     */
     public function getContext(): ?SerializeContext
     {
         return $this->_context;
@@ -25,21 +20,17 @@ abstract class Serialize
         return  $this;
     }
 
-
     public static function setGroups(array $groups): SerializeContext
     {
         /** @var SerializeContext<static> $serializeContext */
         $serializeContext = ContextFactory::build(static::class);
         return $serializeContext->setGroups($groups);
-
     }
-
 
     public function toArray(): array
     {
         return $this->getContext()->toArray($this);
     }
-
 
     public static function from(...$payload): static
     {
