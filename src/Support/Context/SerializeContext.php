@@ -179,8 +179,6 @@ class SerializeContext
     /**
      * @param mixed ...$payload
      * @return T
-     * @throws InvalidArgumentException
-     * @throws ReflectionException
      */
     public function from(mixed ...$payload): object
     {

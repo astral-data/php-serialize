@@ -27,34 +27,35 @@ abstract class Serialize
 
     /**
      * @param array<string> $groups
-     * @return SerializeContext<static>
-     * @throws NotFoundGroupException
-     * @throws InvalidArgumentException
+     * @return SerializeContext|null
      */
-    public static function setGroups(array $groups): SerializeContext
+    public static function setGroups(array $groups): ?SerializeContext
     {
         /** @var SerializeContext<static> $serializeContext */
         $serializeContext = ContextFactory::build(static::class);
         return $serializeContext->setGroups($groups);
+
     }
 
-    /**
-     * @throws InvalidArgumentException
-     */
+
     public function toArray(): array
     {
-        return $this->getContext()->toArray($this);
+        try {
+            return $this->getContext()->toArray($this);
+        } catch (InvalidArgumentException $e) {
+
+        }
+
+        return [];
     }
 
-    /**
-     * @throws InvalidArgumentException
-     * @throws ReflectionException
-     */
+
     public static function from(...$payload): static
     {
         $serializeContext = ContextFactory::build(static::class);
+
         /** @var static $instance */
-        $instance =  $serializeContext->from(...$payload);
+        $instance = $serializeContext->from(...$payload);
         $instance->setContext($serializeContext);
 
         return $instance;
