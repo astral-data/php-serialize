@@ -1,9 +1,7 @@
 <?php
 
-use Astral\Serialize\Annotations\Groups;
-use Astral\Serialize\Serialize;
-use Astral\Serialize\Support\Context\SerializeContext;
 use Astral\Serialize\Annotations\DataCollection\InputIgnore;
+use Astral\Serialize\Serialize;
 
 beforeAll(function () {
 
@@ -48,17 +46,17 @@ it('test parse nested serialize class', function () {
 
     $instance = TestNestedSerialize::from(
         [
-            'name' => 'TestNestedSerialize-name',
-            'id' => 001,
+            'name'           => 'TestNestedSerialize-name',
+            'id'             => 001,
             'otherNestedOne' => [
-                'name_one' => 'OtherNestedOne-name_one',
-                'id_one' => 002,
+                'name_one'       => 'OtherNestedOne-name_one',
+                'id_one'         => 002,
                 'otherNestedTwo' => [
-                    'name_two' => 'OtherNestedTwo-name_two',
-                    'id_two' => 003,
+                    'name_two'         => 'OtherNestedTwo-name_two',
+                    'id_two'           => 003,
                     'otherNestedThree' => [
                         'name_three' => 'OtherNestedThree-name_three',
-                        'id_three' => 004
+                        'id_three'   => 004
                     ]
                 ]
             ]

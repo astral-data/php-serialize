@@ -3,12 +3,10 @@
 namespace Astral\Serialize\Support\Instance;
 
 use ReflectionClass;
-use ReflectionException;
 
 class ReflectionClassInstanceManager
 {
     private array $instances = [];
-
 
     public function get(string $className): ReflectionClass
     {

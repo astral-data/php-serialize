@@ -2,12 +2,11 @@
 
 namespace Astral\Serialize;
 
-use Astral\Serialize\Exceptions\NotFoundAttributePropertyResolver;
+use ReflectionException;
 use Astral\Serialize\Exceptions\NotFoundGroupException;
 use Astral\Serialize\Support\Context\SerializeContext;
 use Astral\Serialize\Support\Factories\ContextFactory;
 use Psr\SimpleCache\InvalidArgumentException;
-use ReflectionException;
 
 abstract class Serialize
 {
@@ -29,7 +28,6 @@ abstract class Serialize
     /**
      * @param array<string> $groups
      * @return SerializeContext<static>
-     * @throws ReflectionException
      * @throws NotFoundGroupException
      * @throws InvalidArgumentException
      */
@@ -41,9 +39,6 @@ abstract class Serialize
     }
 
     /**
-     * @throws ReflectionException
-     * @throws NotFoundAttributePropertyResolver
-     * @throws NotFoundGroupException
      * @throws InvalidArgumentException
      */
     public function toArray(): array
@@ -52,14 +47,11 @@ abstract class Serialize
     }
 
     /**
-     * @throws NotFoundAttributePropertyResolver
-     * @throws ReflectionException
-     * @throws NotFoundGroupException
      * @throws InvalidArgumentException
+     * @throws ReflectionException
      */
     public static function from(...$payload): static
     {
-
         $serializeContext = ContextFactory::build(static::class);
         /** @var static $instance */
         $instance =  $serializeContext->from(...$payload);

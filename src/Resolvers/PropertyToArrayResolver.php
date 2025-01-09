@@ -2,13 +2,11 @@
 
 namespace Astral\Serialize\Resolvers;
 
-use Astral\Serialize\Exceptions\NotFoundAttributePropertyResolver;
 use Astral\Serialize\Support\Collections\DataCollection;
 use Astral\Serialize\Support\Collections\GroupDataCollection;
 use Astral\Serialize\Support\Context\ChooseSerializeContext;
 use Astral\Serialize\Support\Context\OutContext;
 use Astral\Serialize\Support\Instance\ReflectionClassInstanceManager;
-use ReflectionException;
 
 class PropertyToArrayResolver
 {
@@ -19,7 +17,6 @@ class PropertyToArrayResolver
     ) {
 
     }
-
 
     public function resolve(ChooseSerializeContext $chooseContext, GroupDataCollection $groupCollection, object $object): array
     {

@@ -2,7 +2,6 @@
 
 use Astral\Serialize\Annotations\Groups;
 use Astral\Serialize\Serialize;
-use Astral\Serialize\Support\Context\SerializeContext;
 
 beforeAll(function () {
     class TestGroupSerialize extends Serialize
@@ -64,10 +63,10 @@ it('test parse groups serialize class', function () {
         ->and($instance->type_object)->toBeInstanceOf(stdClass::class)
     ;
 
-    $otherObject = new OtherObject();
-    $otherObject->id = 123;
+    $otherObject       = new OtherObject();
+    $otherObject->id   = 123;
     $otherObject->name = 'abc';
-    $instance = TestGroupSerialize::setGroups(['test_2'])->from(
+    $instance          = TestGroupSerialize::setGroups(['test_2'])->from(
         type_string:'111',
         type_int:99999,
         type_object:$otherObject,

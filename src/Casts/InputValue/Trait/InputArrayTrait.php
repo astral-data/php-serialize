@@ -2,7 +2,6 @@
 
 namespace Astral\Serialize\Casts\InputValue\Trait;
 
-use Astral\Serialize\Enums\TypeKindEnum;
 use Astral\Serialize\Exceptions\NotFoundAttributePropertyResolver;
 use Astral\Serialize\Support\Collections\DataCollection;
 use Astral\Serialize\Support\Collections\GroupDataCollection;

@@ -3,7 +3,6 @@
 namespace Astral\Serialize\Resolvers;
 
 use Astral\Serialize\Contracts\Attribute\InputValueCastInterface;
-use Astral\Serialize\Exceptions\NotFoundAttributePropertyResolver;
 use Astral\Serialize\Support\Collections\DataCollection;
 use Astral\Serialize\Support\Config\ConfigManager;
 use Astral\Serialize\Support\Context\InputValueContext;

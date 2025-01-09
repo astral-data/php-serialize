@@ -3,10 +3,10 @@
 namespace Astral\Serialize\Resolvers;
 
 use phpDocumentor\Reflection\Type;
+use phpDocumentor\Reflection\Types\AggregatedType;
 use phpDocumentor\Reflection\Types\Array_;
 use phpDocumentor\Reflection\Types\Mixed_;
 use phpDocumentor\Reflection\Types\Object_;
-use phpDocumentor\Reflection\Types\AggregatedType;
 
 class PropertyTypeDocResolver
 {
@@ -38,7 +38,7 @@ class PropertyTypeDocResolver
         }
 
         return [
-            'typeName'  => is_array($className) ? 'array_union' : 'array',
+            'typeName'   => is_array($className) ? 'array_union' : 'array',
             'classNames' => is_array($className) ? $className : [$className],
         ];
 
@@ -47,7 +47,7 @@ class PropertyTypeDocResolver
     protected function resolveObjectType(Object_ $type): array
     {
         return [
-            'typeName'  => 'object',
+            'typeName'   => 'object',
             'classNames' => [ltrim($type->getFqsen()->__toString(), '\\')],
         ];
     }
@@ -55,7 +55,7 @@ class PropertyTypeDocResolver
     protected function resolveMixedType(Mixed_ $type): array
     {
         return [
-            'typeName'  => 'string',
+            'typeName'   => 'string',
             'classNames' => [null],
         ];
     }
@@ -63,7 +63,7 @@ class PropertyTypeDocResolver
     protected function resolveDefaultType(Type $type): array
     {
         return [
-            'typeName'  => (string)$type,
+            'typeName'   => (string)$type,
             'classNames' => [null],
         ];
     }

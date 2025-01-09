@@ -4,7 +4,6 @@ namespace Astral\Serialize\Casts\InputValue;
 
 use Astral\Serialize\Casts\InputValue\Trait\InputArrayTrait;
 use Astral\Serialize\Contracts\Attribute\InputValueCastInterface;
-use Astral\Serialize\Enums\TypeKindEnum;
 use Astral\Serialize\Exceptions\NotFoundAttributePropertyResolver;
 use Astral\Serialize\Support\Collections\DataCollection;
 use Astral\Serialize\Support\Collections\GroupDataCollection;
@@ -33,7 +32,7 @@ class InputArrayBestMatchChildCast implements InputValueCastInterface
     {
         $children       = $collection->getChildren();
 
-        $resolved = [];
+        $resolved  = [];
         $bestClass = [];
         foreach ($value as $key => $item) {
             $cacheKey = md5(implode('|', array_keys($item)));
@@ -43,14 +42,13 @@ class InputArrayBestMatchChildCast implements InputValueCastInterface
             if ($bestClass[$cacheKey] === null) {
                 $resolved[$key] = $item;
             } else {
-                $bestChild = $children[$bestClass[$cacheKey]];
+                $bestChild      = $children[$bestClass[$cacheKey]];
                 $resolved[$key] = $this->resolveSingle($item, $bestChild, $collection, $context);
             }
         }
         return $resolved;
 
     }
-
 
     /**
      * @param DataCollection $collection
@@ -66,7 +64,7 @@ class InputArrayBestMatchChildCast implements InputValueCastInterface
         $bestMatch    = null;
         $highestScore = 0;
 
-        $groups = $context->chooseSerializeContext->getGroups();
+        $groups       = $context->chooseSerializeContext->getGroups();
         $defaultGroup = $context->chooseSerializeContext->serializeClass;
 
         foreach ($collection->getTypes() as $type) {

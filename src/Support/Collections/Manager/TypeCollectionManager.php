@@ -44,11 +44,11 @@ class TypeCollectionManager
 
         return [new TypeCollection(TypeKindEnum::MIXED, null)];
 
-//        throw new ReflectionException(sprintf(
-//            'Property "%s" in class "%s" does not have a valid type.',
-//            $property->getName(),
-//            $property->getDeclaringClass()->getName()
-//        ));
+        //        throw new ReflectionException(sprintf(
+        //            'Property "%s" in class "%s" does not have a valid type.',
+        //            $property->getName(),
+        //            $property->getDeclaringClass()->getName()
+        //        ));
     }
 
     /**

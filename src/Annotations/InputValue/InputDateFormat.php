@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 namespace Astral\Serialize\Annotations\InputValue;
 
-use DateTimeInterface;
-use DateTimeImmutable;
 use Astral\Serialize\Contracts\Attribute\InputValueCastInterface;
 use Astral\Serialize\Support\Collections\DataCollection;
 use Astral\Serialize\Support\Context\InputValueContext;
 use Attribute;
 use DateTime;
+use DateTimeInterface;
 
 #[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_CLASS)]
 class InputDateFormat implements InputValueCastInterface

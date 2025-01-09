@@ -1,9 +1,6 @@
 <?php
 
 use Astral\Serialize\Serialize;
-use Astral\Serialize\Annotations\DataCollection\OutName;
-use Astral\Serialize\Annotations\DataCollection\OutIgnore;
-use Astral\Serialize\Annotations\DataCollection\InputName;
 
 class ComplicatedSerialize extends Serialize
 {

@@ -3,12 +3,12 @@
 namespace Astral\Serialize;
 
 use Astral\Serialize\Casts\InputConstructCast;
-use Astral\Serialize\Resolvers\OutValueCastResolver;
-use Astral\Serialize\Resolvers\PropertyToArrayResolver;
 use Astral\Serialize\Resolvers\DataCollectionCastResolver;
 use Astral\Serialize\Resolvers\GroupResolver;
 use Astral\Serialize\Resolvers\InputValueCastResolver;
+use Astral\Serialize\Resolvers\OutValueCastResolver;
 use Astral\Serialize\Resolvers\PropertyInputValueResolver;
+use Astral\Serialize\Resolvers\PropertyToArrayResolver;
 use Astral\Serialize\Resolvers\PropertyTypeDocResolver;
 use Astral\Serialize\Resolvers\PropertyTypesContextResolver;
 use Astral\Serialize\Support\Collections\Manager\ConstructDataCollectionManager;

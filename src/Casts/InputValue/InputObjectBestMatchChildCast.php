@@ -48,7 +48,6 @@ class InputObjectBestMatchChildCast implements InputValueCastInterface
 
     }
 
-
     /**
      * @param DataCollection $collection
      * @param GroupDataCollection[] $children
@@ -62,7 +61,7 @@ class InputObjectBestMatchChildCast implements InputValueCastInterface
         $bestMatch    = null;
         $highestScore = -1;
 
-        $groups = $context->chooseSerializeContext->getGroups();
+        $groups       = $context->chooseSerializeContext->getGroups();
         $defaultGroup = $context->chooseSerializeContext->serializeClass;
 
         foreach ($collection->getTypes() as $type) {

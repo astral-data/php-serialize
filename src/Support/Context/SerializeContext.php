@@ -2,7 +2,7 @@
 
 namespace Astral\Serialize\Support\Context;
 
-use Astral\Serialize\Exceptions\NotFoundAttributePropertyResolver;
+use ReflectionException;
 use Astral\Serialize\Exceptions\NotFoundGroupException;
 use Astral\Serialize\Resolvers\DataCollectionCastResolver;
 use Astral\Serialize\Resolvers\GroupResolver;
@@ -16,7 +16,6 @@ use Astral\Serialize\Support\Collections\Manager\ConstructDataCollectionManager;
 use Astral\Serialize\Support\Instance\ReflectionClassInstanceManager;
 use Psr\SimpleCache\CacheInterface;
 use Psr\SimpleCache\InvalidArgumentException;
-use ReflectionException;
 use ReflectionProperty;
 use RuntimeException;
 
@@ -89,7 +88,6 @@ class SerializeContext
         return 'SerializeContext:' . $this->serializeClassName . ':' . implode('|', $this->getGroups());
     }
 
-
     /**
      * @throws InvalidArgumentException
      */
@@ -153,7 +151,6 @@ class SerializeContext
         return $globalDataCollection;
     }
 
-
     /**
      * @throws InvalidArgumentException
      */
@@ -205,7 +202,6 @@ class SerializeContext
         return $object;
 
     }
-
 
     /**
      * @throws InvalidArgumentException

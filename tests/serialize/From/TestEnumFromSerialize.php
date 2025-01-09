@@ -1,10 +1,7 @@
 <?php
 
 use Astral\Serialize\Exceptions\ValueCastError;
-use Astral\Serialize\Annotations\DataCollection\OutName;
-use Astral\Serialize\Annotations\DataCollection\InputName;
 use Astral\Serialize\Serialize;
-use Astral\Serialize\Annotations\DataCollection\OutIgnore;
 
 beforeAll(function () {
     enum TestEnums

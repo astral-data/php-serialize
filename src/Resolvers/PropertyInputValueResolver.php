@@ -3,7 +3,6 @@
 namespace Astral\Serialize\Resolvers;
 
 use Astral\Serialize\Casts\InputConstructCast;
-use Astral\Serialize\Exceptions\NotFoundAttributePropertyResolver;
 use Astral\Serialize\Support\Collections\DataCollection;
 use Astral\Serialize\Support\Collections\GroupDataCollection;
 use Astral\Serialize\Support\Context\ChoosePropertyContext;
@@ -11,7 +10,6 @@ use Astral\Serialize\Support\Context\ChooseSerializeContext;
 use Astral\Serialize\Support\Context\InputValueContext;
 use Astral\Serialize\Support\Instance\ReflectionClassInstanceManager;
 use ReflectionException;
-
 
 class PropertyInputValueResolver
 {
@@ -24,7 +22,6 @@ class PropertyInputValueResolver
 
     }
 
-
     /**
      * @throws ReflectionException
      */
@@ -32,7 +29,7 @@ class PropertyInputValueResolver
     {
 
         $reflectionClass =  $this->reflectionClassInstanceManager->get($groupCollection->getClassName());
-        $object          = $reflectionClass->newInstanceWithoutConstructor();
+        $object          =  $reflectionClass->newInstanceWithoutConstructor();
 
         $context         = new InputValueContext(
             className: $groupCollection->getClassName(),

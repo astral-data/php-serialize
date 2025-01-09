@@ -1,10 +1,8 @@
 <?php
 
-use Astral\Serialize\Annotations\Groups;
-use Astral\Serialize\Serialize;
-use Astral\Serialize\Support\Context\SerializeContext;
-use Astral\Serialize\Annotations\DataCollection\InputName;
 use Astral\Serialize\Annotations\DataCollection\InputIgnore;
+use Astral\Serialize\Annotations\DataCollection\InputName;
+use Astral\Serialize\Serialize;
 
 beforeAll(function () {
 
@@ -52,50 +50,50 @@ it('test parse array nested serialize class', function () {
 
     $instance = TestArrayNestedSerialize::from(
         [
-            'name' => 'TestArrayNestedSerialize-name',
-            'id' => 001,
+            'name'           => 'TestArrayNestedSerialize-name',
+            'id'             => 001,
             'otherNestedOne' => [
                 [
-                    'name_one' => 'OtherNestedOne-name-one-01',
-                    'id_one' => 002,
+                    'name_one'       => 'OtherNestedOne-name-one-01',
+                    'id_one'         => 002,
                     'otherNestedTwo' => [
                         [
-                            'name_two' => 'OtherNestedTwo-name-two-01',
-                            'id_two' => 004,
+                            'name_two'         => 'OtherNestedTwo-name-two-01',
+                            'id_two'           => 004,
                             'otherNestedThree' => [
                                 [
                                     'name_three' => 'OtherNestedThree-name-three-01',
-                                    'id_three' => 005
+                                    'id_three'   => 005
                                 ],
                                 [
                                     'name_three' => 'OtherNestedThree-name-three-02',
-                                    'id_three' => 005
+                                    'id_three'   => 005
                                 ]
                             ]
                         ],
                         [
-                            'name_two' => 'OtherNestedTwo-name-two-02',
-                            'id_two' => 004,
+                            'name_two'         => 'OtherNestedTwo-name-two-02',
+                            'id_two'           => 004,
                             'otherNestedThree' => [
                                 [
                                     'name_three_other' => 'OtherNestedThree-name-three-01',
-                                    'id_three' => 005
+                                    'id_three'         => 005
                                 ]
                             ]
                         ]
                     ]
                 ],
                 [
-                    'name_one' => 'OtherNestedOne-name-one-02',
-                    'id_one' => 003,
+                    'name_one'       => 'OtherNestedOne-name-one-02',
+                    'id_one'         => 003,
                     'otherNestedTwo' => [
                         [
-                            'name_two' => 'OtherNestedTwo-name-two',
-                            'id_two' => 006,
+                            'name_two'         => 'OtherNestedTwo-name-two',
+                            'id_two'           => 006,
                             'otherNestedThree' => [
                                 [
                                     'name_three_other' => 'OtherNestedThree-name-three',
-                                    'id_three' => 007
+                                    'id_three'         => 007
                                 ]
                             ]
                         ]

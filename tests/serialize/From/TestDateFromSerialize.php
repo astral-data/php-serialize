@@ -1,8 +1,8 @@
 <?php
 
-use Carbon\Carbon;
-use Astral\Serialize\Serialize;
 use Astral\Serialize\Annotations\InputValue\InputDateFormat;
+use Astral\Serialize\Serialize;
+use Carbon\Carbon;
 
 beforeAll(function () {
     class TestDateFromSerialize extends Serialize

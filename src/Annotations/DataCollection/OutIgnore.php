@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Astral\Serialize\Annotations\DataCollection;
 
-use UnitEnum;
 use Astral\Serialize\Contracts\Attribute\DataCollectionCastInterface;
 use Astral\Serialize\Support\Collections\DataCollection;
 use Attribute;
 use ReflectionProperty;
+use UnitEnum;
 
 #[Attribute(Attribute::TARGET_PROPERTY)]
 class OutIgnore implements DataCollectionCastInterface

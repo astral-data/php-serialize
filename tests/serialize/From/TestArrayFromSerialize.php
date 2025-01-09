@@ -1,9 +1,9 @@
 <?php
 
 
-use Astral\Serialize\Serialize;
-use Astral\Serialize\Annotations\DataCollection\InputName;
 use Astral\Serialize\Annotations\DataCollection\InputIgnore;
+use Astral\Serialize\Annotations\DataCollection\InputName;
+use Astral\Serialize\Serialize;
 
 beforeAll(function () {
     class ArrayBestMatchOne
@@ -48,15 +48,15 @@ it('test  array only one serialize nested serialize class', function () {
     $res = ArrayBestMatchSerialize::from(vols_1:[
         [
             'name_two' => 'ArrayBestMatchTwo-1',
-            'id_two' => 1,
+            'id_two'   => 1,
         ],
         [
             'name_two' => 'ArrayBestMatchTwo-2',
-            'id_two' => 2,
+            'id_two'   => 2,
         ],
         [
             'name_two' => 'ArrayBestMatchTwo-3',
-            'id_two' => 3,
+            'id_two'   => 3,
         ],
 
     ]);
@@ -83,15 +83,15 @@ it('test array only one  serialize nested serialize class', function () {
     $res = ArrayBestMatchSerialize::from(vols_3:[
         [
             'name_two' => 'ArrayBestMatchTwo-1',
-            'id_two' => 1,
+            'id_two'   => 1,
         ],
         [
             'name_two' => 'ArrayBestMatchTwo-2',
-            'id_two' => 2,
+            'id_two'   => 2,
         ],
         [
             'name_two' => 'ArrayBestMatchTwo-3',
-            'id_two' => 3,
+            'id_two'   => 3,
         ],
 
     ]);
@@ -118,15 +118,15 @@ it('test array analyzer serialize nested serialize class', function () {
     $res = ArrayBestMatchSerialize::from(vols_2:[
         'ArrayBestMatchOne' => [
             'name_one' => 'ArrayBestMatchOne',
-            'id_one' => 1,
+            'id_one'   => 1,
         ],
         'ArrayBestMatchTwo' => [
             'name_two' => 'ArrayBestMatchTwo',
-            'id_two' => 2,
+            'id_two'   => 2,
         ],
         'ArrayBestMatchThree' => [
             'name_three_other' => 'ArrayBestMatchThree',
-            'id_three' => 3,
+            'id_three'         => 3,
         ]
     ]);
 
@@ -153,26 +153,26 @@ it('test array object serialize nested serialize class', function () {
 
     $res1 = ArrayBestMatchSerialize::from(vols_4:[
         'name_two' => 'ArrayBestMatchTwo',
-        'id_two' => 2,
+        'id_two'   => 2,
     ]);
 
     $res2 = ArrayBestMatchSerialize::from(vols_4:[
         'name_three_other' => 'ArrayBestMatchTwo',
-        'id_three' => 3,
+        'id_three'         => 3,
     ]);
 
     $res3 = ArrayBestMatchSerialize::from(vols_4:[
         [
             'name_one' => 'ArrayBestMatchTwo-1',
-            'id_one' => 1,
+            'id_one'   => 1,
         ],
         [
             'name_one' => 'ArrayBestMatchTwo-2',
-            'id_one' => 2,
+            'id_one'   => 2,
         ],
         [
             'name_one' => 'ArrayBestMatchTwo-3',
-            'id_one' => 3,
+            'id_one'   => 3,
         ],
     ]);
 

@@ -4,11 +4,11 @@ namespace Astral\Serialize\Support\Config;
 
 use Astral\Serialize\Casts\InputValue\InputArrayBestMatchChildCast;
 use Astral\Serialize\Casts\InputValue\InputArraySingleChildCast;
+use Astral\Serialize\Casts\InputValue\InputObjectBestMatchChildCast;
 use Astral\Serialize\Casts\InputValue\InputValueEnumCast;
 use Astral\Serialize\Casts\InputValue\InputValueNullCast;
 use Astral\Serialize\Casts\OutValue\OutArrayChildCast;
 use Astral\Serialize\Casts\OutValue\OutValueEnumCast;
-use Astral\Serialize\Casts\InputValue\InputObjectBestMatchChildCast;
 use Astral\Serialize\Contracts\Attribute\DataCollectionCastInterface;
 use Astral\Serialize\Contracts\Attribute\InputValueCastInterface;
 use Astral\Serialize\Contracts\Attribute\OutValueCastInterface;

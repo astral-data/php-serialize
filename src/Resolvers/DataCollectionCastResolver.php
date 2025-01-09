@@ -3,11 +3,9 @@
 namespace Astral\Serialize\Resolvers;
 
 use Astral\Serialize\Contracts\Attribute\DataCollectionCastInterface;
-use Astral\Serialize\Exceptions\NotFoundAttributePropertyResolver;
 use Astral\Serialize\Support\Collections\DataCollection;
 use Astral\Serialize\Support\Config\ConfigManager;
 use InvalidArgumentException;
-use ReflectionProperty;
 
 class DataCollectionCastResolver
 {
@@ -16,7 +14,6 @@ class DataCollectionCastResolver
     ) {
 
     }
-
 
     public function resolve(DataCollection $dataCollection): void
     {
