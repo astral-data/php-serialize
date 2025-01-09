@@ -40,13 +40,7 @@ abstract class Serialize
 
     public function toArray(): array
     {
-        try {
-            return $this->getContext()->toArray($this);
-        } catch (InvalidArgumentException $e) {
-
-        }
-
-        return [];
+        return $this->getContext()->toArray($this);
     }
 
 
