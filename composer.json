@@ -33,7 +33,8 @@
     "autoload": {
         "psr-4": {
             "Astral\\Serialize\\": "src/",
-            "Astral\\Serialize\\Tests\\": "tests/"
+            "Astral\\Serialize\\Tests\\": "tests/",
+            "Astral\\Benchmarks\\": "benchmarks/"
         }
     },
     "config": {

@@ -28,6 +28,8 @@ beforeAll(function () {
 
 it('test enum serialize class', function () {
 
+    var_dump(class_exists(\Astral\Benchmarks\Fake\SerializeBenchFake::class));
+
     $object = TestDateFromSerialize::from([
         'date_1' => '2024-01-01 01:01:01',
         'date_2' => '2024-01-01 01:01:01',
@@ -45,7 +47,6 @@ it('test enum serialize class', function () {
         'date_6' => new Carbon(),
     ]);
 
-    // Assert object properties
     expect($object->date_1)->toBe('01/01/2024')
         ->and($object->date_2)->toBe('2024-01-01 01:01:01')
         ->and($object2->date_1)->toBe('01/01/2024')

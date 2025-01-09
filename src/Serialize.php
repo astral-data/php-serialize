@@ -28,6 +28,7 @@ abstract class Serialize
     }
 
     public function toArray(): array
+
     {
         return $this->getContext()->toArray($this);
     }
