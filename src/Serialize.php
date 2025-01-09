@@ -25,11 +25,8 @@ abstract class Serialize
         return  $this;
     }
 
-    /**
-     * @param array<string> $groups
-     * @return SerializeContext|null
-     */
-    public static function setGroups(array $groups): ?SerializeContext
+
+    public static function setGroups(array $groups): SerializeContext
     {
         /** @var SerializeContext<static> $serializeContext */
         $serializeContext = ContextFactory::build(static::class);
