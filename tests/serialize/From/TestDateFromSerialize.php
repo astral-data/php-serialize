@@ -45,4 +45,15 @@ it('test enum serialize class', function () {
         'date_6' => new Carbon(),
     ]);
 
+    // Assert object properties
+    expect($object->date_1)->toBe('01/01/2024')
+        ->and($object->date_2)->toBe('2024-01-01 01:01:01')
+        ->and($object2->date_1)->toBe('01/01/2024')
+        ->and($object2->date_2)->toBe('2024-01-01 00:00:01')
+        ->and($object3->date_3)->toBeInstanceOf(DateTime::class)
+        ->and($object3->date_4)->toBeInstanceOf(Carbon::class)
+        ->and($object3->date_5)->toBeInstanceOf(DateTime::class)
+        ->and($object3->date_6)->toBeInstanceOf(Carbon::class)
+        ->and($object3->date_3->format('Y-m-d H:i:s'))->toBe('2024-01-01 00:00:01')
+        ->and($object3->date_4->format('Y-m-d'))->toBe('2023-02-01');
 });
