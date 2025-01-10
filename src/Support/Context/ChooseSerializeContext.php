@@ -7,7 +7,7 @@ namespace Astral\Serialize\Support\Context;
  */
 class ChooseSerializeContext
 {
-    private array $groups;
+    private array $groups = [];
 
     /** @var array<string,ChoosePropertyContext> $properties */
     private array $properties;

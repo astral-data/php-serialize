@@ -28,8 +28,11 @@ abstract class Serialize
     }
 
     public function toArray(): array
-
     {
+        if ($this->getContext() === null) {
+            $this->setContext(ContextFactory::build(static::class));
+        }
+
         return $this->getContext()->toArray($this);
     }
 

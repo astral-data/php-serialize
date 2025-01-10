@@ -3,14 +3,11 @@
 namespace Astral\Benchmarks;
 
 use DateTime;
-use Carbon\CarbonImmutable;
 use PhpBench\Attributes\Revs;
 use Astral\Serialize\Serialize;
 use PhpBench\Attributes\Assert;
-use Spatie\LaravelData\Optional;
 use PhpBench\Attributes\Iterations;
 use PhpBench\Attributes\BeforeMethods;
-use Spatie\LaravelData\DataCollection;
 use Astral\Benchmarks\Fake\NestedDataFake;
 use Astral\Benchmarks\Fake\SerializeBenchFake;
 use Astral\Benchmarks\Fake\NestedCollectionFake;
@@ -62,7 +59,7 @@ class SerializeBench
     }
 
 
-    public function setupObject()
+    public function setupObject(): void
     {
         $this->object = new SerializeBenchFake();
 
@@ -84,7 +81,7 @@ class SerializeBench
     }
 
     #[
-        Revs(5000),
+        Revs(500),
         Iterations(5),
         BeforeMethods([ 'setupObjectCreation']),
         Assert('mode(variant.time.avg) < 90 microseconds +/- 5%')
@@ -99,7 +96,7 @@ class SerializeBench
         Revs(5000),
         Iterations(5),
         BeforeMethods([ 'setupObjectCreation']),
-        Assert('mode(variant.time.avg) < 347 microseconds +/- 10%')
+        Assert('mode(variant.time.avg) < 250 microseconds +/- 5%')
     ]
     public function benchObjectCreationWithoutCache(): void
     {
@@ -111,7 +108,7 @@ class SerializeBench
         Revs(500),
         Iterations(5),
         BeforeMethods(['setupObject']),
-        Assert('mode(variant.time.avg) < 39 microseconds +/- 5%')
+        Assert('mode(variant.time.avg) < 25 microseconds +/- 5%')
     ]
     public function benchObjectToArray(): void
     {
@@ -122,7 +119,7 @@ class SerializeBench
         Revs(5000),
         Iterations(5),
         BeforeMethods(['setupObject']),
-        Assert('mode(variant.time.avg) < 226 microseconds +/- 10%')
+        Assert('mode(variant.time.avg) < 150 microseconds +/- 5%')
     ]
     public function benchObjectToArrayWithoutCache(): void
     {
