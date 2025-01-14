@@ -2,9 +2,9 @@
 
 namespace Astral\Benchmarks\Fake;
 
-use DateTime;
-use Astral\Serialize\Serialize;
 use Astral\Serialize\Annotations\InputValue\InputDateFormat;
+use Astral\Serialize\Serialize;
+use DateTime;
 
 class SerializeBenchFake extends Serialize
 {

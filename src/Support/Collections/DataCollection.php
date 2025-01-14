@@ -30,9 +30,18 @@ class DataCollection
         private array                        $outIgnoreGroups = [],
         /** @var array<class-string,GroupDataCollection> */
         public array                         $children = [],
-        //        private ?string                      $propertyAliasName = null,
+        private array                        $metaVols = [],
     ) {
         $this->addInputName($this->name);
+    }
+    public function getMetaVol(string $key, string|null $default = null): mixed
+    {
+        return $this->metaVols[$key] ?? $default;
+    }
+
+    public function setMetaVol(string $key, mixed $vol): void
+    {
+        $this->metaVols[$key] = $vol;
     }
 
     public function getGroups(): array
