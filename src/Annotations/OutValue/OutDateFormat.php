@@ -6,7 +6,9 @@ namespace Astral\Serialize\Annotations\OutValue;
 
 use Astral\Serialize\Contracts\Attribute\OutValueCastInterface;
 use Astral\Serialize\Support\Collections\DataCollection;
+use Astral\Serialize\Support\Context\OutContext;
 use Attribute;
+use DateTime;
 use DateTimeInterface;
 
 /**
@@ -15,35 +17,27 @@ use DateTimeInterface;
 #[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_CLASS)]
 class OutDateFormat implements OutValueCastInterface
 {
-    /** @var string 日期格式 */
-    public string $format = 'Y-m-d H:i:s';
-
-    public bool $isThrow = false;
-
-    /**
-     * Undocumented function
-     *
-     * @param  string  $format  输出的日期格式
-     * @param  bool  $isThrow  非时间格式是否抛出异常 默认抛出
-     * @return void
-     */
-    public function __construct(string $format, bool $isThrow = false)
+    public function __construct(public string $format = 'Y-m-d H:i:s')
     {
-        $this->format  = $format;
-        $this->isThrow = $isThrow;
     }
 
-    public function resolve(DataCollection $dataCollection, mixed $value): ?string
+    public function match(mixed $value, DataCollection $collection, OutContext $context): bool
     {
+        return is_string($value) || is_numeric($value) ||  $value instanceof DateTimeInterface;
+    }
 
-        if ($value instanceof DateTimeInterface) {
-            return $value->format($this->format);
-        } elseif (is_numeric($value)) {
-            return date($this->format, $value);
-        } elseif (is_string($value) && strtotime($value) !== false) {
-            return date($this->format, strtotime($value));
-        }
+    public function resolve(mixed $value, DataCollection $collection, OutContext $context): string|DateTime|null
+    {
+        return $this->formatValue($value);
+    }
 
-        return null;
+    private function formatValue(mixed $value): ?string
+    {
+        return match (true) {
+            $value instanceof DateTimeInterface              => $value->format($this->format),
+            is_numeric($value)                               => date($this->format, (int)$value),
+            is_string($value) && strtotime($value) !== false => date($this->format, strtotime($value)),
+            default                                          => null,
+        };
     }
 }

@@ -34,6 +34,7 @@ class DataCollection
     ) {
         $this->addInputName($this->name);
     }
+
     public function getMetaVol(string $key, string|null $default = null): mixed
     {
         return $this->metaVols[$key] ?? $default;

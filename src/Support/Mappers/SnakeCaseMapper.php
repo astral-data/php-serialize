@@ -1,8 +1,9 @@
 <?php
 
 namespace Astral\Serialize\Support\Mappers;
-use Illuminate\Support\Str;
+
 use Astral\Serialize\Contracts\Mappers\NameMapper;
+use Illuminate\Support\Str;
 
 class SnakeCaseMapper implements NameMapper
 {
