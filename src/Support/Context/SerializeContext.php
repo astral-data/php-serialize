@@ -40,6 +40,11 @@ class SerializeContext
 
     }
 
+    public function getChooseSerializeContext(): ChooseSerializeContext
+    {
+        return $this->chooseSerializeContext;
+    }
+
     /**
      * @param array $groups
      * @return SerializeContext<static>
@@ -126,7 +131,7 @@ class SerializeContext
                 name: $property->getName(),
                 isNullable: $property->getType()?->allowsNull() ?? true,
                 isReadonly: $property->isReadOnly(),
-                attributes: array_merge($property->getDeclaringClass()->getAttributes(), $property->getAttributes()),
+                attributes: array_merge($property->getAttributes(), $property->getDeclaringClass()->getAttributes()),
                 defaultValue: $property->hasDefaultValue() ? $property->getDefaultValue() : null,
                 property: $property,
             );

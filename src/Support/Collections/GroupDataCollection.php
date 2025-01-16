@@ -32,9 +32,6 @@ class GroupDataCollection
         return $this->constructProperties[$name] ?? null;
     }
 
-    /**
-     * 获取所有 DataCollection 属性
-     */
     public function getProperties(): array
     {
         return $this->properties;
@@ -64,9 +61,7 @@ class GroupDataCollection
         return array_values(array_unique($inputNames));
     }
 
-    /**
-     * 添加一个 DataCollection 属性
-     */
+
     public function put(DataCollection $collection): void
     {
         $key = $collection->getName();
@@ -89,10 +84,5 @@ class GroupDataCollection
     public function count(): int
     {
         return count($this->properties);
-    }
-
-    public function getPropertyTo(string $inputName): ?DataCollection
-    {
-        return collect($this->getProperties())->first(fn ($e) => in_array($inputName, $e->inputName)) ?? null;
     }
 }

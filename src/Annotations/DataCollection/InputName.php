@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Astral\Serialize\Annotations\DataCollection;
 
+use Astral\Serialize\Support\Factories\MapperFactory;
 use Astral\Serialize\Contracts\Attribute\DataCollectionCastInterface;
 use Astral\Serialize\Contracts\Mappers\NameMapper;
 use Astral\Serialize\Support\Collections\DataCollection;
@@ -20,8 +21,8 @@ class InputName implements DataCollectionCastInterface
 
     public function resolve(DataCollection $dataCollection, ReflectionProperty|null $property = null): void
     {
-        if ($this->name instanceof NameMapper) {
-            $this->name = $this->name->resolve($this->name);
+        if (is_subclass_of($this->name, NameMapper::class)) {
+            $this->name = MapperFactory::build($this->name)->resolve($dataCollection->getName());
         }
 
         $dataCollection->addInputName($this->name, $this->groups ?: null);

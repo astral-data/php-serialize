@@ -19,6 +19,11 @@ class ChooseSerializeContext
 
     }
 
+    public function getProperties(): array
+    {
+        return $this->properties;
+    }
+
     public function getGroups(): array
     {
         return $this->groups;
