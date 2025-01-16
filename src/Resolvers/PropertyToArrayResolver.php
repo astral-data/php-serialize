@@ -23,6 +23,7 @@ class PropertyToArrayResolver
 
         $context         = new OutContext(
             className: $groupCollection->getClassName(),
+            classInstance: $object,
             propertyToArrayResolver: $this,
             chooseSerializeContext: $chooseContext,
         );

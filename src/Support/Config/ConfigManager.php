@@ -2,6 +2,7 @@
 
 namespace Astral\Serialize\Support\Config;
 
+use Astral\Serialize\Casts\OutValue\OutValueGetterCast;
 use Astral\Serialize\Casts\InputValue\InputArrayBestMatchChildCast;
 use Astral\Serialize\Casts\InputValue\InputArraySingleChildCast;
 use Astral\Serialize\Casts\InputValue\InputObjectBestMatchChildCast;
@@ -35,7 +36,8 @@ class ConfigManager
     /** @var OutValueCastInterface[] $outputValueCasts */
     private array $outputValueCasts = [
         OutArrayChildCast::class,
-        OutValueEnumCast::class
+        OutValueEnumCast::class,
+        OutValueGetterCast::class,
     ];
 
     /** @var CacheDriverEnum|class-string $cacheDriver */
