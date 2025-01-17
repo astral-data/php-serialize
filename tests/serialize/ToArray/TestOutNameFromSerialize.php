@@ -1,6 +1,5 @@
 <?php
 
-
 use Astral\Serialize\Support\Mappers\CamelCaseMapper;
 use Astral\Serialize\Support\Mappers\SnakeCaseMapper;
 use Astral\Serialize\Annotations\DataCollection\OutIgnore;
@@ -63,18 +62,50 @@ it('test class CamelCaseMapper from serialize class', function () {
 
 it('test class SnakeCaseMapper from serialize class', function () {
 
+    $object = new OutNameAllCamelMapper();
+    $res =  $object->toArray();
+    $properties = $object->getContext()->getGroupCollection()->getProperties();
+
+    expect($properties['one_text']->getOutNames()['default'])->toHaveCount(1)
+        ->and(current($properties['one_text']->getOutNames()['default']))->toBe('oneText')
+        ->and($properties['two_text']->getOutNames()['default'])->toHaveCount(1)
+        ->and(current($properties['two_text']->getOutNames()['default']))->toBe('twoText')
+        ->and($res)->toHaveCount(2)
+        ->and(array_key_exists('oneText', $res))->toBeTrue()
+        ->and(array_key_exists('twoText', $res))->toBeTrue();
 
 });
 
 it('test class OutNameAllSnakeAndDataOutNameMapper from serialize class', function () {
 
+    $object = new OutNameAllSnakeAndDataOutNameMapper();
+    $res =  $object->toArray();
+    $properties = $object->getContext()->getGroupCollection()->getProperties();
 
+    expect($properties['oneText']->getOutNames()['default'])->toHaveCount(2)
+        ->and(current($properties['oneText']->getOutNames()['default']))->toBe('test_name')
+        ->and(end($properties['oneText']->getOutNames()['default']))->toBe('one_text')
+        ->and($res)->toHaveCount(2)
+        ->and(array_key_exists('test_name', $res))->toBeTrue()
+        ->and(array_key_exists('one_text', $res))->toBeTrue();
 
 });
 
-
 it('test OutName from serialize class', function () {
 
+    $object = new OutNameObject();
+    $res =  $object->toArray();
+    $properties = $object->getContext()->getGroupCollection()->getProperties();
 
+    expect($properties['oneText']->getOutNames()['default'])->toHaveCount(1)
+        ->and(current($properties['oneText']->getOutNames()['default']))->toBe('test_name')
+        ->and($properties['two_text']->getOutNames()['default'])->toHaveCount(1)
+        ->and(current($properties['two_text']->getOutNames()['default']))->toBe('twoText')
+        ->and($properties['threeText']->getOutNames()['default'])->toHaveCount(1)
+        ->and(current($properties['threeText']->getOutNames()['default']))->toBe('three_text')
+        ->and($res)->toHaveCount(3)
+        ->and(array_key_exists('test_name', $res))->toBeTrue()
+        ->and(array_key_exists('twoText', $res))->toBeTrue()
+        ->and(array_key_exists('three_text', $res))->toBeTrue();
 
 });
