@@ -14,9 +14,11 @@ class DotCaseMapper implements NameMapper
      **/
     public function resolve(string $name): string
     {
-        $snakeCase = preg_replace('/([a-z])([A-Z])/', '$1_$2', $name);
-        $snakeCase = str_replace(['-', '.'], '_', $snakeCase);
-        $snakeCase = Str::lower($snakeCase);
-        return str_replace('_', '.', $snakeCase);
+        return Str::of($name)
+            ->replaceMatches('/([a-z])([A-Z])/', '$1_$2')
+            ->replace(['-', '.'], '_')
+            ->lower()
+            ->replace('_', '.')
+            ->toString();
     }
 }

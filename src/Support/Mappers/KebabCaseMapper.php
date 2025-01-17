@@ -14,10 +14,13 @@ class KebabCaseMapper implements NameMapper
      **/
     public function resolve(string $name): string
     {
-        $name = preg_replace('/([a-z])([A-Z])/', '$1_$2', $name);
-        $name = preg_replace('/[^a-zA-Z0-9]+/', '_', $name);
-        $name = preg_replace('/_+/', '_', $name);
-        $name = trim($name, '_');
-        return Str::of($name)->lower()->replace('_', '-')->toString();
+        return Str::of($name)
+            ->replaceMatches('/([a-z])([A-Z])/', '$1_$2')
+            ->replaceMatches('/[^a-zA-Z0-9]+/', '_')
+            ->replaceMatches('/_+/', '_')
+            ->trim('_')
+            ->lower()
+            ->replace('_', '-')
+            ->toString();
     }
 }

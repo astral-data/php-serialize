@@ -14,8 +14,11 @@ class PascalCaseMapper implements NameMapper
      **/
     public function resolve(string $name): string
     {
-        $cleanedName = preg_replace('/[^a-zA-Z0-9]+/', ' ', $name);
-        $cleanedName = preg_replace('/([a-z])([A-Z])/', '$1 $2', $cleanedName);
-        return Str::studly(Str::lower($cleanedName));
+        return Str::of($name)
+            ->replaceMatches('/([a-z])([A-Z])/', '$1 $2')
+            ->replaceMatches('/[^a-zA-Z0-9]+/', ' ')
+            ->lower()
+            ->studly()
+            ->toString();
     }
 }

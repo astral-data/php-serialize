@@ -14,8 +14,10 @@ class ScreamingSnakeCaseMapper implements NameMapper
      **/
     public function resolve(string $name): string
     {
-        $name = str_replace(['-', '.'], '_', $name);
-        $snakeCase = Str::snake($name);
-        return Str::upper($snakeCase);
+        return Str::of($name)
+            ->replace(['-', '.'], '_')
+            ->snake()
+            ->upper()
+            ->toString();
     }
 }
