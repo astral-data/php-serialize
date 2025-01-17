@@ -34,7 +34,7 @@ class OutDateFormat implements OutValueCastInterface
     private function formatValue(mixed $value): ?string
     {
         return match (true) {
-            is_subclass_of($value, DateTimeInterface::class)  => $value->format($this->format),
+            is_subclass_of($value, DateTimeInterface::class)        => $value->format($this->format),
             is_numeric($value)                                      => date($this->format, (int)$value),
             is_string($value) && strtotime($value) !== false        => date($this->format, strtotime($value)),
             default                                                 => null,

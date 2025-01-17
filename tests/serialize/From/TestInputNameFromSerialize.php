@@ -1,11 +1,10 @@
 <?php
 
 
-use Astral\Serialize\Support\Mappers\CamelCaseMapper;
-use Astral\Serialize\Support\Mappers\SnakeCaseMapper;
-use Astral\Serialize\Annotations\DataCollection\InputIgnore;
 use Astral\Serialize\Annotations\DataCollection\InputName;
 use Astral\Serialize\Serialize;
+use Astral\Serialize\Support\Mappers\CamelCaseMapper;
+use Astral\Serialize\Support\Mappers\SnakeCaseMapper;
 
 beforeAll(function () {
 

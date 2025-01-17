@@ -1,14 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Astral\Serialize\Support\Mappers;
 
 use Astral\Serialize\Contracts\Mappers\NameMapper;
 use Illuminate\Support\Str;
 
-class SnakeCaseMapper implements NameMapper
+class KebabCaseMapper implements NameMapper
 {
     /**
-     * snake_case
+     * kebab-case
      **/
     public function resolve(string $name): string
     {
@@ -16,6 +18,6 @@ class SnakeCaseMapper implements NameMapper
         $name = preg_replace('/[^a-zA-Z0-9]+/', '_', $name);
         $name = preg_replace('/_+/', '_', $name);
         $name = trim($name, '_');
-        return Str::lower($name);
+        return Str::of($name)->lower()->replace('_', '-')->toString();
     }
 }
