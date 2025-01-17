@@ -34,6 +34,16 @@ beforeAll(function () {
         public string $oneText;
         public string $twoText;
 
+        public InputNameNestedSnakeMapper $nestedSnakeMapper;
+
+    }
+
+    #[InputName(SnakeCaseMapper::class)]
+    class InputNameNestedSnakeMapper
+    {
+        public string $oneText;
+
+        public string $twoText;
     }
 
     #[InputName(SnakeCaseMapper::class)]
@@ -43,8 +53,6 @@ beforeAll(function () {
         public string $oneText;
 
     }
-
-
 });
 
 it('test class CamelCaseMapper from serialize class', function () {
@@ -66,12 +74,16 @@ it('test class SnakeCaseMapper from serialize class', function () {
     $res = InputNameAllSnakeMapper::from(
         one_text:'0',
         two_text:'123',
+        nested_snake_mapper:['one_text' => '456','two_text' => '789'],
     );
 
     expect($res->getContext()->getChooseSerializeContext()->getProperty('oneText')->getInputName())->toBe('one_text')
         ->and($res->getContext()->getChooseSerializeContext()->getProperty('twoText')->getInputName())->toBe('two_text')
+        ->and($res->getContext()->getChooseSerializeContext()->getProperty('nestedSnakeMapper')->getInputName())->toBe('nested_snake_mapper')
         ->and($res->oneText)->toBe('0')
-        ->and($res->twoText)->toBe('123');
+        ->and($res->twoText)->toBe('123')
+        ->and($res->nestedSnakeMapper->oneText)->toBe('456')
+        ->and($res->nestedSnakeMapper->twoText)->toBe('789');
 
 });
 

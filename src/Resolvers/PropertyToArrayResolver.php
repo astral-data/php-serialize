@@ -34,13 +34,13 @@ class PropertyToArrayResolver
         foreach ($properties as $collection) {
 
 
-            $matchInput = $this->matchInputNameAndValue($chooseContext, $collection, $object);
+            $matchData = $this->matchNameAndValue($chooseContext, $collection, $object);
 
-            if ($matchInput === false) {
+            if ($matchData === false) {
                 continue;
             }
 
-            $resolvedValue = $matchInput['value'];
+            $resolvedValue = $matchData['value'];
 
             $resolvedValue = $this->outValueCastResolver->resolve(
                 value:$resolvedValue,
@@ -48,23 +48,23 @@ class PropertyToArrayResolver
                 context: $context,
             );
 
-            foreach ($matchInput['names'] as $name) {
+            foreach ($matchData['names'] as $name) {
                 $toArray[$name] = $resolvedValue;
             }
-
         }
 
         return $toArray;
 
     }
 
-    public function matchInputNameAndValue(ChooseSerializeContext $chooseContext, DataCollection $collection, object $object): array|false
+    public function matchNameAndValue(ChooseSerializeContext $chooseContext, DataCollection $collection, object $object): array|false
     {
+
         $defaultGroup = $chooseContext->serializeClass;
         $groups       = $chooseContext->getGroups();
         $outNames     = $collection->getOutNamesByGroups($groups, $defaultGroup);
 
         return $this->groupResolver->resolveExistsGroupsByDataCollection($collection, $groups, $defaultGroup) && !$collection->isOutIgnoreByGroups($groups)
-            ? ['names' => $outNames ,'value' => $object->{$collection->getName()}] : false;
+            ? ['names' => $outNames ,'value' => $object->{$collection->getName()} ?? null] : false;
     }
 }

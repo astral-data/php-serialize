@@ -23,7 +23,7 @@ class OutDateFormat implements OutValueCastInterface
 
     public function match(mixed $value, DataCollection $collection, OutContext $context): bool
     {
-        return is_string($value) || is_numeric($value) ||  $value instanceof DateTimeInterface;
+        return is_string($value) || is_numeric($value) || is_subclass_of($value, DateTimeInterface::class);
     }
 
     public function resolve(mixed $value, DataCollection $collection, OutContext $context): string|DateTime|null
@@ -34,10 +34,10 @@ class OutDateFormat implements OutValueCastInterface
     private function formatValue(mixed $value): ?string
     {
         return match (true) {
-            $value instanceof DateTimeInterface              => $value->format($this->format),
-            is_numeric($value)                               => date($this->format, (int)$value),
-            is_string($value) && strtotime($value) !== false => date($this->format, strtotime($value)),
-            default                                          => null,
+            is_subclass_of($value, DateTimeInterface::class)  => $value->format($this->format),
+            is_numeric($value)                                      => date($this->format, (int)$value),
+            is_string($value) && strtotime($value) !== false        => date($this->format, strtotime($value)),
+            default                                                 => null,
         };
     }
 }

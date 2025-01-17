@@ -11,7 +11,7 @@ use Astral\Serialize\Support\Collections\DataCollection;
 use Attribute;
 use ReflectionProperty;
 
-#[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_CLASS)]
+#[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_CLASS | Attribute::IS_REPEATABLE)]
 class InputName implements DataCollectionCastInterface
 {
     public function __construct(public string|NameMapper $name, public array|string $groups = [])

@@ -15,13 +15,11 @@ class OutArrayChildCast implements OutValueCastInterface
 {
     public function match($value, DataCollection $collection, OutContext $context): bool
     {
-        return in_array($context->chooseSerializeContext->getProperty($collection->getName())->getType()->kind, [TypeKindEnum::COLLECT_SINGLE_OBJECT,TypeKindEnum::OBJECT]);
+        return in_array($context->chooseSerializeContext->getProperty($collection->getName())?->getType()?->kind, [TypeKindEnum::COLLECT_SINGLE_OBJECT,TypeKindEnum::OBJECT]);
     }
 
     /**
      * Resolve the input value for the given collection and context.
-     * @throws NotFoundAttributePropertyResolver
-     * @throws ReflectionException
      */
     public function resolve(mixed $value, DataCollection $collection, OutContext $context): mixed
     {
@@ -40,8 +38,6 @@ class OutArrayChildCast implements OutValueCastInterface
     }
 
     /**
-     * @throws ReflectionException
-     * @throws NotFoundAttributePropertyResolver
      */
     private function resolveArray(array $value, GroupDataCollection $child, OutContext $context, array $chooseContext): array
     {
@@ -53,8 +49,6 @@ class OutArrayChildCast implements OutValueCastInterface
     }
 
     /**
-     * @throws NotFoundAttributePropertyResolver
-     * @throws ReflectionException
      */
     private function resolveSingle(mixed $value, GroupDataCollection $child, OutContext $context, ChooseSerializeContext $chooseContext): mixed
     {
@@ -64,8 +58,6 @@ class OutArrayChildCast implements OutValueCastInterface
     /**
      * Resolve a child collection.
      *
-     * @throws NotFoundAttributePropertyResolver
-     * @throws ReflectionException
      */
     private function resolveChild(GroupDataCollection $child, mixed $value, OutContext $context, ChooseSerializeContext $chooseContext): mixed
     {
