@@ -3,6 +3,9 @@
 namespace Astral\Serialize;
 
 use Astral\Serialize\Casts\InputConstructCast;
+use Astral\Serialize\Faker\FakerCastResolver;
+use Astral\Serialize\Faker\FakerResolver;
+use Astral\Serialize\Faker\Rule\FakerDefaultRules;
 use Astral\Serialize\Resolvers\DataCollectionCastResolver;
 use Astral\Serialize\Resolvers\GroupResolver;
 use Astral\Serialize\Resolvers\InputValueCastResolver;
@@ -18,6 +21,8 @@ use Astral\Serialize\Support\Context\SerializeContext;
 use Astral\Serialize\Support\Factories\CacheFactory;
 use Astral\Serialize\Support\Instance\ReflectionClassInstanceManager;
 use Astral\Serialize\Support\Instance\SerializeInstanceManager;
+use Faker\Factory;
+use Faker\Generator;
 use phpDocumentor\Reflection\DocBlockFactory;
 use phpDocumentor\Reflection\TypeResolver;
 use phpDocumentor\Reflection\Types\ContextFactory;
@@ -26,7 +31,6 @@ class SerializeContainer
 {
     protected static self $instance;
     protected ?ContextFactory $contextFactory                                               = null;
-
     protected ?SerializeContext $context                                                    = null;
     protected ?TypeResolver $typeResolver                                                   = null;
     protected ?DocBlockFactory $docBlockFactory                                             = null;
@@ -37,18 +41,16 @@ class SerializeContainer
     protected ?ReflectionClassInstanceManager $reflectionClassInstanceManager               = null;
     protected ?SerializeInstanceManager $serializeInstanceManager                           = null;
     protected ?DataCollectionCastResolver $attributePropertyResolver                        = null;
-
-    protected ?PropertyInputValueResolver $propertyInputValueResolver = null;
-
-    protected ?PropertyToArrayResolver $propertyToArrayResolver = null;
-
-    protected ?InputValueCastResolver $inputValueCastResolver               = null;
-
-    protected ?OutValueCastResolver $outValueCastResolver               = null;
-
-    protected ?InputConstructCast $inputConstructCast = null;
-
-    protected ?ConstructDataCollectionManager $constructDataCollectionManager = null;
+    protected ?PropertyInputValueResolver $propertyInputValueResolver                       = null;
+    protected ?PropertyToArrayResolver $propertyToArrayResolver                             = null;
+    protected ?InputValueCastResolver $inputValueCastResolver                               = null;
+    protected ?OutValueCastResolver $outValueCastResolver                                   = null;
+    protected ?InputConstructCast $inputConstructCast                                       = null;
+    protected ?ConstructDataCollectionManager $constructDataCollectionManager               = null;
+    protected ?Generator $faker                                                             = null;
+    protected ?FakerResolver $fakerResolver                                                 = null;
+    protected ?FakerCastResolver $fakerCastResolver                                         = null;
+    protected ?FakerDefaultRules  $fakerDefaultRules                                        = null;
 
     public static function get(): SerializeContainer
     {
@@ -148,5 +150,32 @@ class SerializeContainer
     public function serializeInstanceManager(): SerializeInstanceManager
     {
         return $this->serializeInstanceManager ??= new SerializeInstanceManager();
+    }
+
+    public function faker(): Generator
+    {
+        $locale = 'en_US';
+        return $this->faker ??= Factory::create($locale);
+    }
+
+    public function fakerResolver(): FakerResolver
+    {
+        return $this->fakerResolver ??= new FakerResolver(
+            reflectionClassInstanceManager:$this->reflectionClassInstanceManager(),
+            fakerDefaultRules:$this->fakerDefaultRules(),
+            fakerCastResolver:$this->fakerCastResolver(),
+            inputConstructCast:$this->inputConstructCast(),
+            groupResolver: $this->groupResolver(),
+        );
+    }
+
+    public function fakerCastResolver(): FakerCastResolver
+    {
+        return $this->fakerCastResolver ??= new FakerCastResolver(ConfigManager::getInstance());
+    }
+
+    public function fakerDefaultRules(): FakerDefaultRules
+    {
+        return $this->fakerDefaultRules ??= new FakerDefaultRules($this->faker());
     }
 }

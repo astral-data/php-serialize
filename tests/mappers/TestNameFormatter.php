@@ -1,11 +1,11 @@
 <?php
 
-use Astral\Serialize\Support\Mappers\DotCaseMapper;
 use Astral\Serialize\Support\Mappers\CamelCaseMapper;
-use Astral\Serialize\Support\Mappers\SnakeCaseMapper;
+use Astral\Serialize\Support\Mappers\DotCaseMapper;
 use Astral\Serialize\Support\Mappers\KebabCaseMapper;
 use Astral\Serialize\Support\Mappers\PascalCaseMapper;
 use Astral\Serialize\Support\Mappers\ScreamingSnakeCaseMapper;
+use Astral\Serialize\Support\Mappers\SnakeCaseMapper;
 
 beforeAll(function () {
 });

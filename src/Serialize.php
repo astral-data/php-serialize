@@ -47,6 +47,17 @@ abstract class Serialize
         return $instance;
     }
 
+    public static function faker(): static
+    {
+        $serializeContext = ContextFactory::build(static::class);
+
+        /** @var static $instance */
+        $instance = $serializeContext->faker();
+        $instance->setContext($serializeContext);
+
+        return $instance;
+    }
+
     public function __debugInfo()
     {
         $res             = get_object_vars($this);

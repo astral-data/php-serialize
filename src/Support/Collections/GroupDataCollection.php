@@ -61,7 +61,6 @@ class GroupDataCollection
         return array_values(array_unique($inputNames));
     }
 
-
     public function put(DataCollection $collection): void
     {
         $key = $collection->getName();

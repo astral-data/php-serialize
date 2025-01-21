@@ -3,6 +3,7 @@
 namespace Astral\Serialize\Support\Context;
 
 use Astral\Serialize\Exceptions\NotFoundGroupException;
+use Astral\Serialize\Faker\FakerResolver;
 use Astral\Serialize\Resolvers\DataCollectionCastResolver;
 use Astral\Serialize\Resolvers\GroupResolver;
 use Astral\Serialize\Resolvers\PropertyInputValueResolver;
@@ -36,6 +37,7 @@ class SerializeContext
         private readonly ConstructDataCollectionManager $constructDataCollectionManager,
         private readonly PropertyInputValueResolver     $propertyInputValueResolver,
         private readonly PropertyToArrayResolver        $propertyToArrayResolver,
+        private readonly FakerResolver         $fakerResolver,
     ) {
 
     }
@@ -204,6 +206,12 @@ class SerializeContext
 
         return $object;
 
+    }
+
+    public function faker()
+    {
+        $this->chooseSerializeContext->setGroups($this->getGroups());
+        return $this->fakerResolver->resolve($this->chooseSerializeContext, $this->getGroupCollection());
     }
 
     /**

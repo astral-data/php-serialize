@@ -22,6 +22,11 @@ enum TypeKindEnum
         return $this === self::CLASS_OBJECT || $this === self::COLLECT_SINGLE_OBJECT || $this === self::COLLECT_UNION_OBJECT;
     }
 
+    public function existsFakerClass(): bool
+    {
+        return  $this == self::OBJECT || $this === self::CLASS_OBJECT || $this === self::COLLECT_SINGLE_OBJECT || $this === self::COLLECT_UNION_OBJECT;
+    }
+
     public function isCollect(): bool
     {
         return $this === self::COLLECT_UNION_OBJECT || $this === self::COLLECT_SINGLE_OBJECT;

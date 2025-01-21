@@ -3,8 +3,6 @@
 namespace Astral\Serialize\Support\Factories;
 
 use Astral\Serialize\Contracts\Mappers\NameMapper;
-use Astral\Serialize\Support\Mappers\CamelCaseMapper;
-use Astral\Serialize\Support\Mappers\SnakeCaseMapper;
 use InvalidArgumentException;
 
 class MapperFactory
