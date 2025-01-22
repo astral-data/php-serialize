@@ -2,16 +2,16 @@
 
 namespace Astral\Serialize\Annotations\Faker;
 
-use Astral\Serialize\Support\Factories\ContextFactory;
-use Astral\Serialize\Support\Context\FakerValueContext;
 use Astral\Serialize\Contracts\Attribute\FakerCastInterface;
 use Astral\Serialize\Enums\TypeKindEnum;
 use Astral\Serialize\Faker\Rule\FakerDefaultRules;
 use Astral\Serialize\SerializeContainer;
 use Astral\Serialize\Support\Collections\DataCollection;
 use Astral\Serialize\Support\Collections\TypeCollection;
+use Astral\Serialize\Support\Factories\ContextFactory;
 use Attribute;
 use Faker\Generator;
+use InvalidArgumentException;
 
 #[Attribute(Attribute::TARGET_PROPERTY)]
 class FakerCollection implements FakerCastInterface
@@ -25,38 +25,61 @@ class FakerCollection implements FakerCastInterface
     ) {
     }
 
+    /**
+     * Resolves the faker collection data.
+     *
+     * @param DataCollection $collection
+     * @return array
+     */
     public function resolve(DataCollection $collection): array
     {
         return match (true) {
-            is_array($this->fields) => $this->resolveArrayFields(),
-            is_string($this->fields) && class_exists($this->fields) => $this->resolveClass(),
-            default => null,
+            is_array($this->fields)                                 => $this->generateArrayCollection(),
+            is_string($this->fields) && class_exists($this->fields) => $this->generateClassCollection(),
+            default                                                 => throw new InvalidArgumentException('Invalid fields type. Expected string or array.'),
         };
     }
 
-    private function resolveClass(): array
+    /**
+     * Generate a collection of objects from a class.
+     *
+     * @return array
+     */
+    private function generateClassCollection(): array
     {
-
-        $vols = [];
         $context = ContextFactory::build($this->fields);
-        for ($i = 0 ; $i < $this->num ; $i++) {
-            $vols[$i] = $context->faker();
-        }
-
-        return $vols;
+        return array_map(fn () => $context->faker(), range(1, $this->num));
     }
 
-    private function resolveArrayFields(): array
+    /**
+     * Generate a nested array collection based on the fields.
+     *
+     * @return array
+     */
+    private function generateArrayCollection(): array
     {
-        $faker             = SerializeContainer::get()->faker();
-        $fakerDefaultRules = SerializeContainer::get()->fakerDefaultRules();
-        $typeCollection    =  new TypeCollection(TypeKindEnum::STRING);
+        $faker             = $this->getFaker();
+        $fakerDefaultRules = $this->getFakerDefaultRules();
+        $typeCollection    = new TypeCollection(TypeKindEnum::STRING);
+
         return $this->generateNestedArray($faker, $fakerDefaultRules, $typeCollection, $this->fields);
     }
 
-
-    private function generateNestedArray(Generator $faker, FakerDefaultRules $fakerDefaultRules, TypeCollection $typeCollection, array $fields): array
-    {
+    /**
+     * Recursively generate a nested array based on the given fields.
+     *
+     * @param Generator $faker
+     * @param FakerDefaultRules $fakerDefaultRules
+     * @param TypeCollection $typeCollection
+     * @param array $fields
+     * @return array
+     */
+    private function generateNestedArray(
+        Generator $faker,
+        FakerDefaultRules $fakerDefaultRules,
+        TypeCollection $typeCollection,
+        array $fields
+    ): array {
         $nested = [];
 
         for ($i = 0 ; $i < $this->num ; $i++) {
@@ -71,5 +94,25 @@ class FakerCollection implements FakerCastInterface
         }
 
         return $nested;
+    }
+
+    /**
+     * Get the Faker generator instance.
+     *
+     * @return Generator
+     */
+    private function getFaker(): Generator
+    {
+        return SerializeContainer::get()->faker();
+    }
+
+    /**
+     * Get the Faker default rules instance.
+     *
+     * @return FakerDefaultRules
+     */
+    private function getFakerDefaultRules(): FakerDefaultRules
+    {
+        return SerializeContainer::get()->fakerDefaultRules();
     }
 }

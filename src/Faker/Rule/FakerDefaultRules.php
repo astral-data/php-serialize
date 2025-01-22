@@ -37,10 +37,10 @@ class FakerDefaultRules
         ['type' => [TypeKindEnum::STRING,TypeKindEnum::MIXED], 'method' => 'wildcard', 'pattern' => '*ip', 'faker' => 'ipv4', 'params' => []],
         ['type' => [TypeKindEnum::STRING,TypeKindEnum::MIXED], 'method' => 'wildcard', 'pattern' => 'birthday', 'faker' => 'date', 'params' => ['Y-m-d']],
         ['type' => [TypeKindEnum::STRING, TypeKindEnum::INT,TypeKindEnum::FLOAT,TypeKindEnum::MIXED], 'method' => 'wildcard', 'pattern' => 'birthday', 'faker' => 'date', 'params' => ['Ymd']],
-        ['type' => [TypeKindEnum::STRING,TypeKindEnum::MIXED], 'method' => 'regex', 'pattern' => '/gender|sex/i', 'faker' => 'randomElement', 'params' => [['男', '女']]],
         ['type' => [TypeKindEnum::STRING,TypeKindEnum::MIXED], 'method' => 'wildcard', 'pattern' => 'description', 'faker' => 'paragraph', 'params' => []],
         ['type' => [TypeKindEnum::INT,TypeKindEnum::FLOAT], 'method' => 'wildcard', 'pattern' => '*', 'faker' => 'numberBetween', 'params' => [1, 100]],
         ['type' => [TypeKindEnum::STRING,TypeKindEnum::MIXED], 'method' => 'wildcard', 'pattern' => '*', 'faker' => 'sentence', 'params' => [4]],
+        ['type' => [TypeKindEnum::BOOLEAN], 'method' => 'wildcard', 'pattern' => '*', 'faker' => 'boolean', 'params' => ['chanceOfGettingTrue' => 50]],
         ['type' => [TypeKindEnum::ENUM], 'method' => 'wildcard', 'pattern' => '*', 'faker' => 'randomElement'],
         ['type' => [TypeKindEnum::ARRAY], 'method' => 'wildcard', 'pattern' => '*', 'faker' => 'randomElement'],
     ];
@@ -57,14 +57,11 @@ class FakerDefaultRules
         $name   =  $mapper->resolve($name);
 
         foreach ($types as $type) {
-
             foreach ($this->rules as $rule) {
                 if ($this->matchRule($type->kind, $name, $rule)) {
-
                     if ($type->kind === TypeKindEnum::ENUM) {
                         return $this->generateEnumValue($type->className);
                     }
-
                     return $this->generateMockValue($rule['faker'], $rule['params']);
                 }
             }

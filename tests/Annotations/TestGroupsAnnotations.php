@@ -17,39 +17,39 @@ it('creates groups with integer names', function () {
 });
 
 it('creates groups with UnitEnum values', function () {
-    enum TestEnum: string
+    enum TestAnnotationEnum: string
     {
         case FIRST  = 'first';
         case SECOND = 'second';
     }
 
-    $groups = new Groups(TestEnum::FIRST, TestEnum::SECOND);
+    $groups = new Groups(TestAnnotationEnum::FIRST, TestAnnotationEnum::SECOND);
 
     expect($groups->names)
         ->toBe(['FIRST', 'SECOND']);
 });
 
 it('creates groups with mixed types', function () {
-    enum TestEnumBack: string
+    enum TestAnnotationEnumBack: string
     {
         case FIRST = 'first';
     }
 
-    $groups = new Groups('group1', 123, TestEnumBack::FIRST);
+    $groups = new Groups('group1', 123, TestAnnotationEnumBack::FIRST);
 
     expect($groups->names)
         ->toBe(['group1', '123', 'FIRST']);
 });
 
 it('creates groups with mixed enums and strings', function () {
-    enum TestEnumUnion: string
+    enum TestAnnotationEnumUnion: string
     {
         case ADMIN = 'admin';
         case USER  = 'user';
     }
 
     // 使用字符串和枚举混合创建 Groups 实例
-    $groups = new Groups('group1', TestEnumUnion::ADMIN, 'group2', TestEnumUnion::USER);
+    $groups = new Groups('group1', TestAnnotationEnumUnion::ADMIN, 'group2', TestAnnotationEnumUnion::USER);
 
     // 验证结果
     expect($groups->names)

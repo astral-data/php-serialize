@@ -2,7 +2,6 @@
 
 namespace Astral\Serialize\Annotations\Faker;
 
-use Astral\Serialize\Support\Context\FakerValueContext;
 use Astral\Serialize\Contracts\Attribute\FakerCastInterface;
 use Astral\Serialize\SerializeContainer;
 use Astral\Serialize\Support\Collections\DataCollection;

@@ -7,29 +7,29 @@ use Astral\Serialize\Support\Collections\DataCollection;
 use Astral\Serialize\Support\Collections\TypeCollection;
 use Astral\Serialize\Support\Context\InputValueContext;
 
-enum TestUnitEnum
-{
-    case OPTION_ONE;
-    case OPTION_TWO;
-}
+beforeAll(function () {
 
-enum TestUnitTryFromEnum
-{
-    case OPTION_ONE;
-    case OPTION_TWO;
-
-    public static function tryFrom(string $name): ?self
+    enum TestUnitEnum
     {
-        return match ($name) {
-            'one'   => 'other',
-            'two'   => self::OPTION_ONE,
-            default => null,
-        };
+        case OPTION_ONE;
+        case OPTION_TWO;
     }
-}
 
+    enum TestUnitTryFromEnum
+    {
+        case OPTION_ONE;
+        case OPTION_TWO;
 
-beforeEach(function () {
+        public static function tryFrom(string $name): ?self
+        {
+            return match ($name) {
+                'one'   => 'other',
+                'two'   => self::OPTION_ONE,
+                default => null,
+            };
+        }
+    }
+
     $this->cast       = new InputValueEnumCast();
     $this->collection = Mockery::mock(DataCollection::class);
     $this->context    = Mockery::mock(InputValueContext::class);

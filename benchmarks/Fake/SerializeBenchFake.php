@@ -2,7 +2,7 @@
 
 namespace Astral\Benchmarks\Fake;
 
-use Astral\Serialize\Annotations\InputValue\InputDateFormat;
+use Astral\Serialize\Annotations\Input\InputDateFormat;
 use Astral\Serialize\Serialize;
 use DateTime;
 

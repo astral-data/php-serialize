@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Astral\Serialize\Annotations\InputValue;
+namespace Astral\Serialize\Annotations\Input;
 
 use Astral\Serialize\Contracts\Attribute\InputValueCastInterface;
 use Astral\Serialize\Support\Collections\DataCollection;
