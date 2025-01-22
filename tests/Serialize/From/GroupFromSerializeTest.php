@@ -38,7 +38,7 @@ beforeAll(function () {
     }
 });
 
-it('test parse groups serialize class', function () {
+it('test parse groups Serialize class', function () {
 
     /** @var TestGroupSerialize  $instance */
     $instance = TestGroupSerialize::setGroups(['test_1'])->from(
@@ -63,27 +63,30 @@ it('test parse groups serialize class', function () {
         ->and($instance->type_object)->toBeInstanceOf(stdClass::class)
     ;
 
+
     $otherObject       = new OtherObject();
     $otherObject->id   = 123;
     $otherObject->name = 'abc';
-    $instance          = TestGroupSerialize::setGroups(['test_2'])->from(
+
+    /** @var TestGroupSerialize  $instance2 */
+    $instance2          = TestGroupSerialize::setGroups(['test_2'])->from(
         type_string:'111',
         type_int:99999,
         type_object:$otherObject,
         type_null:123,
         type_float:998,
-        abc: 110
+        abc: 111
     );
 
-    expect($instance)->toBeInstanceOf(TestGroupSerialize::class)
-        ->and($instance->type_string)->toBeString('')
-        ->and($instance->type_int)->toBeInt(99999)
-        ->and($instance->type_null)->toBeInt(110)
-        ->and($instance->type_float)->toBeFloat(0)
-        ->and($instance->type_mixed_other)->toBeNull()
-        ->and($instance->type_object)->toBeInstanceOf(OtherObject::class)
-        ->and($instance->type_object->name)->toBeString('abc')
-        ->and($instance->type_object->id)->toBeInt(123)
+    expect($instance2)->toBeInstanceOf(TestGroupSerialize::class)
+        ->and($instance2->type_string)->toBeString('')
+        ->and($instance2->type_int)->toBeInt(99999)
+        ->and($instance2->type_null)->toBeInt(110)
+        ->and($instance2->type_float)->toBeFloat(0)
+        ->and($instance2->type_mixed_other)->toBeNull()
+        ->and($instance2->type_object)->toBeInstanceOf(OtherObject::class)
+        ->and($instance2->type_object->name)->toBeString('abc')
+        ->and($instance2->type_object->id)->toBeInt(123)
     ;
 
 });

@@ -17,8 +17,6 @@ beforeEach(function () {
 it('tests one property reflections not parsing doc', function () {
     $reflectionProperty = new ReflectionProperty(TypeOneDoc::class, 'type_collect_object');
 
-    var_dump($reflectionProperty->getType());
-
     $result             = $this->typeManager->processNamedType($reflectionProperty->getType(), $reflectionProperty);
     expect($result)->toBeInstanceOf(TypeCollection::class)
         ->and($result->kind)->toBe(TypeKindEnum::ARRAY)
@@ -128,7 +126,11 @@ it('tests union doc property reflections and type parsing', function () {
                 ->and($item->className)->toBe('Astral\Serialize\Tests\TestTypeDoc\Other\OtherTypeDoc'),
             1 => expect($item->kind)->toBe(TypeKindEnum::COLLECT_SINGLE_OBJECT)
                 ->and($item->className)->toBe('Astral\Serialize\Tests\TestTypeDoc\Both\BothTypeDoc'),
-            default => expect(false)->toBeTrue("Unexpected element at index {$key}")
+            2 => expect($item->kind)->toBe(TypeKindEnum::COLLECT_UNION_OBJECT)
+                ->and($item->className)->toBe('Astral\Serialize\Tests\TestTypeDoc\Other\OtherTypeDoc'),
+            3 => expect($item->kind)->toBe(TypeKindEnum::COLLECT_UNION_OBJECT)
+                ->and($item->className)->toBe('Astral\Serialize\Tests\TestTypeDoc\Both\BothTypeDoc'),
+            default => expect(false)->toBeTrue("Unexpected element at index $key")
         };
     }
 

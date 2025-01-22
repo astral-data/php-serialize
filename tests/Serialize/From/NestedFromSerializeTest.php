@@ -39,11 +39,7 @@ beforeAll(function () {
 
 });
 
-it('test parse nested serialize class', function () {
-
-    $startMemory = memory_get_usage();
-
-
+it('test parse nested Serialize class', function () {
     $instance = TestNestedSerialize::from(
         [
             'name'           => 'TestNestedSerialize-name',
@@ -63,23 +59,18 @@ it('test parse nested serialize class', function () {
         ]
     );
 
-    print_r($instance);
+    // Add assertions to validate the parsed data
+    expect($instance)->toBeInstanceOf(TestNestedSerialize::class)
+        ->and($instance->name)->toBe('TestNestedSerialize-name')
+        ->and($instance->id)->toBe(1)
+        ->and($instance->otherNestedOne)->toBeInstanceOf(OtherNestedOne::class)
+        ->and($instance->otherNestedOne->name_one)->toBe('OtherNestedOne-name_one')
+        ->and($instance->otherNestedOne->id_one)->toBe(2)
+        ->and($instance->otherNestedOne->otherNestedTwo)->toBeInstanceOf(OtherNestedTwo::class)
+        ->and($instance->otherNestedOne->otherNestedTwo->name_two)->toBe('OtherNestedTwo-name_two')
+        ->and($instance->otherNestedOne->otherNestedTwo->id_two)->toBe(3)
+        ->and($instance->otherNestedOne->otherNestedTwo->otherNestedThree)->toBeInstanceOf(OtherNestedThree::class)
+        ->and($instance->otherNestedOne->otherNestedTwo->otherNestedThree->name_three)->toBe('OtherNestedThree-name_three')
+        ->and(isset($instance->otherNestedOne->otherNestedTwo->otherNestedThree->id_three))->toBeFalse(); // Ensure id_three is ignored
 
-    // 记录测试结束后的内存使用
-    $endMemory = memory_get_usage();
-
-    // 记录峰值内存
-    $peakMemory = memory_get_peak_usage();
-
-    // 计算使用内存
-    $memoryUsed = $endMemory - $startMemory;
-
-    // 输出内存使用情况
-    echo sprintf(
-        "Start Memory: %.2f MB\nEnd Memory: %.2f MB\nMemory Used: %.2f MB\nPeak Memory: %.2f MB\n",
-        $startMemory / 1024 / 1024,
-        $endMemory   / 1024 / 1024,
-        $memoryUsed  / 1024 / 1024,
-        $peakMemory  / 1024 / 1024
-    );
 });

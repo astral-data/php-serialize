@@ -1,6 +1,8 @@
 <?php
 
+use Astral\Serialize\Exceptions\NotFoundGroupException;
 use Astral\Serialize\Resolvers\GroupResolver;
+use Astral\Serialize\Support\Collections\DataCollection;
 use Psr\SimpleCache\CacheInterface;
 
 it('throws NotFoundGroupException when groups do not exist', function () {
@@ -14,10 +16,9 @@ it('throws NotFoundGroupException when groups do not exist', function () {
     $reflection = $this->createMock(ReflectionClass::class);
     $reflection->method('getAttributes')->willReturn([]);
 
-    $result = $resolver->resolveExistsGroupsByProperty($reflection, 'test', ['nonexistent']);
+    $result = $resolver->resolveExistsGroupsByClass($reflection, 'test', ['nonexistent']);
 
-    expect($result)->toBeFalse();
-});
+})->throws(NotFoundGroupException::class, 'Invalid group(s) "nonexistent" for . Available groups: [test]');
 
 it('returns true when groups exist', function () {
     $mockCache = mock(CacheInterface::class);
@@ -46,7 +47,7 @@ it('returns true when groups exist', function () {
     ]);
 
     $resolver = new GroupResolver($mockCache);
-    $result   = $resolver->resolveExistsGroupsByProperty($reflection, 'test', ['group1']);
+    $result   = $resolver->resolveExistsGroupsByClass($reflection, 'test', ['group1']);
 
     expect($result)->toBeTrue();
 });
@@ -56,11 +57,9 @@ it('returns cached groups when available', function () {
     $mockCache->shouldReceive('has')->andReturnUsing(fn ($key) => true);
     $mockCache->shouldReceive('get')->andReturnUsing(fn ($key) => ['cached_group1', 'cached_group2']);
 
-    $resolver = new GroupResolver($mockCache);
-
+    $resolver   = new GroupResolver($mockCache);
     $reflection = $this->createMock(ReflectionClass::class);
-
-    $result = $resolver->resolveExistsGroupsByProperty($reflection, 'test', ['cached_group1']);
+    $result     = $resolver->resolveExistsGroupsByClass($reflection, 'test', ['cached_group1']);
 
     expect($result)->toBeTrue();
 });
@@ -73,15 +72,14 @@ it('generates correct cache keys for ReflectionClass', function () {
 
     $resolver = new GroupResolver($mockCache);
     $cacheKey = $resolver->getCacheKey($reflection);
-
-    expect($cacheKey)->toBe('TestClass');
+    expect($cacheKey)->toBe('group:TestClass');
 });
 
 it('generates correct cache keys for ReflectionProperty', function () {
     $mockCache = mock(CacheInterface::class);
 
     $declaringClass = $this->createMock(ReflectionClass::class);
-    $declaringClass->method('__toString')->willReturn('TestClass');
+    $declaringClass->method('getName')->willReturn('TestClass');
 
     $reflection = $this->createMock(ReflectionProperty::class);
     $reflection->method('getDeclaringClass')->willReturn($declaringClass);
@@ -89,6 +87,41 @@ it('generates correct cache keys for ReflectionProperty', function () {
 
     $resolver = new GroupResolver($mockCache);
     $cacheKey = $resolver->getCacheKey($reflection);
+    expect($cacheKey)->toBe('group:TestClass:testProperty');
+});
 
-    expect($cacheKey)->toBe('TestClass:testProperty');
+it('returns true when default group matches in DataCollection', function () {
+    $mockCache = mock(CacheInterface::class);
+
+    $collection = $this->createMock(DataCollection::class);
+    $collection->method('getGroups')->willReturn([]);
+
+    $resolver = new GroupResolver($mockCache);
+    $result   = $resolver->resolveExistsGroupsByDataCollection($collection, ['defaultGroup'], 'defaultGroup');
+
+    expect($result)->toBeTrue();
+});
+
+it('returns true when group exists in DataCollection', function () {
+    $mockCache = mock(CacheInterface::class);
+
+    $collection = $this->createMock(DataCollection::class);
+    $collection->method('getGroups')->willReturn(['group1', 'group2']);
+
+    $resolver = new GroupResolver($mockCache);
+    $result   = $resolver->resolveExistsGroupsByDataCollection($collection, ['group2'], 'defaultGroup');
+
+    expect($result)->toBeTrue();
+});
+
+it('returns false when group does not exist in DataCollection', function () {
+    $mockCache = mock(CacheInterface::class);
+
+    $collection = $this->createMock(DataCollection::class);
+    $collection->method('getGroups')->willReturn(['group1', 'group2']);
+
+    $resolver = new GroupResolver($mockCache);
+    $result   = $resolver->resolveExistsGroupsByDataCollection($collection, ['nonexistentGroup'], 'defaultGroup');
+
+    expect($result)->toBeFalse();
 });

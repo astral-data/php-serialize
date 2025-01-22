@@ -54,7 +54,7 @@ beforeAll(function () {
     }
 });
 
-it('test class CamelCaseMapper from serialize class', function () {
+it('test class CamelCaseMapper from Serialize class', function () {
 
     $res = InputNameAllCamelMapper::from(
         oneText:'0',
@@ -68,7 +68,7 @@ it('test class CamelCaseMapper from serialize class', function () {
 
 });
 
-it('test class SnakeCaseMapper from serialize class', function () {
+it('test class SnakeCaseMapper from Serialize class', function () {
 
     $res = InputNameAllSnakeMapper::from(
         one_text:'0',
@@ -86,7 +86,7 @@ it('test class SnakeCaseMapper from serialize class', function () {
 
 });
 
-it('test class InputNameAllSnakeAndDataInputNameMapper from serialize class', function () {
+it('test class InputNameAllSnakeAndDataInputNameMapper from Serialize class', function () {
 
     $res = InputNameAllSnakeAndDataInputNameMapper::from(
         one_text:'0',
@@ -126,7 +126,7 @@ it('test class InputNameAllSnakeAndDataInputNameMapper from serialize class', fu
 });
 
 
-it('test InputName from serialize class', function () {
+it('test InputName from Serialize class', function () {
 
     $res = InputNameObject::from(
         test_name:'0',

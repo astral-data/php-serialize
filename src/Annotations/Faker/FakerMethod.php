@@ -107,7 +107,7 @@ class FakerMethod implements FakerCastInterface
             $typeName  = $paramType->getName();
 
             return match(true) {
-                !$paramType->isBuiltin() && class_exists($typeName) => ContextFactory::build($typeName)->faker(),
+                !$paramType->isBuiltin() && class_exists($typeName)             => ContextFactory::build($typeName)->faker(),
                 array_key_exists($name, $this->params)                          => $this->params[$name],
                 $param->isDefaultValueAvailable()                               => $param->getDefaultValue(),
                 default                                                         => null,

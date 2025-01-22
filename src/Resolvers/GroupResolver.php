@@ -103,6 +103,6 @@ class GroupResolver
 
     public function getCacheKey(ReflectionClass|ReflectionProperty $reflection): string
     {
-        return 'group:' . $reflection instanceof ReflectionClass ? $reflection->getName() : $reflection->getDeclaringClass()->getName() . ':' . $reflection->getName();
+        return 'group:' . ($reflection instanceof ReflectionClass ? $reflection->getName() : ($reflection->getDeclaringClass()->getName() . ':' . $reflection->getName()));
     }
 }

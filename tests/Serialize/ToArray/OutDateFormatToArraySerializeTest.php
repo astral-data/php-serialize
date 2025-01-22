@@ -26,7 +26,7 @@ beforeAll(function () {
     }
 });
 
-it('test out data format to array serialize class', function () {
+it('test out data format to array Serialize class', function () {
     // Create a new instance of the TestOutDateFormat class
     $object = new TestOutDateFormat();
 

@@ -26,9 +26,7 @@ beforeAll(function () {
     }
 });
 
-it('test enum serialize class', function () {
-
-    var_dump(class_exists(\Astral\Benchmarks\Fake\SerializeBenchFake::class));
+it('test enum Serialize class', function () {
 
     $object = TestDateFromSerialize::from([
         'date_1' => '2024-01-01 01:01:01',

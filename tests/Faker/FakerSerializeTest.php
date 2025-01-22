@@ -84,7 +84,7 @@ beforeAll(function () {
 
 });
 
-it('test  faker serialize class', function () {
+it('test  faker Serialize class', function () {
 
     $res = TestFakerSerialize::faker();
 

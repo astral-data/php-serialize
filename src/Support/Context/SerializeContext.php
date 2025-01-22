@@ -194,7 +194,6 @@ class SerializeContext
             $payloads = array_merge($payloads, $values);
         }
 
-
         $this->chooseSerializeContext->setGroups($this->getGroups());
 
         /** @var T $object */

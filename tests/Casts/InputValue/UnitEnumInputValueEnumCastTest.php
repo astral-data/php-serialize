@@ -29,7 +29,9 @@ beforeAll(function () {
             };
         }
     }
+});
 
+beforeEach(function () {
     $this->cast       = new InputValueEnumCast();
     $this->collection = Mockery::mock(DataCollection::class);
     $this->context    = Mockery::mock(InputValueContext::class);
@@ -41,7 +43,7 @@ test('match returns true for valid unit enum value', function () {
     $typeCollection            = Mockery::mock(TypeCollection::class);
     $typeCollection->kind      = TypeKindEnum::ENUM;
     $typeCollection->className = TestUnitEnum::class;
-    $this->collection->shouldReceive('getChooseType')->andReturn($typeCollection);
+    $this->collection->shouldReceive('getTypes')->andReturn([$typeCollection]);
 
     $result = $this->cast->match('OPTION_ONE', $this->collection, $this->context);
 
@@ -53,7 +55,7 @@ test('resolve returns correct unit enum instance for valid value', function () {
     $typeCollection            = Mockery::mock(TypeCollection::class);
     $typeCollection->kind      = TypeKindEnum::ENUM;
     $typeCollection->className = TestUnitEnum::class;
-    $this->collection->shouldReceive('getChooseType')->andReturn($typeCollection);
+    $this->collection->shouldReceive('getTypes')->andReturn([$typeCollection]);
 
     $result = $this->cast->resolve('OPTION_ONE', $this->collection, $this->context);
 
@@ -65,11 +67,11 @@ test('resolve throws ValueCastError for invalid unit enum value', function () {
     $typeCollection            = Mockery::mock(TypeCollection::class);
     $typeCollection->kind      = TypeKindEnum::ENUM;
     $typeCollection->className = TestUnitEnum::class;
-    $this->collection->shouldReceive('getChooseType')->andReturn($typeCollection);
+    $this->collection->shouldReceive('getTypes')->andReturn([$typeCollection]);
 
     $this->cast->resolve('INVALID_OPTION', $this->collection, $this->context);
 
-})->throws(ValueCastError::class, 'Enum value "INVALID_OPTION" not found in classes: TestUnitEnum');
+})->throws(ValueCastError::class, 'Enum value "INVALID_OPTION" not found in EnumClass: TestUnitEnum');
 
 
 
@@ -78,7 +80,7 @@ test('match returns true for valid unit try enum value', function () {
     $typeCollection            = Mockery::mock(TypeCollection::class);
     $typeCollection->kind      = TypeKindEnum::ENUM;
     $typeCollection->className = TestUnitTryFromEnum::class;
-    $this->collection->shouldReceive('getChooseType')->andReturn($typeCollection);
+    $this->collection->shouldReceive('getTypes')->andReturn([$typeCollection]);
 
     $result = $this->cast->match('other', $this->collection, $this->context);
 

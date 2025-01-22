@@ -43,7 +43,7 @@ beforeAll(function () {
     }
 });
 
-it('test class CamelCaseMapper from serialize class', function () {
+it('test class CamelCaseMapper from Serialize class', function () {
 
     $object     = new OutNameAllSnakeMapper();
     $res        =  $object->toArray();
@@ -59,7 +59,7 @@ it('test class CamelCaseMapper from serialize class', function () {
 
 });
 
-it('test class SnakeCaseMapper from serialize class', function () {
+it('test class SnakeCaseMapper from Serialize class', function () {
 
     $object     = new OutNameAllCamelMapper();
     $res        =  $object->toArray();
@@ -75,7 +75,7 @@ it('test class SnakeCaseMapper from serialize class', function () {
 
 });
 
-it('test class OutNameAllSnakeAndDataOutNameMapper from serialize class', function () {
+it('test class OutNameAllSnakeAndDataOutNameMapper from Serialize class', function () {
 
     $object     = new OutNameAllSnakeAndDataOutNameMapper();
     $res        =  $object->toArray();
@@ -90,7 +90,7 @@ it('test class OutNameAllSnakeAndDataOutNameMapper from serialize class', functi
 
 });
 
-it('test OutName from serialize class', function () {
+it('test OutName from Serialize class', function () {
 
     $object     = new OutNameObject();
     $res        =  $object->toArray();

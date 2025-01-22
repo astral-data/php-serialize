@@ -43,7 +43,7 @@ beforeAll(function () {
 
 });
 
-it('test  array only one serialize nested serialize class', function () {
+it('test  array only one Serialize nested Serialize class', function () {
 
     $res = ArrayBestMatchSerialize::from(vols_1:[
         [
@@ -78,7 +78,7 @@ it('test  array only one serialize nested serialize class', function () {
         ->and($res->vols_1[2]->id_two)->toBe(3);
 });
 
-it('test array only one  serialize nested serialize class', function () {
+it('test array only one  Serialize nested Serialize class', function () {
 
     $res = ArrayBestMatchSerialize::from(vols_3:[
         [
@@ -113,7 +113,7 @@ it('test array only one  serialize nested serialize class', function () {
         ->and($res->vols_3[2]->id_two)->toBe(3);
 });
 
-it('test array analyzer serialize nested serialize class', function () {
+it('test array analyzer Serialize nested Serialize class', function () {
 
     $res = ArrayBestMatchSerialize::from(vols_2:[
         'ArrayBestMatchOne' => [
@@ -149,7 +149,7 @@ it('test array analyzer serialize nested serialize class', function () {
 });
 
 
-it('test array object serialize nested serialize class', function () {
+it('test array object Serialize nested Serialize class', function () {
 
     $res1 = ArrayBestMatchSerialize::from(vols_4:[
         'name_two' => 'ArrayBestMatchTwo',

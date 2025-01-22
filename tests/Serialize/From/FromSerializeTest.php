@@ -32,7 +32,7 @@ beforeAll(function () {
     }
 });
 
-it('test parse serialize class', function () {
+it('test parse Serialize class', function () {
 
     $object  = TestFromSerialize::from(
         [
@@ -50,5 +50,14 @@ it('test parse serialize class', function () {
         abc:123
     );
 
-    print_r($object->toArray());
+    expect($object)->toBeInstanceOf(TestFromSerialize::class)
+        ->and($object->withoutType)->toBe('hhh')
+        ->and($object->type_string)->toBe('test_string')
+        ->and($object->type_object)->toBeInstanceOf(StdClass::class)
+        ->and($object->type_int)->toBe(11)
+        ->and($object->type_null)->toBe(123)
+        ->and($object->type_float)->toBe(0.0)
+        ->and($object->type_mixed_other)->toBeArray()
+        ->and($object->type_mixed_other['abc']['bbb']['ccc'])->toBe('dddd')
+        ->and($object->type_collect_object)->toBeInstanceOf(StdClass::class);
 });

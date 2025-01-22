@@ -8,16 +8,10 @@ use Astral\Serialize\Support\Collections\DataCollection;
 use Astral\Serialize\Support\Collections\GroupDataCollection;
 use Astral\Serialize\Support\Context\InputValueContext;
 
-// TODO
-
-beforeEach(function () {
+beforeAll(function () {
     $this->cast       = new InputArraySingleChildCast();
     $this->collection = Mockery::mock(DataCollection::class);
     $this->context    = Mockery::mock(InputValueContext::class);
-
-    // 替换 SerializeContainer 为 Mock
-    //    $this->serializeContainerMock = Mockery::mock(SerializeContainer::class)->makePartial();
-    //    SerializeContainer::getInstanceForTest($this->serializeContainerMock);
 });
 
 test('match returns true for valid array and single child collection', function () {
@@ -45,7 +39,6 @@ test('resolve correctly maps values for collect object type', function () {
 
     $values = ['value1', 'value2'];
 
-    // Mock SerializeContainer 和 propertyInputValueResolver
     $resolverMock = Mockery::mock(PropertyInputValueResolver::class);
     $this->serializeContainerMock->shouldReceive('propertyInputValueResolver')->andReturn($resolverMock);
 

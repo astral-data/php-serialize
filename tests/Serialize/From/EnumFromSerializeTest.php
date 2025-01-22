@@ -17,18 +17,18 @@ beforeAll(function () {
     }
 });
 
-it('test enum serialize class', function () {
+it('test enum Serialize class', function () {
     $object  = TestEnumFromSerialize::from(enum:'NAME_ONE', abc:123);
     expect($object)->toBeInstanceOf(TestEnumFromSerialize::class)
         ->and($object->enum)->toBeInstanceOf(TestEnums::class)
         ->and($object->enum)->toBe(TestEnums::NAME_ONE);
 });
 
-it('test not find enum serialize class', function () {
+it('test not find enum Serialize class', function () {
     TestEnumFromSerialize::from(enum:'NAME_ONE-NO-FIND', abc:123);
 })->throws(ValueCastError::class);
 
-it('test enum union string serialize class', function () {
+it('test enum union string Serialize class', function () {
     $object1  = TestEnumFromSerialize::from(enum_2:'NAME_ONE-NO-FIND', abc:123);
     $object2  = TestEnumFromSerialize::from(enum_2:'NAME_TWO', abc:123);
 

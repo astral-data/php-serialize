@@ -1,8 +1,8 @@
 <?php
 
 use Astral\Serialize\Annotations\Faker\FakerMethod;
-use Astral\Serialize\Serialize;
 use Astral\Serialize\Annotations\Faker\FakerObject;
+use Astral\Serialize\Serialize;
 
 beforeAll(function () {
 
@@ -86,7 +86,7 @@ beforeAll(function () {
             'testMethodObjectAndParams',
             params: [
                 'vols' => ['id' => 1,'name' => 'vols','children' => [
-                    'child-id' => 2,
+                    'child-id'   => 2,
                     'child-name' => 'child-vols'
                 ]]
             ],
@@ -107,7 +107,7 @@ beforeAll(function () {
     }
 
 });
-it('test faker method serialize class', function () {
+it('test faker method Serialize class', function () {
     $res = TestFakerMethodSerialize::faker();
 
     // Assert that the resolved data matches the expected structure and values

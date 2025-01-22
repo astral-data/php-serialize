@@ -50,11 +50,17 @@ class PropertyInputValueResolver
             $chooseContext->addProperty(new ChoosePropertyContext($name, $chooseContext));
             $matchInput = $this->matchInputNameAndValue($chooseContext, $collection, $groupCollection, $payload);
 
+            //            if($chooseContext->serializeClass == 'TestGroupSerialize' && in_array('test_2',$chooseContext->getGroups()) && $collection->getName() == 'type_object'){
+            //                var_dump($matchInput);
+            //            }
+
             if ($matchInput === false) {
                 continue;
             }
 
             $chooseContext->getProperty($name)->setInputName($matchInput['name']);
+
+
 
             $resolvedValue = $matchInput['value'];
 

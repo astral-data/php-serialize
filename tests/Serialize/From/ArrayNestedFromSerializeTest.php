@@ -44,7 +44,7 @@ beforeAll(function () {
 
 });
 
-it('test parse array nested serialize class', function () {
+it('test parse array nested Serialize class', function () {
 
     $startMemory = memory_get_usage();
 
