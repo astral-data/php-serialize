@@ -61,6 +61,9 @@ it('test  array only one Serialize nested Serialize class', function () {
 
     ]);
 
+
+    print_r($res->toArray());
+
     expect($res)->toBeInstanceOf(ArrayBestMatchSerialize::class)
         ->and($res->vols_1)->toBeArray();
 

@@ -1,6 +1,7 @@
 <?php
 
 
+use Astral\Serialize\Support\Mappers\PascalCaseMapper;
 use Astral\Serialize\Annotations\DataCollection\InputName;
 use Astral\Serialize\Serialize;
 use Astral\Serialize\Support\Mappers\CamelCaseMapper;
@@ -11,6 +12,8 @@ beforeAll(function () {
     class InputNameObject extends Serialize
     {
         #[InputName('test_name')]
+        #[InputName('test_name_2')]
+        #[InputName('test_name_3')]
         public string $oneText;
 
         #[InputName(CamelCaseMapper::class)]
@@ -23,6 +26,7 @@ beforeAll(function () {
     #[InputName(CamelCaseMapper::class)]
     class InputNameAllCamelMapper extends Serialize
     {
+        #[InputName(PascalCaseMapper::class)]
         public string $one_text;
         public string $two_text;
     }
@@ -139,5 +143,31 @@ it('test InputName from Serialize class', function () {
         ->and($res->oneText)->toBe('0')
         ->and($res->two_text)->toBe('123')
         ->and($res->threeText)->toBe('456');
+
+});
+
+it('test InputName More Name from Serialize class', function () {
+
+
+    $res = InputNameObject::from(
+        test_name_2:'345',
+        test_name:'123',
+        test_name_3:'678',
+    );
+
+    expect($res->oneText)->toBe('123');
+
+});
+
+
+it('test data inputName greater than class InputName', function () {
+
+    $res = InputNameAllCamelMapper::from(
+        oneText:'0',
+        OneText:"456",
+        twoText:'123',
+    );
+
+    expect($res->one_text)->toBe('456');
 
 });

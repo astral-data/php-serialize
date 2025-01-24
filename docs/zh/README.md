@@ -239,6 +239,8 @@ $user = User::from([
     'alternateStatus' => 'inactive' // 支持字符串或枚举值
 ]);
 
+var_dump($user->status); // 输出: UserStatus::ACTIVE
+
 // 转换为数组
 $userArray = $user->toArray();
 // $userArray 的内容:
@@ -326,6 +328,248 @@ $profileArray = $profile->toArray();
 
 // 验证可空类型的行为
 echo $profile->username;         // 输出 null
+```
+
+#### 联合类型
+
+1. 可以混合使用基本类型和对象类型
+2. 对象层级匹配
+    对于多个对象类型，会选择最匹配的类型
+    支持继承层级的智能匹配
+3. 动态类型处理
+    自动处理不同类型的输入
+    提供更加灵活的数据建模方式
+
+```php
+use Astral\Serialize\Serialize;
+
+// 定义一个基础用户类
+class User extends Serialize {
+    public string $name;
+    public int $age;
+}
+
+// 定义一个管理员用户类
+class AdminUser extends User {
+    public string $role;
+}
+
+class FlexibleData extends Serialize {
+    // 支持整数或字符串类型的标识符
+    public int|string $flexibleId;
+
+    // 支持用户对象或整数标识符
+    public User|int $userIdentifier;
+
+    // 支持多种复杂的联合类型
+    public AdminUser|User|int $complexIdentifier;
+}
+
+// 场景1：使用整数作为 flexibleId
+$data1 = FlexibleData::from([
+    'flexibleId' => 123,
+    'userIdentifier' => 456,
+    'complexIdentifier' => 789
+]);
+
+$data1Array = $data1->toArray();
+// $data1Array 的内容:
+// [
+//     'flexibleId' => 123,
+//     'userIdentifier' => 456,
+//     'complexIdentifier' => 789
+// ]
+
+// 场景2：使用字符串作为 flexibleId
+$data2 = FlexibleData::from([
+    'flexibleId' => 'ABC123',
+    'userIdentifier' => [
+        'name' => '张三',
+        'age' => 30
+    ],
+    'complexIdentifier' => [
+        'name' => '李四',
+        'age' => 25
+    ]
+]);
+
+echo $data2->userIdentifier; // 输出 User 对象
+echo $data2->complexIdentifier; // 输出 User 对象
+
+$data2Array = $data2->toArray();
+// $data2Array 的内容:
+// [
+//     'flexibleId' => 'ABC123',
+//     'userIdentifier' => User Object (
+//         ['name' => '张三', 'age' => 30]
+//     ),
+//     'complexIdentifier' => User Object (
+//         ['name' => '李四', 'age' => 25]
+//     )
+// ]
+
+// 场景3：使用管理员用户
+$data3 = FlexibleData::from([
+    'flexibleId' => 'USER001',
+    'userIdentifier' => [
+        'name' => '王五',
+        'age' => 35,
+        'role' => 'admin'
+    ],
+    'complexIdentifier' => [
+        'name' => '赵六',
+        'age' => 40,
+        'role' => 'super_admin'
+    ]
+]);
+
+echo $data2->userIdentifier; // 输出 User 对象
+echo $data2->complexIdentifier; // 输出 AdminUser 对象
+
+$data3Array = $data3->toArray();
+// $data3Array 的内容:
+// [
+//     'flexibleId' => 'USER001',
+//     'userIdentifier' => User Object (
+//         ['name' => '王五', 'age' => 35]
+//     ),
+//     'complexIdentifier' => AdminUser Object (
+//         ['name' => '赵六', 'age' => 40, 'role' => 'super_admin']
+//     )
+// ]
+```
+
+#### 数组对象转换
+
+##### phpDoc定义
+
+```php
+use Astral\Serialize\Serialize;
+
+// 定义基础数组类型
+class ArrayOne extends Serialize {
+    public string $type = 'one';
+    public string $name;
+}
+
+class ArrayTwo extends Serialize {
+    public string $type = 'two';
+    public string $code;
+}
+
+class MultiArraySerialize extends Serialize {
+    // 场景1：混合类型数组
+    /** @var (ArrayOne|ArrayTwo)[] */
+    public array $mixedTypeArray;
+
+    // 场景2：多类型数组
+    /** @var ArrayOne[]|ArrayTwo[] */
+    public array $multiTypeArray;
+
+    // 场景3：键值对混合类型
+    /** @var array(string, ArrayOne|ArrayTwo) */
+    public array $keyValueMixedArray;
+}
+
+// 场景1：混合类型数组
+$data1 = MultiArraySerialize::from(
+    mixedTypeArray : [
+        ['name' => '张三'],           //  转化 ArrayOne 对象
+        ['code' => 'ABC123'],         // 转化 ArrayTwo 对象
+        ['name' => '李四'],            // 转化 ArrayOne 对象
+        ['code' => 'DEF456']          // 转化 ArrayTwo 对象
+    ]
+);
+
+$data1Array = $data1->toArray();
+// $data1Array 的内容:
+// [
+//     'mixedTypeArray' => [
+//           [0] => ArrayOne Object
+//                (
+//                    ['name' => '张三', 'type' => 'one'],
+//                )
+//           [1] => ArrayTwo Object
+//                (
+//                    ['code' => 'ABC123', 'type' => 'two'],
+//                )
+//           [2] => ArrayOne Object
+//                (
+//                    ['name' => '李四', 'type' => 'one'],
+//                )
+//           [3] => ArrayTwo Object
+//                (
+//                    ['code' => 'DEF456', 'type' => 'two'],
+//                )
+//     ]
+// ]
+
+// 场景2：多类型数组
+$data2 = MultiArraySerialize::from(
+    multiTypeArray:[
+        ['name' => '王五'],            // 转化 ArrayOne 对象
+        ['name' => '赵六'],            // 转化 ArrayOne 对象
+        ['code' => 'GHI789']          // 转化 ArrayTwo 对象
+    ]
+);
+
+$data2Array = $data2->toArray();
+// $data2Array 的内容:
+// [
+//     'multiTypeArray' => [
+//         ArrayOne Object (
+//             ['name' => '王五', 'type' => 'one']
+//         ),
+//         ArrayOne Object (
+//             ['name' => '赵六', 'type' => 'one']
+//         ),
+//         ArrayTwo Object (
+//             ['code' => 'GHI789', 'type' => 'two']
+//         )
+//     ]
+// ]
+
+// 场景3：键值对混合类型
+$data3 = MultiArraySerialize::from(
+    keyValueMixedArray: [
+        'user1' => ['name' => '张三'],           // 转化 ArrayOne 对象
+        'system1' => ['code' => 'ABC123'],       // 转化 ArrayTwo 对象
+        'user2' => ['name' => '李四']            // 转化 ArrayOne 对象
+    ]
+);
+
+$data3Array = $data3->toArray();
+// $data3Array 的内容:
+// [
+//     'keyValueMixedArray' => [
+//         'user1' => ArrayOne Object (
+//             ['name' => '张三', 'type' => 'one']
+//         ),
+//         'system1' => ArrayTwo Object (
+//             ['code' => 'ABC123', 'type' => 'two']
+//         ),
+//         'user2' => ArrayOne Object (
+//             ['name' => '李四', 'type' => 'one']
+//         )
+//     ]
+// ]
+
+// 场景4：无法匹配时的处理
+$data4 = MultiArraySerialize::from(
+    mixedTypeArray : [
+        ['unknown' => 'data1'],
+        ['another' => 'data2']
+    ]
+);
+
+$data4Array = $data4->toArray();
+// $data4Array 的内容:
+// [
+//     'mixedTypeArray' => [
+//         ['unknown' => 'data1'],
+//         ['another' => 'data2']
+//     ]
+// ]
 ```
 
 ### 注解类使用
@@ -495,9 +739,9 @@ $adminUserArray = $adminUser->toArray();
 // [
 //     'name' => '张三',
 //     'sex' => 1,
-//     'info' => [
+//     'info' => ComplexNestedInfo Object ([
 //         'money' => 100.00
-//     ]
+//     ])
 // ]
 ```
 
@@ -634,10 +878,10 @@ $complexUser = ComplexUser::from([
 $complexUserArray = $complexUser->toArray();
 // $complexUserArray 的内容:
 // [
-//     'profile' => [
+//     'profile' => UserProfile Object ([
 //         'nickname' => '小明',
 //         'age' => 25
-//     ],
+//     ]),
 //     'tags' => ['developer', 'programmer']
 // ]
 ```
@@ -728,20 +972,20 @@ $userArray = $user->toArray();
 // ]
 ```
 
-###### 局部属性可以覆盖全局映射
+###### 属性映射大于类级映射
 
 ```php
 
-// 局部属性可以覆盖全局映射
 #[InputName(SnakeCaseMapper::class)]
 class PartialOverrideUser extends Serialize {
     #[InputName(PascalCaseMapper::class)]
-    public string $userName;  // 使用帕斯卡命名映射
+    public string $userName;  // 优先使用帕斯卡命名映射
     
     public string $userEmail;  // 继续使用类级别的全局映射
 }
 
 $partialUser = PartialOverrideUser::from([
+    'User_name' => '张三',     // 使用蛇形映射
     'UserName' => '李四',     // 使用帕斯卡映射
     'user_email' => 'user@example.com' // 使用蛇形映射
 ]);
@@ -1072,29 +1316,6 @@ $advancedUserArray = $advancedUser->toArray();
 // ]
 ```
 
-### 高级类型处理
-
-#### 联合类型
-
-```php
-class FlexibleData extends Serialize {
-    public int|string $flexibleId;
-    public User|int $userIdentifier;
-}
-```
-
-#### 多对象处理
-
-```php
-class MultiObjectSerialize extends Serialize {
-    /** @var ArrayBestMatchOne|ArrayBestMatchTwo|ArrayBestMatchThree */
-    public object $singleObject;
-
-    /** @var (ArrayBestMatchOne|ArrayBestMatchTwo)[] */
-    public array $mixedArray;
-}
-```
-
 ## Faker
 
 ### 简单属性模拟
@@ -1106,23 +1327,86 @@ class UserFaker extends Serialize {
 
     #[FakerValue('email')]
     public string $email;
+
+    #[FakerValue('uuid')]
+    public string $userId;
+
+    #[FakerValue('phoneNumber')]
+    public string $phone;
+
+    #[FakerValue('age')]
+    public int $age;
+
+    #[FakerValue('boolean')]
+    public bool $isActive;
 }
 
 $user = UserFaker::faker();
+
+$userArray = $user->toArray();
+// $userArray 的内容:
+// [
+//    "name" => "John Doe"
+//    "email" => "john.doe@example.com"
+//    "userId" => "550e8400-e29b-41d4-a716-446655440000"
+//    "phone" => "+1-555-123-4567"
+//    "age" => 35
+//    "isActive" => true
+// ]
 ```
 
 ### 集合模拟
 
 ```php
+
+class UserProfile extends Serialize {
+    public string $nickname;
+    public int $age;
+    public string $email;
+    public string $avatar;
+}
+
 class UserListFaker extends Serialize {
     #[FakerCollection(['name', 'email'], num: 3)]
     public array $users;
+
+     #[FakerCollection(UserProfile::class, num: 2)]
+    public array $profiles;
 }
 
 $userList = UserListFaker::faker();
+
+$complexUserListFaker = UserListFaker::faker();
+
+$complexUserListFakerArray = $complexUserListFaker->toArray();
+// $complexUserListFakerArray 的内容:
+// [
+//     'profile' => [
+//        [0] => UserProfile Object (
+//              [
+//              'nickname' => 'RandomNickname', 
+//              'age' => 28, 'email' => 'random.user@example.com', 
+//              'avatar' => 'https://example.com/avatars/random-avatar.jpg'
+//              ],
+//         ),
+//         [1] => UserProfile Object (
+//              [
+//              'nickname' => 'RandomNickname', 
+//              'age' => 28, 'email' => 'random.user@example.com', 
+//              'avatar' => 'https://example.com/avatars/random-avatar.jpg'
+//              ],
+//         )
+//      ],  
+//     'users' => [
+//         ['name' => 'RandomNickname', 'email' => 'RandomEmail@example.com']
+//         ['name' => 'RandomNickname', 'email' => 'RandomEmail@example.com']
+//     ]
+// ]
 ```
 
 ### 嵌套对象模拟
+
+#### 基本用法
 
 ```php
 class ComplexUserFaker extends Serialize {
@@ -1131,7 +1415,49 @@ class ComplexUserFaker extends Serialize {
 }
 ```
 
-### Faker 方法
+#### 演示实例
+
+```php
+use Astral\Serialize\Serialize;
+use Astral\Serialize\Attributes\FakerObject;
+use Astral\Serialize\Attributes\FakerCollection;
+
+class UserProfile extends Serialize {
+    public string $nickname;
+    public int $age;
+    public string $email;
+    public string $avatar;
+}
+
+class UserTag extends Serialize {
+    public string $name;
+    public string $color;
+}
+
+class ComplexUserFaker extends Serialize {
+    #[FakerObject(UserProfile::class)]
+    public UserProfile $profile;
+
+    #[FakerObject(UserTag::class)]
+    public UserTag|UserProfile $primaryTag;
+
+}
+
+$complexUserFaker = ComplexUserFaker::faker();
+
+$complexUserFakerArray = $complexUserFaker->toArray();
+// $complexUserFakerArray 的内容:
+// [
+//     'profile' => UserProfile Object (
+//         ['nickname' => 'RandomNickname', 'age' => 28, 'email' => 'random.user@example.com', 'avatar' => 'https://example.com/avatars/random-avatar.jpg']
+//     ),
+//     'primaryTag' => UserTag Object (
+//         ['name' => 'Developer', 'color' => '#007bff']
+//     )
+// ]
+```
+
+### Faker类方法模拟
 
 ```php
 class UserService {
@@ -1144,4 +1470,99 @@ class UserFaker extends Serialize {
     #[FakerMethod(UserService::class, 'generateUserData')]
     public array $userData;
 }
+```
+
+#### 完整的示例
+
+```php
+use Astral\Serialize\Serialize;
+use Astral\Serialize\Attributes\Faker\FakerMethod;
+use Astral\Serialize\Attributes\Faker\FakerObject;
+use Astral\Serialize\Attributes\Faker\FakerCollection;
+
+// 用户配置文件类
+class UserProfile extends Serialize {
+    public string $nickname;
+    public int $age;
+    public string $email;
+    public array $types = ['type1' => 'money', 'type2' => 'score'];
+}
+
+// 用户服务类，提供数据生成方法
+class UserService {
+    public function generateUserData(): array {
+        return [
+            'name' => 'Generated User',
+            'email' => 'generated.user@example.com',
+            'age' => 30
+        ];
+    }
+
+    public function generateUserProfile(UserProfile $user): UserProfile {
+        return $user;
+    }
+
+    public function generateUserList(int $count): array {
+        $users = [];
+        for ($i = 0; $i < $count; $i++) {
+            $users[] = [
+                'name' => "User {$i}",
+                'email' => "user{$i}@example.com"
+            ];
+        }
+        return $users;
+    }
+}
+
+// Faker 方法模拟示例
+class UserFaker extends Serialize {
+    // 使用方法生成简单数据
+    #[FakerMethod(UserService::class, 'generateUserData')]
+    public array $userData;
+
+    // 使用方法生成对象
+    #[FakerMethod(UserService::class, 'generateUserProfile')]
+    public UserProfile $userProfile;
+
+    // 获取指定属性
+    #[FakerMethod(UserService::class, 'generateUserProfile',returnType:'age')]
+    public int $age;
+
+    // 获取指定属性 多级可以使用[.]链接
+    #[FakerMethod(UserService::class, 'generateUserProfile',returnType:'types.type2')]
+    public string $type2;
+
+    // 传入参数
+    #[FakerMethod(UserService::class, 'generateUserList',params:['count'=> 3])]
+    public array $userList;
+}
+
+// 生成模拟数据
+$userFaker = UserFaker::faker();
+
+// 转换为数组
+$userFakerArray = $userFaker->toArray();
+// $userFakerArray 的内容:
+// [
+//     'userData' => [
+//         'name' => 'Generated User',
+//         'email' => 'generated.user@example.com',
+//         'age' => 30
+//     ],
+//     'userProfile' => UserProfile Object (
+//         [
+//             'nickname' => 'GeneratedNickname', 
+//             'age' => 25, // 随机生成
+//             'email' => 'profile@example.com'
+//             'types' => ['type1' => 'money', 'type2' => 'score']
+//         ]
+//     ),
+//     'age' => 99 , // 随机生成
+//     'type2' => 'score',
+//     'userList' => [
+//         ['name' => 'User 0', 'email' => 'user0@example.com'],
+//         ['name' => 'User 1', 'email' => 'user1@example.com'],
+//         ['name' => 'User 2', 'email' => 'user2@example.com']
+//     ]
+// ]
 ```
