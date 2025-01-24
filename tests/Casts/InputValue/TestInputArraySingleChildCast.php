@@ -2,7 +2,7 @@
 
 use Astral\Serialize\Casts\InputValue\InputArraySingleChildCast;
 use Astral\Serialize\Enums\TypeKindEnum;
-use Astral\Serialize\Resolvers\PropertyInputValueResolver;
+use Astral\Serialize\Resolvers\InputResolver;
 use Astral\Serialize\SerializeContainer;
 use Astral\Serialize\Support\Collections\DataCollection;
 use Astral\Serialize\Support\Collections\GroupDataCollection;
@@ -39,7 +39,7 @@ test('resolve correctly maps values for collect object type', function () {
 
     $values = ['value1', 'value2'];
 
-    $resolverMock = Mockery::mock(PropertyInputValueResolver::class);
+    $resolverMock = Mockery::mock(InputResolver::class);
     $this->serializeContainerMock->shouldReceive('propertyInputValueResolver')->andReturn($resolverMock);
 
     $resolverMock->shouldReceive('resolve')->with('SomeClass', $child, 'value1')->andReturn('resolved1');
@@ -60,7 +60,7 @@ test('resolve returns single resolved value for non-collect object type', functi
 
     $child->shouldReceive('getClassName')->andReturn('SomeClass');
 
-    $resolverMock = Mockery::mock(PropertyInputValueResolver::class);
+    $resolverMock = Mockery::mock(InputResolver::class);
     SerializeContainer::get()->shouldReceive('propertyInputValueResolver')->andReturn($resolverMock);
 
     $resolverMock->shouldReceive('resolve')->with('SomeClass', $child, 'value')->andReturn('resolved_value');

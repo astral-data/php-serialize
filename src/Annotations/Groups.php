@@ -7,7 +7,7 @@ namespace Astral\Serialize\Annotations;
 use Attribute;
 use UnitEnum;
 
-#[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_CLASS)]
+#[Attribute(Attribute::TARGET_PROPERTY)]
 class Groups
 {
     public array $names;

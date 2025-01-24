@@ -44,7 +44,8 @@ class GroupResolver
      */
     public function resolveExistsGroupsByDataCollection(DataCollection $collection, array $groups, string $defaultGroup): bool
     {
-        if (!$collection->getGroups() && count($groups) == 1 && current($groups) === $defaultGroup) {
+        // default group
+        if (count($groups) == 1 && current($groups) === $defaultGroup) {
             return true;
         }
 

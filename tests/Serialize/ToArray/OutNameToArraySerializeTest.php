@@ -1,6 +1,6 @@
 <?php
 
-use Astral\Serialize\Annotations\DataCollection\OutName;
+use Astral\Serialize\Annotations\DataCollection\OutputName;
 use Astral\Serialize\Serialize;
 use Astral\Serialize\Support\Mappers\CamelCaseMapper;
 use Astral\Serialize\Support\Mappers\SnakeCaseMapper;
@@ -9,24 +9,24 @@ beforeAll(function () {
 
     class OutNameObject extends Serialize
     {
-        #[OutName('test_name')]
+        #[OutputName('test_name')]
         public ?string $oneText;
 
-        #[OutName(CamelCaseMapper::class)]
+        #[OutputName(CamelCaseMapper::class)]
         public ?string $two_text;
 
-        #[OutName(SnakeCaseMapper::class)]
+        #[OutputName(SnakeCaseMapper::class)]
         public ?string $threeText;
     }
 
-    #[OutName(CamelCaseMapper::class)]
+    #[OutputName(CamelCaseMapper::class)]
     class OutNameAllCamelMapper extends Serialize
     {
         public string $one_text;
         public string $two_text;
     }
 
-    #[OutName(SnakeCaseMapper::class)]
+    #[OutputName(SnakeCaseMapper::class)]
     class OutNameAllSnakeMapper extends Serialize
     {
         public string $oneText;
@@ -34,10 +34,10 @@ beforeAll(function () {
 
     }
 
-    #[OutName(SnakeCaseMapper::class)]
+    #[OutputName(SnakeCaseMapper::class)]
     class OutNameAllSnakeAndDataOutNameMapper extends Serialize
     {
-        #[OutName('test_name')]
+        #[OutputName('test_name')]
         public string $oneText;
 
     }
@@ -90,7 +90,7 @@ it('test class OutNameAllSnakeAndDataOutNameMapper from Serialize class', functi
 
 });
 
-it('test OutName from Serialize class', function () {
+it('test OutputName from Serialize class', function () {
 
     $object     = new OutNameObject();
     $res        =  $object->toArray();

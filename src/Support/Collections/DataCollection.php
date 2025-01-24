@@ -124,6 +124,9 @@ class DataCollection
 
     public function isInputIgnoreByGroups(array $groups): bool
     {
+        
+
+        
         foreach ($groups as $group) {
             if (in_array($group, $this->inputIgnoreGroups)) {
                 return true;
@@ -149,7 +152,7 @@ class DataCollection
             $vols =  isset($this->outNames[$group]) ? array_merge($vols, $this->outNames[$group]) : $vols;
         }
 
-        return  array_unique($vols);
+        return  $vols ? array_unique($vols) : [$this->name];
     }
 
     public function isOutIgnoreByGroups(array $groups): bool

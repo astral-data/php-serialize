@@ -2,22 +2,22 @@
 
 namespace Astral\Serialize\Support\Context;
 
-use Astral\Serialize\Exceptions\NotFoundGroupException;
-use Astral\Serialize\Faker\FakerResolver;
-use Astral\Serialize\Resolvers\DataCollectionCastResolver;
-use Astral\Serialize\Resolvers\GroupResolver;
-use Astral\Serialize\Resolvers\PropertyInputValueResolver;
-use Astral\Serialize\Resolvers\PropertyToArrayResolver;
+use RuntimeException;
+use ReflectionProperty;
 use Astral\Serialize\Serialize;
+use Psr\SimpleCache\CacheInterface;
 use Astral\Serialize\SerializeContainer;
+use Astral\Serialize\Faker\FakerResolver;
+use Astral\Serialize\Resolvers\GroupResolver;
+use Astral\Serialize\Resolvers\InputResolver;
+use Psr\SimpleCache\InvalidArgumentException;
+use Astral\Serialize\Resolvers\OutputResolver;
+use Astral\Serialize\Exceptions\NotFoundGroupException;
 use Astral\Serialize\Support\Collections\DataCollection;
 use Astral\Serialize\Support\Collections\GroupDataCollection;
-use Astral\Serialize\Support\Collections\Manager\ConstructDataCollectionManager;
+use Astral\Serialize\Resolvers\Casts\DataCollectionCastResolver;
 use Astral\Serialize\Support\Instance\ReflectionClassInstanceManager;
-use Psr\SimpleCache\CacheInterface;
-use Psr\SimpleCache\InvalidArgumentException;
-use ReflectionProperty;
-use RuntimeException;
+use Astral\Serialize\Support\Collections\Manager\ConstructDataCollectionManager;
 
 /**
  * @template T
@@ -35,9 +35,9 @@ class SerializeContext
         private readonly GroupResolver                  $groupResolver,
         private readonly DataCollectionCastResolver     $dataCollectionCastResolver,
         private readonly ConstructDataCollectionManager $constructDataCollectionManager,
-        private readonly PropertyInputValueResolver     $propertyInputValueResolver,
-        private readonly PropertyToArrayResolver        $propertyToArrayResolver,
-        private readonly FakerResolver         $fakerResolver,
+        private readonly InputResolver                  $propertyInputValueResolver,
+        private readonly OutputResolver                 $propertyToArrayResolver,
+        private readonly FakerResolver                  $fakerResolver,
     ) {
 
     }

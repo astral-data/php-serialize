@@ -1,14 +1,14 @@
 <?php
 
-namespace Astral\Serialize\Resolvers;
+namespace Astral\Serialize\Resolvers\Casts;
 
-use Astral\Serialize\Contracts\Attribute\OutValueCastInterface;
-use Astral\Serialize\Support\Collections\DataCollection;
-use Astral\Serialize\Support\Config\ConfigManager;
-use Astral\Serialize\Support\Context\OutContext;
 use InvalidArgumentException;
+use Astral\Serialize\Support\Context\OutContext;
+use Astral\Serialize\Support\Config\ConfigManager;
+use Astral\Serialize\Support\Collections\DataCollection;
+use Astral\Serialize\Contracts\Attribute\OutValueCastInterface;
 
-class OutValueCastResolver
+class OutputCastResolver
 {
     public function __construct(
         private readonly ConfigManager $configManager

@@ -3,7 +3,7 @@
 namespace Astral\Serialize\Tests\TestTypeDoc;
 
 use Astral\Serialize\Annotations\DataCollection\InputName;
-use Astral\Serialize\Annotations\DataCollection\OutIgnore;
+use Astral\Serialize\Annotations\DataCollection\OutputIgnore;
 use Astral\Serialize\Serialize;
 use Astral\Serialize\Tests\TestTypeDoc\Both\BothTypeDoc;
 use Astral\Serialize\Tests\TestTypeDoc\Other\OtherTypeDoc;
@@ -12,7 +12,7 @@ use Astral\Serialize\Tests\TestTypeDoc\Other\ReqOtherEnum;
 class TypeOneDoc extends Serialize
 {
     #[InputName('input_name')]
-    #[OutIgnore]
+    #[OutputIgnore]
     /** @var OtherTypeDoc[] $type_collect_object */
     public array $type_collect_object;
 

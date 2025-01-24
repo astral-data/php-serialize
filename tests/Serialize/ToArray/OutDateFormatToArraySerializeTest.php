@@ -1,6 +1,6 @@
 <?php
 
-use Astral\Serialize\Annotations\Out\OutDateFormat;
+use Astral\Serialize\Annotations\Out\OutputDateFormat;
 use Astral\Serialize\Serialize;
 use Carbon\Carbon;
 
@@ -8,16 +8,16 @@ beforeAll(function () {
 
     class TestOutDateFormat extends Serialize
     {
-        #[OutDateFormat('d/m/Y')]
+        #[OutputDateFormat('d/m/Y')]
         public string $date_1;
 
-        #[OutDateFormat]
+        #[OutputDateFormat]
         public string $date_2;
 
-        #[OutDateFormat('d/m/Y H:i:s')]
+        #[OutputDateFormat('d/m/Y H:i:s')]
         public DateTime $date_3;
 
-        #[OutDateFormat('d/m/Y')]
+        #[OutputDateFormat('d/m/Y')]
         public Carbon $date_4;
 
         public DateTime $date_5;

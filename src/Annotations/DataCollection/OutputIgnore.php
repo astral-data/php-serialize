@@ -11,7 +11,7 @@ use ReflectionProperty;
 use UnitEnum;
 
 #[Attribute(Attribute::TARGET_PROPERTY)]
-class OutIgnore implements DataCollectionCastInterface
+class OutputIgnore implements DataCollectionCastInterface
 {
     public array $groups;
 
@@ -29,6 +29,6 @@ class OutIgnore implements DataCollectionCastInterface
 
     public function resolve(DataCollection $dataCollection, ReflectionProperty|null $property = null): void
     {
-        $dataCollection->setOutIgnoreGroups($this->groups ?? [$dataCollection->getParentGroupCollection()->getClassName()]);
+        $dataCollection->setOutIgnoreGroups($this->groups ?: [$dataCollection->getParentGroupCollection()->getClassName()]);
     }
 }

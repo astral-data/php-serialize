@@ -2,18 +2,19 @@
 
 namespace Astral\Serialize\Resolvers;
 
-use Astral\Serialize\Support\Collections\DataCollection;
-use Astral\Serialize\Support\Collections\GroupDataCollection;
-use Astral\Serialize\Support\Context\ChooseSerializeContext;
 use Astral\Serialize\Support\Context\OutContext;
+use Astral\Serialize\Resolvers\Casts\OutputCastResolver;
+use Astral\Serialize\Support\Collections\DataCollection;
+use Astral\Serialize\Support\Context\ChooseSerializeContext;
+use Astral\Serialize\Support\Collections\GroupDataCollection;
 use Astral\Serialize\Support\Instance\ReflectionClassInstanceManager;
 
-class PropertyToArrayResolver
+class OutputResolver
 {
     public function __construct(
         protected readonly ReflectionClassInstanceManager $reflectionClassInstanceManager,
-        private readonly OutValueCastResolver $outValueCastResolver,
-        protected readonly GroupResolver $groupResolver,
+        private readonly OutputCastResolver               $outValueCastResolver,
+        protected readonly GroupResolver                  $groupResolver,
     ) {
 
     }
@@ -30,12 +31,11 @@ class PropertyToArrayResolver
 
         $properties = $groupCollection->getProperties();
 
+
         $toArray  = [];
         foreach ($properties as $collection) {
 
-
             $matchData = $this->matchNameAndValue($chooseContext, $collection, $object);
-
             if ($matchData === false) {
                 continue;
             }

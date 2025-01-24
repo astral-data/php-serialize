@@ -20,11 +20,11 @@ abstract class Serialize
         return  $this;
     }
 
-    public static function setGroups(array $groups): SerializeContext
+    public static function setGroups(array|string $groups): SerializeContext
     {
         /** @var SerializeContext<static> $serializeContext */
         $serializeContext = ContextFactory::build(static::class);
-        return $serializeContext->setGroups($groups);
+        return $serializeContext->setGroups((array)$groups);
     }
 
     public function toArray(): array

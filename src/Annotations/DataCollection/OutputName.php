@@ -12,7 +12,7 @@ use Attribute;
 use ReflectionProperty;
 
 #[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_CLASS | Attribute::IS_REPEATABLE)]
-class OutName implements DataCollectionCastInterface
+class OutputName implements DataCollectionCastInterface
 {
     public function __construct(public string|NameMapper $name, public array|string $groups = [])
     {
