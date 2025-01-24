@@ -1,6 +1,6 @@
 <?php
 
-use Astral\Serialize\Annotations\Out\OutputDateFormat;
+use Astral\Serialize\Annotations\Output\OutputDateFormat;
 use Astral\Serialize\Serialize;
 use Carbon\Carbon;
 

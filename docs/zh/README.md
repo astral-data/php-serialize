@@ -413,7 +413,6 @@ $createArray = $user2->toArray();
 //     'name' => '李四',
 //     'username' => 'username',
 //     'email' => 'zhangsan@example.com',
-//     'noGroupInfo' => '默认分组信息'
 // ]
 
 // 使用 update 分组更新用户 只会接受group为update的数据信息
@@ -434,7 +433,6 @@ $updateArray = $user3->toArray();
 //     'id' => '1',
 //     'name' => '李四',
 //     'score' => 100,
-//     'noGroupInfo' => '默认分组信息'
 // ]
 
 // 使用 detail 和 other 展示用户 会接受group为detail和other的数据信息
@@ -458,7 +456,6 @@ $multiGroupArray = $user4->toArray();
 //     'score' => 100,
 //     'email' => 'zhangsan@example.com',
 //     'sensitiveData' => '机密信息',
-//     'noGroupInfo' => '默认分组信息'
 // ]
 ```
 
@@ -645,7 +642,7 @@ $complexUserArray = $complexUser->toArray();
 // ]
 ```
 
-##### 命名映射高级用法
+##### Mapper映射
 
 ```php
 use Astral\Serialize\Attributes\InputName;
@@ -729,6 +726,11 @@ $userArray = $user->toArray();
 //     'userId' => 123,
 //     'registeredAt' => '2023-01-01'
 // ]
+```
+
+###### 局部属性可以覆盖全局映射
+
+```php
 
 // 局部属性可以覆盖全局映射
 #[InputName(SnakeCaseMapper::class)]
@@ -752,7 +754,9 @@ $partialUser->toArray();
 // ]
 ```
 
-##### 全局类映射的分组使用
+###### 全局类映射的分组使用
+
+需要搭配`Groups`注解一起使用
 
 ```php
 use Astral\Serialize\Attributes\Groups;
@@ -855,6 +859,7 @@ use Astral\Serialize\Attributes\InputIgnore;
 use Astral\Serialize\Attributes\OutputIgnore;
 use Astral\Serialize\Serialize;
 
+
 class User extends Serialize {
 
     public string $name;
@@ -888,34 +893,65 @@ $userArray = $user->toArray();
 
 ##### 分组忽略
 
+忽略分组需要搭配Groups注解一起使用
+
 ```php
-use Astral\Serialize\Attributes\InputIgnore;
-use Astral\Serialize\Attributes\OutputIgnore;
+use Astral\Serialize\Attributes\Input\InputIgnore;
+use Astral\Serialize\Attributes\Output\OutputIgnore;
 use Astral\Serialize\Serialize;
+use Astral\Serialize\Attributes\Groups;
 
 class ComplexUser extends Serialize {
    
-
-    #[Group('admin','public')]
+    #[Groups('admin','public')]
     #[InputIgnore('admin')]
     public string $name;
 
-    #[Group('admin','public')]
+    #[Groups('admin','public')]
     #[OutputIgnore('public')]
     public string $secretKey;
 
-    // 支持分组忽略
+    #[Groups('admin','public')]
     #[InputIgnore('admin')]
     #[OutputIgnore('public')]
-    #[Group('admin','public')]
     public string $sensitiveInfo;
+
+    #[InputIgnore]
+    public string $globalInputIgnore;
+
+     #[OutputIgnore]
+    public string $globalOutputIgnore;
 }
+
+// 默认分组
+$complexUser = ComplexUser::from([
+    'name' => '张三',
+    'secretKey' => 'confidential',
+    'sensitiveInfo' => '机密信息',
+    'globalInputIgnore' => '全局输入忽略',
+    'globalOutputIgnore' => '全局输出忽略'
+]);
+
+echo $complexUser->globalInputIgnore; // 输出 ‘’
+echo $complexUser->globalOutputIgnore; // 输出 ‘全局输出忽略’
+
+$complexUser = $complexUser->toArray();
+// $complexUser 的内容:
+// [
+//    'name' => '张三',
+//    'secretKey' => 'confidential',
+//    'sensitiveInfo' => '机密信息',
+//    'globalInputIgnore' => '',
+// ]
+
 
 // 使用admin分组
 $complexUser = ComplexUser::setGroups('admin')->from([
     'name' => '张三',
     'secretKey' => 'confidential',
     'sensitiveInfo' => '机密信息'
+    'globalInputIgnore' => '全局输入忽略',
+    'globalOutputIgnore' => '全局输出忽略'
 ]);
 
 $complexUser = $complexUser->toArray();
@@ -923,6 +959,7 @@ $complexUser = $complexUser->toArray();
 // [
 //     'name' => '',
 //     'secretKey' => 'confidential',
+// 'globalInputIgnore' => '',
 // ]
 
 // 使用public分组
@@ -930,12 +967,15 @@ $complexUser = ComplexUser::setGroups('public')->from([
     'name' => '张三',
     'secretKey' => 'confidential',
     'sensitiveInfo' => '机密信息'
+    'globalInputIgnore' => '全局输入忽略',
+    'globalOutputIgnore' => '全局输出忽略'
 ]);
 
 $complexUser = $complexUser->toArray();
 // $complexUser 的内容:
 // [
 //     'name' => '张三',
+///    'globalInputIgnore' => '',
 // ]
 ```
 
@@ -954,8 +994,8 @@ $complexUser = $complexUser->toArray();
 ##### 基础使用
 
 ```php
-use Astral\Serialize\Attributes\InputDateFormat;
-use Astral\Serialize\Attributes\OutputDateFormat;
+use Astral\Serialize\Attributes\Input\InputDateFormat;
+use Astral\Serialize\Attributes\Output\OutputDateFormat;
 use Astral\Serialize\Serialize;
 
 class TimeExample extends Serialize {
@@ -980,7 +1020,7 @@ class TimeExample extends Serialize {
 }
 
 // 创建订单对象
-$order = Order::from([
+$order = TimeExample::from([
     'dateTime' => new DateTime('2023-08-11'),           // 输入格式：Y-m-d
     'dateDateString' => '2023-08-15',           // 输入格式：Y-m-d
     'processedAt' => '2023-08-16 14:30',   // 输入默认格式 也支持DateTime对象
@@ -1001,6 +1041,11 @@ $orderArray = $order->toArray();
 ##### 带时区的时间转换
 
 ```php
+
+use Astral\Serialize\Attributes\Input\InputDateFormat;
+use Astral\Serialize\Attributes\Output\OutputDateFormat;
+use Astral\Serialize\Serialize;
+
 class AdvancedTimeUser extends Serialize {
     // 支持时区转换
     #[InputDateFormat('Y-m-d H:i:s', timezone: 'UTC')]

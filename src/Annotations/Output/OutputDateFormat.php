@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Astral\Serialize\Annotations\Out;
+namespace Astral\Serialize\Annotations\Output;
 
 use DateMalformedStringException;
 use DateInvalidTimeZoneException;
