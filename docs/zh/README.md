@@ -1400,6 +1400,7 @@ $complexUserListFakerArray = $complexUserListFaker->toArray();
 //     'users' => [
 //         ['name' => 'RandomNickname', 'email' => 'RandomEmail@example.com']
 //         ['name' => 'RandomNickname', 'email' => 'RandomEmail@example.com']
+//         ['name' => 'RandomNickname', 'email' => 'RandomEmail@example.com']
 //     ]
 // ]
 ```
