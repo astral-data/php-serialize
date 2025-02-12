@@ -899,35 +899,39 @@ use Astral\Serialize\Support\Mappers\{
 };
 use Astral\Serialize\Serialize;
 
+#[Groups('profile','api')]
 class User extends Serialize {
     // 直接指定映射名称
-    #[InputName('user_name')]
-    #[OutputName('userName')]
+    #[InputName('user_name', groups: ['profile','api'])]
+    #[OutputName('userName', groups: ['profile','api'])]
     public string $name;
 
     // 使用映射器进行风格转换
-    #[InputName(CamelCaseMapper::class)]
-    #[OutputName(SnakeCaseMapper::class)]
+    #[InputName(CamelCaseMapper::class, groups: ['profile','api'])]
+    #[OutputName(SnakeCaseMapper::class, groups: ['profile','api'])]
     public int $userId;
 
     // 支持多个映射和分组
-    #[InputName('email', groups: 'profile')]
-    #[OutputName('userEmail', groups: 'api')]
+    #[InputName('profile-email', groups: 'profile')]
+    #[OutputName('userEmail', groups: 'profile')]
     public string $email;
 }
 
 // 使用不同的映射策略
-$user = User::from([
+$user = User::setGroups('profile')::from([
     'user_name' => '张三',       // 映射到 $name
-    'user_id' => 123,           // 使用 CamelCaseMapper 转换
-    'email' => 'user@example.com' // 仅在 'profile' 分组生效
+    'userId' => 123,           // 使用 CamelCaseMapper 转换
+    'profile-email' => 'user@example.com' // 仅在 'profile' 分组生效
 ]);
 
 // 输出时应用不同的映射
-$userArray = $user->toArray(
-    inputGroups: ['profile'],   // 仅使用 profile 分组的输入映射
-    outputGroups: ['api']       // 仅使用 api 分组的输出映射
-);
+$userArray = $user->toArray();
+// $userArray 的内容:
+// [
+//     'userName' => '张三',
+//     'user_id' => '三',
+//     'userEmail' => user@example.com,
+// ]
 ```
   
 ##### 全局类映射
