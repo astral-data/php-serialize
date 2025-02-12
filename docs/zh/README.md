@@ -841,6 +841,7 @@ $user = MultiOutputUser::from([
 ]);
 
 // 转换为数组
+// tips: 因为id 有多个outputname 所以输出了 ['user_id','id','userId']
 $userArray = $user->toArray();
 // $userArray 的内容:
 // [
