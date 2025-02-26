@@ -723,7 +723,7 @@ class ComplexNestedInfo extends Serialize {
     public string $currency;
 }
 
-// ComplexNestedInfo 会隐藏currency
+// ComplexNestedInfo 会自动隐藏currency
 $adminUser = ComplexUser::from(
     name: '张三',
     sex: 1,
