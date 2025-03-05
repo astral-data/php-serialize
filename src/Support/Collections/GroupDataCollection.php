@@ -56,7 +56,7 @@ class GroupDataCollection
     {
         $inputNames = [];
         foreach ($this->properties as $property) {
-            $inputNames = array_merge($inputNames, $property->getInputNamesByGroups($groups, $defaultGroup));
+            $inputNames = [...$inputNames, ...$property->getInputNamesByGroups($groups, $defaultGroup)];
         }
         return array_values(array_unique($inputNames));
     }

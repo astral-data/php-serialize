@@ -27,7 +27,7 @@ class InputValueEnumCast implements InputValueCastInterface
 
         $types = $collection->getTypes();
         foreach ($types as $type) {
-            if ($type->kind != TypeKindEnum::ENUM) {
+            if ($type->kind !== TypeKindEnum::ENUM) {
                 continue;
             }
             $enumInstance  = $this->findEnumInstance($type->className, $value);
@@ -36,7 +36,7 @@ class InputValueEnumCast implements InputValueCastInterface
             }
         }
 
-        if (count($types) == 1) {
+        if (count($types) === 1) {
             throw new ValueCastError(
                 sprintf(
                     'Enum value "%s" not found in EnumClass: %s',
@@ -73,7 +73,7 @@ class InputValueEnumCast implements InputValueCastInterface
     private function hasEnumType(DataCollection $collection): bool
     {
         foreach ($collection->getTypes() as $type) {
-            if ($type->kind == TypeKindEnum::ENUM) {
+            if ($type->kind === TypeKindEnum::ENUM) {
                 return true;
             }
         }

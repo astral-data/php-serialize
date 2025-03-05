@@ -24,11 +24,10 @@ class InputArrayBestMatchChildCast implements InputValueCastInterface
      * @param $value
      * @param DataCollection $collection
      * @param InputValueContext $context
-     * @return mixed
-     * @throws NotFoundAttributePropertyResolver
+     * @return array
      * @throws ReflectionException
      */
-    public function resolve($value, DataCollection $collection, InputValueContext $context): mixed
+    public function resolve($value, DataCollection $collection, InputValueContext $context): array
     {
         $children       = $collection->getChildren();
 

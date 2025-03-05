@@ -17,8 +17,9 @@ class ConstructDataCollectionManager
 
         $vols = [];
         foreach ($params as $param) {
-            $vols[$param->getName()] = new ConstructDataCollection(
-                name: $param->getName(),
+            $name = $param->getName();
+            $vols[$name] = new ConstructDataCollection(
+                name: $name,
                 isPromoted: $param->isPromoted(),
                 isOptional: $param->isOptional(),
                 isNull: $param->allowsNull(),

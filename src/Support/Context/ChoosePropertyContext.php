@@ -17,13 +17,19 @@ class ChoosePropertyContext
     public function __construct(
         private readonly string $name,
         private readonly ?ChooseSerializeContext $parent = null,
+        private readonly DataCollection $dataCollection,
     ) {
 
     }
 
-    public static function build(DataCollection $collection, ChooseSerializeContext $context): ChoosePropertyContext
+    public static function build(DataCollection $collection, ChooseSerializeContext $context,DataCollection $dataCollection): ChoosePropertyContext
     {
-        return new self($collection->getName(), $context);
+        return new self($collection->getName(), $context, $dataCollection);
+    }
+
+    public function getDataCollection() : DataCollection
+    {
+        return $this->dataCollection;
     }
 
     public function getParent(): ?ChooseSerializeContext
@@ -36,7 +42,7 @@ class ChoosePropertyContext
         return $this->name;
     }
 
-    public function getInputName(): string
+    public function getInputName(): ?string
     {
         return $this->inputName;
     }
@@ -44,6 +50,16 @@ class ChoosePropertyContext
     public function setInputName(?string $inputName): void
     {
         $this->inputName = $inputName;
+    }
+
+    public function getOutPutNames() : array
+    {
+        return $this->outputName;
+    }
+
+    public function setOutPutNames(array $outPutNames): void
+    {
+        $this->outputName = $outPutNames;
     }
 
     public function getType(): ?TypeCollection

@@ -25,7 +25,7 @@ class GroupResolver
     public function resolveExistsGroupsByClass(ReflectionClass $reflection, string $defaultGroup, array $groups): bool
     {
         $availableGroups = array_merge([$defaultGroup], $this->getDefaultGroups($reflection));
-        $invalidGroups   = array_filter($groups, fn ($group) => !in_array($group, $availableGroups, true));
+        $invalidGroups   = array_filter($groups, static fn ($group) => !in_array($group, $availableGroups, true));
 
         if ($invalidGroups) {
             throw new NotFoundGroupException(sprintf(
@@ -45,12 +45,12 @@ class GroupResolver
     public function resolveExistsGroupsByDataCollection(DataCollection $collection, array $groups, string $defaultGroup): bool
     {
         // default group
-        if (count($groups) == 1 && current($groups) === $defaultGroup) {
+        if (count($groups) === 1 && current($groups) === $defaultGroup) {
             return true;
         }
 
         foreach ($groups as $group) {
-            if (in_array($group, $collection->getGroups())) {
+            if (in_array($group, $collection->getGroups(), true)) {
                 return true;
             }
         }
@@ -69,9 +69,8 @@ class GroupResolver
         }
 
         $groups = $this->getGroupsTo($reflection);
-
         foreach ($reflection->getProperties() as $property) {
-            $groups =   array_merge($groups, $this->getGroupsTo($property));
+            $groups =  [...$groups, ...$this->getGroupsTo($property)];
         }
 
         $groups = array_unique($groups);

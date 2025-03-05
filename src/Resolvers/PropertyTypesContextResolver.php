@@ -38,7 +38,7 @@ class PropertyTypesContextResolver
         /** @var Var_ $varTag */
         $varTag = $varTags[0];
 
-        $tag = $varTag->getType() ?? null;
+        $tag = $varTag->getType();
         if (!$tag) {
             return null; // 如果没有类型信息，返回 null
         }

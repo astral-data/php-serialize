@@ -2,30 +2,30 @@
 
 namespace Astral\Serialize;
 
-use Faker\Factory;
-use Faker\Generator;
-use Astral\Serialize\Faker\FakerResolver;
-use phpDocumentor\Reflection\TypeResolver;
+use Astral\Serialize\Casts\InputConstructCast;
 use Astral\Serialize\Faker\FakerCastResolver;
+use Astral\Serialize\Faker\FakerResolver;
+use Astral\Serialize\Faker\Rule\FakerDefaultRules;
+use Astral\Serialize\Resolvers\Casts\DataCollectionCastResolver;
+use Astral\Serialize\Resolvers\Casts\InputValueCastResolver;
+use Astral\Serialize\Resolvers\Casts\OutputCastResolver;
 use Astral\Serialize\Resolvers\GroupResolver;
 use Astral\Serialize\Resolvers\InputResolver;
-use phpDocumentor\Reflection\DocBlockFactory;
-use Astral\Serialize\Casts\InputConstructCast;
 use Astral\Serialize\Resolvers\OutputResolver;
-use Astral\Serialize\Faker\Rule\FakerDefaultRules;
-use Astral\Serialize\Support\Config\ConfigManager;
-use phpDocumentor\Reflection\Types\ContextFactory;
-use Astral\Serialize\Support\Factories\CacheFactory;
-use Astral\Serialize\Support\Context\SerializeContext;
-use Astral\Serialize\Resolvers\Casts\OutputCastResolver;
 use Astral\Serialize\Resolvers\PropertyTypeDocResolver;
-use Astral\Serialize\Resolvers\Casts\InputValueCastResolver;
 use Astral\Serialize\Resolvers\PropertyTypesContextResolver;
-use Astral\Serialize\Resolvers\Casts\DataCollectionCastResolver;
-use Astral\Serialize\Support\Instance\SerializeInstanceManager;
-use Astral\Serialize\Support\Instance\ReflectionClassInstanceManager;
-use Astral\Serialize\Support\Collections\Manager\TypeCollectionManager;
 use Astral\Serialize\Support\Collections\Manager\ConstructDataCollectionManager;
+use Astral\Serialize\Support\Collections\Manager\TypeCollectionManager;
+use Astral\Serialize\Support\Config\ConfigManager;
+use Astral\Serialize\Support\Context\SerializeContext;
+use Astral\Serialize\Support\Factories\CacheFactory;
+use Astral\Serialize\Support\Instance\ReflectionClassInstanceManager;
+use Astral\Serialize\Support\Instance\SerializeInstanceManager;
+use Faker\Factory;
+use Faker\Generator;
+use phpDocumentor\Reflection\DocBlockFactory;
+use phpDocumentor\Reflection\TypeResolver;
+use phpDocumentor\Reflection\Types\ContextFactory;
 
 class SerializeContainer
 {
@@ -41,10 +41,10 @@ class SerializeContainer
     protected ?ReflectionClassInstanceManager $reflectionClassInstanceManager               = null;
     protected ?SerializeInstanceManager $serializeInstanceManager                           = null;
     protected ?DataCollectionCastResolver $attributePropertyResolver                        = null;
-    protected ?InputResolver $propertyInputValueResolver                       = null;
-    protected ?OutputResolver $propertyToArrayResolver                             = null;
+    protected ?InputResolver $propertyInputValueResolver                                    = null;
+    protected ?OutputResolver $propertyToArrayResolver                                      = null;
     protected ?InputValueCastResolver $inputValueCastResolver                               = null;
-    protected ?OutputCastResolver $outValueCastResolver                                   = null;
+    protected ?OutputCastResolver $outValueCastResolver                                     = null;
     protected ?InputConstructCast $inputConstructCast                                       = null;
     protected ?ConstructDataCollectionManager $constructDataCollectionManager               = null;
     protected ?Generator $faker                                                             = null;

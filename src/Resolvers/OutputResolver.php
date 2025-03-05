@@ -2,11 +2,12 @@
 
 namespace Astral\Serialize\Resolvers;
 
-use Astral\Serialize\Support\Context\OutContext;
 use Astral\Serialize\Resolvers\Casts\OutputCastResolver;
 use Astral\Serialize\Support\Collections\DataCollection;
-use Astral\Serialize\Support\Context\ChooseSerializeContext;
 use Astral\Serialize\Support\Collections\GroupDataCollection;
+use Astral\Serialize\Support\Context\ChoosePropertyContext;
+use Astral\Serialize\Support\Context\ChooseSerializeContext;
+use Astral\Serialize\Support\Context\OutContext;
 use Astral\Serialize\Support\Instance\ReflectionClassInstanceManager;
 
 class OutputResolver
@@ -35,11 +36,14 @@ class OutputResolver
         $toArray  = [];
         foreach ($properties as $collection) {
 
+            $name = $collection->getName();
             $matchData = $this->matchNameAndValue($chooseContext, $collection, $object);
             if ($matchData === false) {
                 continue;
             }
 
+            $chooseContext->addProperty(new ChoosePropertyContext($name, $chooseContext, $collection));
+            $chooseContext->getProperty($name)?->setOutPutNames($matchData['names']);
             $resolvedValue = $matchData['value'];
 
             $resolvedValue = $this->outValueCastResolver->resolve(

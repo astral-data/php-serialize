@@ -2,22 +2,22 @@
 
 namespace Astral\Serialize\Support\Context;
 
-use RuntimeException;
-use ReflectionProperty;
-use Astral\Serialize\Serialize;
-use Psr\SimpleCache\CacheInterface;
-use Astral\Serialize\SerializeContainer;
+use Astral\Serialize\Exceptions\NotFoundGroupException;
 use Astral\Serialize\Faker\FakerResolver;
+use Astral\Serialize\Resolvers\Casts\DataCollectionCastResolver;
 use Astral\Serialize\Resolvers\GroupResolver;
 use Astral\Serialize\Resolvers\InputResolver;
-use Psr\SimpleCache\InvalidArgumentException;
 use Astral\Serialize\Resolvers\OutputResolver;
-use Astral\Serialize\Exceptions\NotFoundGroupException;
+use Astral\Serialize\Serialize;
+use Astral\Serialize\SerializeContainer;
 use Astral\Serialize\Support\Collections\DataCollection;
 use Astral\Serialize\Support\Collections\GroupDataCollection;
-use Astral\Serialize\Resolvers\Casts\DataCollectionCastResolver;
-use Astral\Serialize\Support\Instance\ReflectionClassInstanceManager;
 use Astral\Serialize\Support\Collections\Manager\ConstructDataCollectionManager;
+use Astral\Serialize\Support\Instance\ReflectionClassInstanceManager;
+use Psr\SimpleCache\CacheInterface;
+use Psr\SimpleCache\InvalidArgumentException;
+use ReflectionProperty;
+use RuntimeException;
 
 /**
  * @template T
@@ -191,8 +191,9 @@ class SerializeContext
         $payloads = [];
         foreach ($payload as $field => $itemPayload) {
             $values   = is_numeric($field) && is_array($itemPayload) ? $itemPayload : [$field => $itemPayload];
-            $payloads = array_merge($payloads, $values);
+            $payloads = [...$payloads, ...$values];
         }
+        $payloads = array_unique($payloads);
 
         $this->chooseSerializeContext->setGroups($this->getGroups());
 

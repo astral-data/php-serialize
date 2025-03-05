@@ -52,7 +52,6 @@ class ConfigManager
         foreach ($this->outputValueCasts as $key => $cast) {
             $this->outputValueCasts[$key] = new $cast();
         }
-
     }
 
     public static function getInstance(): ConfigManager

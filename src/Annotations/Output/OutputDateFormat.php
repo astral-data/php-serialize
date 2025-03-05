@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Astral\Serialize\Annotations\Output;
 
-use DateMalformedStringException;
-use DateInvalidTimeZoneException;
 use Astral\Serialize\Contracts\Attribute\OutValueCastInterface;
 use Astral\Serialize\Support\Collections\DataCollection;
 use Astral\Serialize\Support\Context\OutContext;
 use Attribute;
+use DateInvalidTimeZoneException;
+use DateMalformedStringException;
 use DateTime;
 use DateTimeInterface;
 use DateTimeZone;
@@ -50,9 +50,9 @@ class OutputDateFormat implements OutValueCastInterface
 
         return match (true) {
             is_subclass_of($value, DateTimeInterface::class) => $this->formatDateTime($value, $timezone),
-            is_numeric($value) => $this->formatTimestamp((int)$value, $timezone),
+            is_numeric($value)                               => $this->formatTimestamp((int)$value, $timezone),
             is_string($value) && strtotime($value) !== false => $this->formatStringDate($value, $timezone),
-            default => null,
+            default                                          => null,
         };
     }
 

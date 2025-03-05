@@ -25,12 +25,12 @@ class PropertyTypeDocResolver
         $valueType = $type->getValueType();
 
         if ($valueType instanceof  Object_) {
-            $className =   ltrim($valueType->getFqsen()->__toString(), '\\');
+            $className =   ltrim($valueType->getFqsen()?->__toString(), '\\');
         } elseif ($valueType instanceof AggregatedType) {
             $className = [];
             foreach ($valueType as $type) {
                 $className[] = ltrim($type instanceof Object_
-                    ? $type->getFqsen()->__toString()
+                    ? $type->getFqsen()?->__toString()
                     : (string)$valueType, '\\');
             }
         } else {
@@ -48,7 +48,7 @@ class PropertyTypeDocResolver
     {
         return [
             'typeName'   => 'object',
-            'classNames' => [ltrim($type->getFqsen()->__toString(), '\\')],
+            'classNames' => [ltrim($type->getFqsen()?->__toString(), '\\')],
         ];
     }
 

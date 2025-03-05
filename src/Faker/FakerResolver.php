@@ -9,6 +9,7 @@ use Astral\Serialize\Support\Collections\DataCollection;
 use Astral\Serialize\Support\Collections\GroupDataCollection;
 use Astral\Serialize\Support\Context\ChooseSerializeContext;
 use Astral\Serialize\Support\Instance\ReflectionClassInstanceManager;
+use ReflectionException;
 
 class FakerResolver
 {
@@ -22,6 +23,9 @@ class FakerResolver
 
     }
 
+    /**
+     * @throws ReflectionException
+     */
     public function resolve(ChooseSerializeContext $chooseContext, GroupDataCollection $groupCollection)
     {
 

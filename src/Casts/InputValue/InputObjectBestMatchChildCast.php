@@ -19,7 +19,7 @@ class InputObjectBestMatchChildCast implements InputValueCastInterface
     public function match($value, DataCollection $collection, InputValueContext $context): bool
     {
         return $value
-            && (is_object($value) || is_array($value) && $this->getDimension($value) === 1)
+            && (is_object($value) || (is_array($value) && $this->getDimension($value) === 1))
             && count($collection->getChildren()) > 1 && $this->hasObjectType($collection);
     }
 
@@ -28,7 +28,6 @@ class InputObjectBestMatchChildCast implements InputValueCastInterface
      * @param DataCollection $collection
      * @param InputValueContext $context
      * @return mixed
-     * @throws NotFoundAttributePropertyResolver
      * @throws ReflectionException
      */
     public function resolve($value, DataCollection $collection, InputValueContext $context): mixed
@@ -65,7 +64,7 @@ class InputObjectBestMatchChildCast implements InputValueCastInterface
         $defaultGroup = $context->chooseSerializeContext->serializeClass;
 
         foreach ($collection->getTypes() as $type) {
-            if ($type->kind != TypeKindEnum::CLASS_OBJECT) {
+            if ($type->kind !== TypeKindEnum::CLASS_OBJECT) {
                 continue;
             }
 
@@ -89,7 +88,7 @@ class InputObjectBestMatchChildCast implements InputValueCastInterface
     private function hasObjectType(DataCollection $collection): bool
     {
         foreach ($collection->getTypes() as $type) {
-            if ($type->kind == TypeKindEnum::CLASS_OBJECT) {
+            if ($type->kind === TypeKindEnum::CLASS_OBJECT) {
                 return true;
             }
         }

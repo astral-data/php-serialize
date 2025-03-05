@@ -36,9 +36,13 @@ class TypeCollectionManager
 
         if ($typeDocBlock && ($type instanceof ReflectionUnionType || in_array($type?->getName(), ['array', 'object']))) {
             return $this->processDocCommentNamedType($typeDocBlock);
-        } elseif ($type instanceof ReflectionUnionType) {
+        }
+
+        if ($type instanceof ReflectionUnionType) {
             return $this->processUnionType($type, $property);
-        } elseif ($type instanceof ReflectionNamedType) {
+        }
+
+        if ($type instanceof ReflectionNamedType) {
             return [$this->processNamedType($type, $property)];
         }
 

@@ -2,10 +2,10 @@
 
 namespace Astral\Serialize\Resolvers\Casts;
 
-use InvalidArgumentException;
-use Astral\Serialize\Support\Config\ConfigManager;
-use Astral\Serialize\Support\Collections\DataCollection;
 use Astral\Serialize\Contracts\Attribute\DataCollectionCastInterface;
+use Astral\Serialize\Support\Collections\DataCollection;
+use Astral\Serialize\Support\Config\ConfigManager;
+use InvalidArgumentException;
 
 class DataCollectionCastResolver
 {

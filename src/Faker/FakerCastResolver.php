@@ -9,19 +9,8 @@ use InvalidArgumentException;
 
 class FakerCastResolver
 {
-    public function __construct(
-        private readonly ConfigManager $configManager
-    ) {
-
-    }
-
     public function resolve(DataCollection $dataCollection): mixed
     {
-
-        //        foreach ($this->configManager->getAttributePropertyResolver() as $cast) {
-        //            $cast->resolve($dataCollection);
-        //        }
-
         $attributes =  $dataCollection->getAttributes();
 
         if (!$attributes) {

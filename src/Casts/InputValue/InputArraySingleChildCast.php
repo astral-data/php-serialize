@@ -22,7 +22,6 @@ class InputArraySingleChildCast implements InputValueCastInterface
 
     /**
      * Resolve the input value for the given collection and context.
-     * @throws NotFoundAttributePropertyResolver
      * @throws ReflectionException
      */
     public function resolve(mixed $value, DataCollection $collection, InputValueContext $context): mixed
@@ -30,7 +29,7 @@ class InputArraySingleChildCast implements InputValueCastInterface
         $child     = current($collection->getChildren());
         $childType = $collection->getTypes()[0];
 
-        $context->chooseSerializeContext->getProperty($collection->getName())->setType($childType);
+        $context->chooseSerializeContext->getProperty($collection->getName())?->setType($childType);
 
         if ($childType->kind->isCollect()) {
             return $this->resolveArray($value, $child, $collection, $context);

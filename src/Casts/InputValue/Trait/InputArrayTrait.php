@@ -13,7 +13,6 @@ trait InputArrayTrait
 {
     /**
      * @throws ReflectionException
-     * @throws NotFoundAttributePropertyResolver
      */
     private function resolveArray(array $value, GroupDataCollection $child, DataCollection $collection, InputValueContext $context): array
     {
@@ -26,7 +25,6 @@ trait InputArrayTrait
     }
 
     /**
-     * @throws NotFoundAttributePropertyResolver
      * @throws ReflectionException
      */
     private function resolveSingle(mixed $value, GroupDataCollection $child, DataCollection $collection, InputValueContext $context): mixed
@@ -38,7 +36,6 @@ trait InputArrayTrait
     /**
      * Resolve a child collection.
      *
-     * @throws NotFoundAttributePropertyResolver
      * @throws ReflectionException
      */
     private function resolveChild(GroupDataCollection $child, mixed $value, InputValueContext $context, ChooseSerializeContext $chooseContext): mixed
@@ -57,11 +54,11 @@ trait InputArrayTrait
         if ($key !== null) {
             $context->chooseSerializeContext
                 ->getProperty($collection->getName())
-                ->addChildren($chooseContext, $key);
+                ?->addChildren($chooseContext, $key);
         } else {
             $context->chooseSerializeContext
                 ->getProperty($collection->getName())
-                ->addChildren($chooseContext);
+                ?->addChildren($chooseContext);
         }
 
         return $chooseContext;

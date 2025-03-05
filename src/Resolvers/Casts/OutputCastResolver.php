@@ -2,11 +2,11 @@
 
 namespace Astral\Serialize\Resolvers\Casts;
 
-use InvalidArgumentException;
-use Astral\Serialize\Support\Context\OutContext;
-use Astral\Serialize\Support\Config\ConfigManager;
-use Astral\Serialize\Support\Collections\DataCollection;
 use Astral\Serialize\Contracts\Attribute\OutValueCastInterface;
+use Astral\Serialize\Support\Collections\DataCollection;
+use Astral\Serialize\Support\Config\ConfigManager;
+use Astral\Serialize\Support\Context\OutContext;
+use InvalidArgumentException;
 
 class OutputCastResolver
 {

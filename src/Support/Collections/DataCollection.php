@@ -7,8 +7,6 @@ use ReflectionProperty;
 
 class DataCollection
 {
-    //    private array $tranFromResolvers = [];
-
     public function __construct(
         private readonly array               $groups,
         private readonly GroupDataCollection $parentGroupCollection,
@@ -105,7 +103,7 @@ class DataCollection
 
     public function getInputNamesByGroups(array $groups, string $defaultGroup): array
     {
-        if (count($groups) == 1 && current($groups) === $defaultGroup) {
+        if (count($groups) === 1 && current($groups) === $defaultGroup) {
             return $this->inputNames[$defaultGroup] ?? $this->inputNames['default'];
         }
 
@@ -124,11 +122,8 @@ class DataCollection
 
     public function isInputIgnoreByGroups(array $groups): bool
     {
-        
-
-        
         foreach ($groups as $group) {
-            if (in_array($group, $this->inputIgnoreGroups)) {
+            if (in_array($group, $this->inputIgnoreGroups, true)) {
                 return true;
             }
         }
@@ -143,7 +138,7 @@ class DataCollection
 
     public function getOutNamesByGroups(array $groups, string $defaultGroup): array
     {
-        if (count($groups) == 1 && current($groups) === $defaultGroup) {
+        if (count($groups) === 1 && current($groups) === $defaultGroup) {
             return $this->outNames[$defaultGroup] ?? $this->outNames['default'] ?? [$this->name];
         }
 
@@ -158,7 +153,7 @@ class DataCollection
     public function isOutIgnoreByGroups(array $groups): bool
     {
         foreach ($groups as $group) {
-            if (in_array($group, $this->outIgnoreGroups)) {
+            if (in_array($group, $this->outIgnoreGroups, true)) {
                 return true;
             }
         }
@@ -254,15 +249,4 @@ class DataCollection
             $this->children[$key] = $collection;
         }
     }
-
-    //    public function toArray(): array
-    //    {
-    //        return [
-    //            'name'         => $this->name,
-    //            'type'         => array_map(fn ($type) => $type->toArray(), $this->types),
-    //            'defaultValue' => $this->defaultValue,
-    //            'nullable'     => $this->isNullable,
-    //            'children'     => $this->children ? array_map(fn ($child) => $child->toArray(), $this->children) : null,
-    //        ];
-    //    }
 }

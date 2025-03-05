@@ -2,15 +2,15 @@
 
 namespace Astral\Serialize\Resolvers;
 
-use ReflectionException;
 use Astral\Serialize\Casts\InputConstructCast;
-use Astral\Serialize\Support\Context\InputValueContext;
-use Astral\Serialize\Support\Collections\DataCollection;
 use Astral\Serialize\Resolvers\Casts\InputValueCastResolver;
+use Astral\Serialize\Support\Collections\DataCollection;
+use Astral\Serialize\Support\Collections\GroupDataCollection;
 use Astral\Serialize\Support\Context\ChoosePropertyContext;
 use Astral\Serialize\Support\Context\ChooseSerializeContext;
-use Astral\Serialize\Support\Collections\GroupDataCollection;
+use Astral\Serialize\Support\Context\InputValueContext;
 use Astral\Serialize\Support\Instance\ReflectionClassInstanceManager;
+use ReflectionException;
 
 class InputResolver
 {
@@ -28,7 +28,6 @@ class InputResolver
      */
     public function resolve(ChooseSerializeContext $chooseContext, GroupDataCollection $groupCollection, array $payload)
     {
-
         $reflectionClass =  $this->reflectionClassInstanceManager->get($groupCollection->getClassName());
         $object          =  $reflectionClass->newInstanceWithoutConstructor();
 
@@ -47,24 +46,15 @@ class InputResolver
         foreach ($properties as $collection) {
 
             $name = $collection->getName();
-
-            $chooseContext->addProperty(new ChoosePropertyContext($name, $chooseContext));
             $matchInput = $this->matchInputNameAndValue($chooseContext, $collection, $groupCollection, $payload);
-
-            //            if($chooseContext->serializeClass == 'TestGroupSerialize' && in_array('test_2',$chooseContext->getGroups()) && $collection->getName() == 'type_object'){
-            //                var_dump($matchInput);
-            //            }
-
             if ($matchInput === false) {
                 continue;
             }
 
-            $chooseContext->getProperty($name)->setInputName($matchInput['name']);
-
-
+            $chooseContext->addProperty(new ChoosePropertyContext($name, $chooseContext, $collection));
+            $chooseContext->getProperty($name)?->setInputName($matchInput['name']);
 
             $resolvedValue = $matchInput['value'];
-
             $resolvedValue = $this->inputValueCastResolver->resolve(
                 value:$resolvedValue,
                 collection:$collection,
@@ -88,14 +78,9 @@ class InputResolver
 
     public function matchInputNameAndValue(ChooseSerializeContext $chooseContext, DataCollection $collection, GroupDataCollection $groupCollection, array $payloadKeys): array|false
     {
-
-
-
         $defaultGroup = $chooseContext->serializeClass;
         $groups       = $chooseContext->getGroups();
         $inputNames   = $collection->getInputNamesByGroups($groups, $defaultGroup);
-
-
 
         return !$this->groupResolver->resolveExistsGroupsByDataCollection($collection, $groups, $defaultGroup) || $collection->isInputIgnoreByGroups($groups)
             ? $this->getConstructPropertyValue($groupCollection, $collection, null)

@@ -7,6 +7,7 @@ use Astral\Serialize\Support\Collections\TypeCollection;
 use Astral\Serialize\Support\Factories\MapperFactory;
 use Astral\Serialize\Support\Mappers\SnakeCaseMapper;
 use Faker\Generator;
+use InvalidArgumentException;
 use UnitEnum;
 
 class FakerDefaultRules
@@ -73,14 +74,16 @@ class FakerDefaultRules
     private function matchRule(TypeKindEnum $type, string $name, array $rule): bool
     {
 
-        if (!in_array($type, $rule['type'])) {
+        if (!in_array($type, $rule['type'], true)) {
             return false;
         }
 
         // Match using regex or wildcard
         if ($rule['method'] === 'regex') {
             return preg_match($rule['pattern'], $name) === 1;
-        } elseif ($rule['method'] === 'wildcard') {
+        }
+
+        if ($rule['method'] === 'wildcard') {
             return fnmatch($rule['pattern'], $name);
         }
 
@@ -95,7 +98,7 @@ class FakerDefaultRules
     private function generateEnumValue(null|string|UnitEnum $enumClass): mixed
     {
         if (!is_string($enumClass) || !enum_exists($enumClass)) {
-            throw new \InvalidArgumentException('Invalid enum class provided for ENUM type.');
+            throw new InvalidArgumentException('Invalid enum class provided for ENUM type.');
         }
 
         $enumInstances = $enumClass::cases();

@@ -24,7 +24,7 @@ enum TypeKindEnum
 
     public function existsFakerClass(): bool
     {
-        return  $this == self::OBJECT || $this === self::CLASS_OBJECT || $this === self::COLLECT_SINGLE_OBJECT || $this === self::COLLECT_UNION_OBJECT;
+        return  $this === self::OBJECT || $this === self::CLASS_OBJECT || $this === self::COLLECT_SINGLE_OBJECT || $this === self::COLLECT_UNION_OBJECT;
     }
 
     public function isCollect(): bool
@@ -39,14 +39,19 @@ enum TypeKindEnum
 
     public static function getNameTo(string $type, ?string $className = null): self
     {
-
         if ($className && enum_exists($className)) {
             return self::ENUM;
-        } elseif ($className && $type == 'array_union' && class_exists($className)) {
+        }
+
+        if ($className && $type === 'array_union' && class_exists($className)) {
             return self::COLLECT_UNION_OBJECT;
-        } elseif ($className && $type == 'array' && class_exists($className)) {
+        }
+
+        if ($className && $type === 'array' && class_exists($className)) {
             return self::COLLECT_SINGLE_OBJECT;
-        } elseif ($className && class_exists($className) && $type != 'array') {
+        }
+
+        if ($className && class_exists($className) && $type !== 'array') {
             return self::CLASS_OBJECT;
         }
 
