@@ -16,7 +16,7 @@ An advanced PHP serialization tool leveraging attributes for flexible object-to-
 Install using Composer:
 
 ```bash
-composer require astral/serialize
+composer require astral/php-serialize
 ```
 
 ### Basic Usage
