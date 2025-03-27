@@ -193,7 +193,6 @@ class SerializeContext
             $values   = is_numeric($field) && is_array($itemPayload) ? $itemPayload : [$field => $itemPayload];
             $payloads = [...$payloads, ...$values];
         }
-        $payloads = array_unique($payloads);
 
         $this->chooseSerializeContext->setGroups($this->getGroups());
 
