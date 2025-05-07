@@ -639,6 +639,27 @@ $defaultArray = $user1->toArray();
 //     'noGroupInfo' => '默认分组信息'
 // ]
 
+// 指定分组内容输入
+$defaultArray = $user1->withGroups('create')->toArray();
+// 输出内容
+// [
+//     'name' => '李四',
+//     'username' => 'username',
+//     'email' => 'zhangsan@example.com',
+// ]
+
+$defaultArray = $user1->withGroups(['detail','other'])->toArray();
+// 输出内容
+// [
+//     'id' => '1',
+//     'name' => '李四',
+//     'username' => 'username',
+//     'score' => 100,
+//     'email' => 'zhangsan@example.com',
+//     'sensitiveData' => '机密信息',
+// ]
+
+
 // 使用 create 分组创建用户 只会接受group为create的数据信息
 $user2 = User::setGroups(['create'])->from(
     id:1,

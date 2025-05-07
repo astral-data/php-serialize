@@ -218,10 +218,7 @@ class SerializeContext
      */
     public function toArray(object $object): array
     {
-        if (!$this->getGroups()) {
-            $this->chooseSerializeContext->setGroups($this->getGroups());
-        }
-
+        $this->chooseSerializeContext->setGroups($this->getGroups());
         return $this->propertyToArrayResolver->resolve($this->chooseSerializeContext, $this->getGroupCollection(), $object);
     }
 }
