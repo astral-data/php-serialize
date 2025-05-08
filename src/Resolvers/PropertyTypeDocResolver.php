@@ -22,19 +22,19 @@ class PropertyTypeDocResolver
 
     protected function resolveArrayType(Array_ $type): array
     {
-        $valueType = $type->getValueType();
+        $valueTypes = $type->getValueType();
 
-        if ($valueType instanceof  Object_) {
-            $className =   ltrim($valueType->getFqsen()?->__toString(), '\\');
-        } elseif ($valueType instanceof AggregatedType) {
+        if ($valueTypes instanceof  Object_) {
+            $className =   ltrim($valueTypes->getFqsen()?->__toString(), '\\');
+        } elseif ($valueTypes instanceof AggregatedType) {
             $className = [];
-            foreach ($valueType as $type) {
-                $className[] = ltrim($type instanceof Object_
-                    ? $type->getFqsen()?->__toString()
-                    : (string)$valueType, '\\');
+            foreach ($valueTypes as $valueType) {
+                $className[] = ltrim($valueType instanceof Object_
+                    ? $valueType->getFqsen()?->__toString()
+                    : (string)$valueTypes, '\\');
             }
         } else {
-            $className =  ltrim((string)$valueType, '\\');
+            $className =  ltrim((string)$valueTypes, '\\');
         }
 
         return [
