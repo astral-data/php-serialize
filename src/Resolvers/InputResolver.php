@@ -51,7 +51,7 @@ class InputResolver
                 continue;
             }
 
-            $chooseContext->addProperty(new ChoosePropertyContext($name, $chooseContext, $collection));
+            $chooseContext->addProperty(new ChoosePropertyContext($name, $collection, $chooseContext));
             $chooseContext->getProperty($name)?->setInputName($matchInput['name']);
 
             $resolvedValue = $matchInput['value'];

@@ -42,7 +42,7 @@ class OutputResolver
                 continue;
             }
 
-            $chooseContext->addProperty(new ChoosePropertyContext($name, $chooseContext, $collection));
+            $chooseContext->addProperty(new ChoosePropertyContext($name, $collection, $chooseContext));
             $chooseContext->getProperty($name)?->setOutPutNames($matchData['names']);
             $resolvedValue = $matchData['value'];
 

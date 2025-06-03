@@ -16,15 +16,15 @@ class ChoosePropertyContext
 
     public function __construct(
         private readonly string $name,
-        private readonly ?ChooseSerializeContext $parent = null,
         private readonly DataCollection $dataCollection,
+        private readonly ?ChooseSerializeContext $parent = null,
     ) {
 
     }
 
     public static function build(DataCollection $collection, ChooseSerializeContext $context,DataCollection $dataCollection): ChoosePropertyContext
     {
-        return new self($collection->getName(), $context, $dataCollection);
+        return new self($collection->getName(), $dataCollection, $context);
     }
 
     public function getDataCollection() : DataCollection
