@@ -20,7 +20,7 @@ class LaravelCache implements CacheInterface
         return $this->repository->get($key, $default);
     }
 
-    public function set(string $key, mixed $value, int|DateInterval $ttl = null): bool
+    public function set(string $key, mixed $value, int|DateInterval|null $ttl = null): bool
     {
         return $this->repository->put($key, $value, $ttl);
     }
@@ -44,7 +44,7 @@ class LaravelCache implements CacheInterface
         return $results;
     }
 
-    public function setMultiple(iterable $values, int|DateInterval $ttl = null): bool
+    public function setMultiple(iterable $values, int|DateInterval|null $ttl = null): bool
     {
         foreach ($values as $key => $value) {
             $this->set($key, $value, $ttl);
