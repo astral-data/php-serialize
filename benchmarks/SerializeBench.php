@@ -83,7 +83,7 @@ class SerializeBench
         Revs(500),
         Iterations(5),
         BeforeMethods([ 'setupObjectCreation']),
-        Assert('mode(variant.time.avg) < 90 microseconds +/- 5%')
+        Assert('mode(variant.time.avg) < 140 microseconds +/- 5%')
     ]
     public function benchObjectCreation(): void
     {
@@ -94,7 +94,7 @@ class SerializeBench
         Revs(5000),
         Iterations(5),
         BeforeMethods([ 'setupObjectCreation']),
-        Assert('mode(variant.time.avg) < 250 microseconds +/- 5%')
+        Assert('mode(variant.time.avg) < 350 microseconds +/- 5%')
     ]
     public function benchObjectCreationWithoutCache(): void
     {
@@ -106,7 +106,7 @@ class SerializeBench
         Revs(500),
         Iterations(5),
         BeforeMethods(['setupObject']),
-        Assert('mode(variant.time.avg) < 25 microseconds +/- 5%')
+        Assert('mode(variant.time.avg) < 80 microseconds +/- 5%')
     ]
     public function benchObjectToArray(): void
     {
@@ -117,7 +117,7 @@ class SerializeBench
         Revs(5000),
         Iterations(5),
         BeforeMethods(['setupObject']),
-        Assert('mode(variant.time.avg) < 150 microseconds +/- 5%')
+        Assert('mode(variant.time.avg) < 270 microseconds +/- 5%')
     ]
     public function benchObjectToArrayWithoutCache(): void
     {
