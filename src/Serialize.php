@@ -29,7 +29,7 @@ abstract class Serialize
 
     public function withGroups(array|string $groups): static
     {
-        $this->getContext()->setGroups((array)$groups);
+        $this->getContext()?->setGroups((array)$groups);
         return $this;
     }
 

@@ -90,3 +90,25 @@ it('test parse groups Serialize class', function () {
     ;
 
 });
+
+it('test with groups Serialize class', function () {
+    $instance = TestGroupSerialize::from(
+        not_construct_string:'not_construct_string',
+        not_construct_int:'001',
+        type_string:'111',
+        type_int:99999,
+        type_object:new OtherObject(),
+        type_null:123,
+        type_float:998,
+        abc: 110
+    );
+
+    $res = $instance->withGroups(['test_1'])->toArray();
+    expect($res['not_construct_string'])->toBeString('not_construct_string')
+        ->and($res['type_string'])->toBeString('001')
+        ->and($res['type_string_ignore'])->toBeString('')
+        ->and(isset($res['not_construct_int']))->toBeFalse()
+        ->and(isset($res['type_int']))->toBeFalse()
+        ->and(isset($res['type_object']))->toBeFalse()
+        ->and(isset($res['type_float']))->toBeFalse();
+});

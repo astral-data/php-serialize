@@ -10,6 +10,7 @@ use Astral\Serialize\Support\Context\InputValueContext;
 use Attribute;
 use DateInvalidTimeZoneException;
 use DateTime;
+use DateTimeImmutable;
 use DateTimeInterface;
 use DateTimeZone;
 
@@ -34,16 +35,20 @@ class InputDateFormat implements InputValueCastInterface
      */
     public function resolve(mixed $value, DataCollection $collection, InputValueContext $context): string|DateTime
     {
+
         $timezone = $this->timezone ? new DateTimeZone($this->timezone) : null;
+        $className = current($collection->getTypes())->className;
 
         if (!$this->outFormat
+            && is_subclass_of($className, DateTimeInterface::class)
+            && method_exists($className, 'createFromFormat')
             && count($collection->getTypes()) === 1
-            && is_subclass_of(current($collection->getTypes())?->className, DateTimeInterface::class)
         ) {
-            return  (current($collection->getTypes())?->className)::createFromFormat($this->inputFormat, (string)$value, $timezone);
+            return $className::createFromFormat($this->inputFormat, (string)$value, $timezone);
         }
 
         $dateTime = DateTime::createFromFormat($this->inputFormat, (string)$value, $timezone);
         return $dateTime !== false ? $dateTime->format($this->outFormat) : (string)$value;
+
     }
 }

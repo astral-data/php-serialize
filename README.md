@@ -1,4 +1,6 @@
-[![Packagist Downloads](https://img.shields.io/packagist/dm/astral/php-serialize)](https://packagist.org/packages/astral/php-serialize)
+[![Total Downloads](https://img.shields.io/packagist/dt/astral/php-serialize.svg?style=flat-square)](https://packagist.org/packages/astral/php-serialize)
+[![Tests](https://github.com/astral-data/php-serialize/actions/workflows/test.yml/badge.svg)](https://github.com/astral-data/php-serialize/actions/workflows/test.yml)
+[![PHPStan](https://github.com/astral-data/php-serialize/actions/workflows/phpstan.yml/badge.svg)](https://github.com/astral-data/php-serialize/actions/workflows/phpstan.yml)
 
 # Languages
 

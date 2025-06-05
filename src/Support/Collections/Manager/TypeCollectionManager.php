@@ -11,6 +11,7 @@ use phpDocumentor\Reflection\TypeResolver;
 use ReflectionException;
 use ReflectionNamedType;
 use ReflectionProperty;
+use ReflectionType;
 use ReflectionUnionType;
 
 class TypeCollectionManager
@@ -26,15 +27,13 @@ class TypeCollectionManager
      *
      * @param ReflectionProperty $property
      * @return TypeCollection[]
-//     * @throws ReflectionException
      */
     public function getCollectionTo(ReflectionProperty $property): array
     {
         $type = $property->getType();
 
         $typeDocBlock = $this->propertyTypesContextResolver->resolveTypeFromDocBlock($property);
-
-        if ($typeDocBlock && ($type instanceof ReflectionUnionType || in_array($type?->getName(), ['array', 'object']))) {
+        if ($typeDocBlock && ($type instanceof ReflectionUnionType || ($type instanceof ReflectionNamedType && in_array($type->getName(), ['array', 'object']))) ) {
             return $this->processDocCommentNamedType($typeDocBlock);
         }
 
@@ -47,12 +46,6 @@ class TypeCollectionManager
         }
 
         return [new TypeCollection(TypeKindEnum::MIXED, null)];
-
-        //        throw new ReflectionException(sprintf(
-        //            'Property "%s" in class "%s" does not have a valid type.',
-        //            $property->getName(),
-        //            $property->getDeclaringClass()->getName()
-        //        ));
     }
 
     /**

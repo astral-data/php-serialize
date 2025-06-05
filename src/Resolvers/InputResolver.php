@@ -51,7 +51,7 @@ class InputResolver
                 continue;
             }
 
-            $chooseContext->addProperty(new ChoosePropertyContext($name, $chooseContext, $collection));
+            $chooseContext->addProperty(new ChoosePropertyContext($name, $collection, $chooseContext));
             $chooseContext->getProperty($name)?->setInputName($matchInput['name']);
 
             $resolvedValue = $matchInput['value'];
@@ -134,10 +134,5 @@ class InputResolver
         }
 
         return $current;
-    }
-
-    private function normalizePayload(array|object $payload): array
-    {
-        return is_object($payload) ? (array)$payload : $payload;
     }
 }

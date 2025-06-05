@@ -24,7 +24,7 @@ class ConfigManager
     /** @var DataCollectionCastInterface[] $attributePropertyResolver */
     private array $attributePropertyResolver = [];
 
-    /** @var InputValueCastInterface[] $inputValueCasts */
+    /** @var (InputValueCastInterface|string)[] $inputValueCasts */
     private array $inputValueCasts = [
         InputValueNullCast::class,
         InputObjectBestMatchChildCast::class,
@@ -33,7 +33,7 @@ class ConfigManager
         InputValueEnumCast::class,
     ];
 
-    /** @var OutValueCastInterface[] $outputValueCasts */
+    /** @var (OutValueCastInterface|string)[] $outputValueCasts */
     private array $outputValueCasts = [
         OutArrayChildCast::class,
         OutValueEnumCast::class,

@@ -2,6 +2,8 @@
 
 namespace Astral\Serialize\Enums;
 
+use http\Exception\RuntimeException;
+
 enum TypeKindEnum
 {
     case MIXED;
@@ -63,6 +65,7 @@ enum TypeKindEnum
             'array'  => self::ARRAY,
             'object' => self::OBJECT,
             'mixed'  => self::MIXED,
+            default  => throw new RuntimeException("not found type $type"),
         };
     }
 }
