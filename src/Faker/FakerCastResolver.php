@@ -31,13 +31,6 @@ class FakerCastResolver
      */
     private function resolveCast(object $cast, DataCollection $dataCollection): mixed
     {
-        if (!is_object($cast)) {
-            throw new InvalidArgumentException(sprintf(
-                'Expected an object, but got %s.',
-                gettype($cast)
-            ));
-        }
-
         if (is_subclass_of($cast, FakerCastInterface::class)) {
             return $cast->resolve($dataCollection);
         }

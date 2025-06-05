@@ -40,13 +40,6 @@ class DataCollectionCastResolver
      */
     private function resolveCast(object $cast, DataCollection $dataCollection): void
     {
-        if (!is_object($cast)) {
-            throw new InvalidArgumentException(sprintf(
-                'Expected an object, but got %s.',
-                gettype($cast)
-            ));
-        }
-
         if (is_subclass_of($cast, DataCollectionCastInterface::class)) {
             $cast->resolve($dataCollection);
         }

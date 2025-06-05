@@ -10,6 +10,7 @@ use Astral\Serialize\Support\Context\InputValueContext;
 use Attribute;
 use DateInvalidTimeZoneException;
 use DateTime;
+use DateTimeImmutable;
 use DateTimeInterface;
 use DateTimeZone;
 
@@ -29,18 +30,27 @@ class InputDateFormat implements InputValueCastInterface
         return is_string($value) || is_numeric($value);
     }
 
+
+
     /**
      * @throws DateInvalidTimeZoneException
      */
     public function resolve(mixed $value, DataCollection $collection, InputValueContext $context): string|DateTime
     {
         $timezone = $this->timezone ? new DateTimeZone($this->timezone) : null;
+        $types = $collection->getTypes();
+        if (!$types || count($types) !== 1) {
+            $dateTime = DateTime::createFromFormat($this->inputFormat, (string)$value, $timezone);
+            return $dateTime !== false ? $dateTime->format($this->outFormat) : (string)$value;
+        }
+
+        $className = current($types)->className;
 
         if (!$this->outFormat
-            && count($collection->getTypes()) === 1
-            && is_subclass_of(current($collection->getTypes())?->className, DateTimeInterface::class)
+            && in_array($className, [DateTime::class, DateTimeImmutable::class], true)
+            && method_exists($className, 'createFromFormat')
         ) {
-            return  (current($collection->getTypes())?->className)::createFromFormat($this->inputFormat, (string)$value, $timezone);
+            return $className::createFromFormat($this->inputFormat, (string)$value, $timezone);
         }
 
         $dateTime = DateTime::createFromFormat($this->inputFormat, (string)$value, $timezone);

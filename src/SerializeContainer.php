@@ -24,6 +24,7 @@ use Astral\Serialize\Support\Instance\SerializeInstanceManager;
 use Faker\Factory;
 use Faker\Generator;
 use phpDocumentor\Reflection\DocBlockFactory;
+use phpDocumentor\Reflection\DocBlockFactoryInterface;
 use phpDocumentor\Reflection\TypeResolver;
 use phpDocumentor\Reflection\Types\ContextFactory;
 
@@ -33,7 +34,7 @@ class SerializeContainer
     protected ?ContextFactory $contextFactory                                               = null;
     protected ?SerializeContext $context                                                    = null;
     protected ?TypeResolver $typeResolver                                                   = null;
-    protected ?DocBlockFactory $docBlockFactory                                             = null;
+    protected DocBlockFactory|DocBlockFactoryInterface|null $docBlockFactory                = null;
     protected ?TypeCollectionManager $typeCollectionManager                                 = null;
     protected ?PropertyTypesContextResolver $propertyTypesContextResolver                   = null;
     protected ?PropertyTypeDocResolver $propertyTypeDocResolver                             = null;
@@ -67,7 +68,7 @@ class SerializeContainer
         return $this->typeResolver ??= new TypeResolver();
     }
 
-    public function docBlockFactory(): DocBlockFactory
+    public function docBlockFactory(): DocBlockFactory|DocBlockFactoryInterface
     {
         return $this->docBlockFactory ??= DocBlockFactory::createInstance();
     }
@@ -171,7 +172,7 @@ class SerializeContainer
 
     public function fakerCastResolver(): FakerCastResolver
     {
-        return $this->fakerCastResolver ??= new FakerCastResolver(ConfigManager::getInstance());
+        return $this->fakerCastResolver ??= new FakerCastResolver();
     }
 
     public function fakerDefaultRules(): FakerDefaultRules

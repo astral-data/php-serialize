@@ -8,6 +8,7 @@ use Astral\Serialize\Contracts\Attribute\InputValueCastInterface;
 use Astral\Serialize\Enums\TypeKindEnum;
 use Astral\Serialize\Exceptions\ValueCastError;
 use Astral\Serialize\Support\Collections\DataCollection;
+use Astral\Serialize\Support\Collections\TypeCollection;
 use Astral\Serialize\Support\Context\InputValueContext;
 use BackedEnum;
 use UnitEnum;
@@ -24,7 +25,6 @@ class InputValueEnumCast implements InputValueCastInterface
      */
     public function resolve(mixed $value, DataCollection $collection, InputValueContext $context): UnitEnum|string
     {
-
         $types = $collection->getTypes();
         foreach ($types as $type) {
             if ($type->kind !== TypeKindEnum::ENUM) {
@@ -41,7 +41,7 @@ class InputValueEnumCast implements InputValueCastInterface
                 sprintf(
                     'Enum value "%s" not found in EnumClass: %s',
                     $value,
-                    current($types)?->className
+                    current($types)->className
                 )
             );
         }

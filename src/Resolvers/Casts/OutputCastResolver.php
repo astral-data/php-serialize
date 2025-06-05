@@ -53,13 +53,6 @@ class OutputCastResolver
      */
     private function applyCast(object $cast, DataCollection $collection, mixed $value, OutContext $context): mixed
     {
-        if (!is_object($cast)) {
-            throw new InvalidArgumentException(sprintf(
-                'Expected an object, but got %s.',
-                gettype($cast)
-            ));
-        }
-
         if (!is_subclass_of($cast, OutValueCastInterface::class)) {
             return $value;
         }

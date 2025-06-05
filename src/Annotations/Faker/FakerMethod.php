@@ -10,7 +10,9 @@ use Exception;
 use ReflectionClass;
 use ReflectionException;
 use ReflectionMethod;
+use ReflectionNamedType;
 use ReflectionParameter;
+use RuntimeException;
 
 #[Attribute(Attribute::TARGET_PROPERTY)]
 class FakerMethod implements FakerCastInterface
@@ -30,11 +32,11 @@ class FakerMethod implements FakerCastInterface
     public function resolve(DataCollection $collection): mixed
     {
         if (!class_exists($this->className)) {
-            throw new Exception("Class $this->className not found");
+            throw new RuntimeException("Class $this->className not found");
         }
 
         if (!method_exists($this->className, $this->methodName)) {
-            throw new Exception("Method $this->methodName not found from class $this->className");
+            throw new RuntimeException("Method $this->methodName not found from class $this->className");
         }
 
         $instance         = $this->createInstanceWithResolvedConstructor($this->className);
@@ -65,7 +67,7 @@ class FakerMethod implements FakerCastInterface
     {
         if (in_array($className, $dependencyChain, true)) {
             $chain = implode(' -> ', array_merge($dependencyChain, [$className]));
-            throw new Exception("Circular dependency detected: $chain");
+            throw new RuntimeException("Circular dependency detected: $chain");
         }
 
         $dependencyChain[] = $className;
@@ -79,14 +81,20 @@ class FakerMethod implements FakerCastInterface
 
         return $reflectionClass->newInstanceArgs(array_map(function ($param) use ($dependencyChain) {
             $paramType = $param->getType();
-            $name      =  $paramType->getName();
+
+            if(!$paramType instanceof ReflectionNamedType){
+                throw new \http\Exception\RuntimeException("$paramType is not ReflectionNamedType");
+            }
+
+            $typeName  = $paramType->getName();
+
             return match(true) {
-                !$paramType->isBuiltin() && class_exists($name) => $this->createInstanceWithResolvedConstructor($name, $dependencyChain),
+                !$paramType->isBuiltin() && class_exists($typeName) => $this->createInstanceWithResolvedConstructor($typeName, $dependencyChain),
                 $param->isDefaultValueAvailable()               => $param->getDefaultValue(),
                 default                                         => null,
             };
 
-        }, $constructor->getParameters()));
+        }, $constructor?->getParameters()));
     }
 
     /**
@@ -103,7 +111,12 @@ class FakerMethod implements FakerCastInterface
 
         return array_map(function (ReflectionParameter $param) {
             $paramType = $param->getType();
-            $name      =  $param->getName();
+
+            if(!$paramType instanceof ReflectionNamedType){
+                throw new \http\Exception\RuntimeException("$paramType is not ReflectionNamedType");
+            }
+
+            $name      = $param->getName();
             $typeName  = $paramType->getName();
 
             return match(true) {
@@ -134,7 +147,7 @@ class FakerMethod implements FakerCastInterface
             } elseif (is_object($result) && property_exists($result, $key)) {
                 $result = $result->$key;
             } else {
-                throw new Exception("Unable to extract path '$path' from result");
+                throw new RuntimeException("Unable to extract path '$path' from result");
             }
         }
         return $result;

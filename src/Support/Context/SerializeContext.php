@@ -16,6 +16,7 @@ use Astral\Serialize\Support\Collections\Manager\ConstructDataCollectionManager;
 use Astral\Serialize\Support\Instance\ReflectionClassInstanceManager;
 use Psr\SimpleCache\CacheInterface;
 use Psr\SimpleCache\InvalidArgumentException;
+use ReflectionException;
 use ReflectionProperty;
 use RuntimeException;
 
@@ -49,7 +50,7 @@ class SerializeContext
 
     /**
      * @param array $groups
-     * @return SerializeContext<static>
+     * @return static
      * @throws InvalidArgumentException
      * @throws NotFoundGroupException
      */
@@ -140,7 +141,7 @@ class SerializeContext
 
             $typeCollections = SerializeContainer::get()->typeCollectionManager()->getCollectionTo($property);
             $dataCollection->setTypes(...$typeCollections);
-            $this->dataCollectionCastResolver->resolve($dataCollection, $property);
+            $this->dataCollectionCastResolver->resolve($dataCollection);
 
             $this->assembleChildren(
                 dataCollection: $dataCollection,
@@ -184,7 +185,6 @@ class SerializeContext
 
     /**
      * @param mixed ...$payload
-     * @return T
      */
     public function from(mixed ...$payload): object
     {

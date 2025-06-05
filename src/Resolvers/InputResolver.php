@@ -135,9 +135,4 @@ class InputResolver
 
         return $current;
     }
-
-    private function normalizePayload(array|object $payload): array
-    {
-        return is_object($payload) ? (array)$payload : $payload;
-    }
 }

@@ -1,8 +1,5 @@
 parameters:
     level: 5
-    mockery:
-        class: DataCollection
-        mockClass: Mockery\MockInterface
     treatPhpDocTypesAsCertain: false
     paths:
         - src
