@@ -1,25 +1,24 @@
-name: PHP Composer
+name: Run Tests
 
-on:
-  push:
-    branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
+on: ['push', 'pull_request']
 
 permissions:
   contents: read
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php-version: [ 8.1, 8.2, 8.3, 8.4 ]
 
     steps:
     - uses: actions/checkout@v4
 
-    - name: Setup PHP
+    - name: PHP ${{ matrix.php-version }}
       uses: shivammathur/setup-php@v2
       with:
-        php-version: '8.1'
+        php-version: ${{ matrix.php-version }}
         extensions: mbstring, intl, pdo_mysql
         coverage: none
 
