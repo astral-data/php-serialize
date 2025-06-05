@@ -30,30 +30,25 @@ class InputDateFormat implements InputValueCastInterface
         return is_string($value) || is_numeric($value);
     }
 
-
-
     /**
      * @throws DateInvalidTimeZoneException
      */
     public function resolve(mixed $value, DataCollection $collection, InputValueContext $context): string|DateTime
     {
-        $timezone = $this->timezone ? new DateTimeZone($this->timezone) : null;
-        $types = $collection->getTypes();
-        if (!$types || count($types) !== 1) {
-            $dateTime = DateTime::createFromFormat($this->inputFormat, (string)$value, $timezone);
-            return $dateTime !== false ? $dateTime->format($this->outFormat) : (string)$value;
-        }
 
-        $className = current($types)->className;
+        $timezone = $this->timezone ? new DateTimeZone($this->timezone) : null;
+        $className = current($collection->getTypes())->className;
 
         if (!$this->outFormat
-            && in_array($className, [DateTime::class, DateTimeImmutable::class], true)
+            && is_subclass_of($className, DateTimeInterface::class)
             && method_exists($className, 'createFromFormat')
+            && count($collection->getTypes()) === 1
         ) {
             return $className::createFromFormat($this->inputFormat, (string)$value, $timezone);
         }
 
         $dateTime = DateTime::createFromFormat($this->inputFormat, (string)$value, $timezone);
         return $dateTime !== false ? $dateTime->format($this->outFormat) : (string)$value;
+
     }
 }
