@@ -19,8 +19,4 @@ class Tag
     ) {
     }
 
-    public function buildTagStorage(): TagStorage
-    {
-        return new TagStorage($this->value, $this->description);
-    }
 }

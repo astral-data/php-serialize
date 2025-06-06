@@ -16,9 +16,4 @@ class Route
         public array $attributes = [],
     ) {
     }
-
-    public function getMethod(): string
-    {
-        return 'April\\ApiDoc\\Storage\\OpenAPI\\Method\\' . $this->method->name;
-    }
 }

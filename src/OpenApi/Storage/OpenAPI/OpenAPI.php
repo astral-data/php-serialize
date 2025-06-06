@@ -4,30 +4,28 @@ declare(strict_types=1);
 
 namespace Astral\Serialize\OpenApi\Storage\OpenAPI;
 
+use Astral\Serialize\OpenApi\Collections\OpenApiCollection;
 use Astral\Serialize\OpenApi\Storage\OpenAPI\Method\MethodInterface;
 use Astral\Serialize\OpenApi\Storage\StorageInterface;
 
 class OpenAPI implements StorageInterface
 {
-    /** @var string openapi版本 */
-    public string $openapi = '3.0.0';
 
-    /** @var ApiInfo openapi文档头信息 */
+    public string $openapi = '3.1.1';
+
     public ApiInfo $info;
 
-    /** @var ServersStorage[] 服务器信息 */
+    /** @var ServersStorage[] */
     public array $servers;
 
-    /** @var string 请求api的域名 */
     public string $host;
 
-    /** @var string 请求api的标识符 */
     public string $basePath;
 
-    /** @var array<TagStorage> 请求api的标识符 */
+    /** @var array<TagStorage>  */
     public array $tags;
 
-    /** @var array<string,MethodInterface> 具体api配置 */
+    /** @var array<string,MethodInterface>  */
     public array $paths = [];
 
     public function withApiInfo(ApiInfo $apiInfo): self
@@ -59,9 +57,11 @@ class OpenAPI implements StorageInterface
         return $this;
     }
 
-    public function addPath(string $url, MethodInterface $method): self
+    public function addPath(OpenApiCollection $openApiCollection): self
     {
-        $this->paths[$url][$method->getName()] = $method;
+        $this->paths[$openApiCollection->route->route][strtolower($openApiCollection->route->method->name)] = $openApiCollection->build();
         return $this;
     }
+
+
 }

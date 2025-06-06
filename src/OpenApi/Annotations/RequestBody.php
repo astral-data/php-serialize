@@ -14,7 +14,7 @@ class RequestBody
         /** @var class-string $className */
         public string $className = '',
         public ContentTypeEnum $contentType = ContentTypeEnum::JSON,
-        public ?string $group = null
+        public array|null $group = null
     ){
     }
 }

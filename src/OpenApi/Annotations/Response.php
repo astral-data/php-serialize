@@ -11,9 +11,9 @@ class Response
 {
     public function __construct(
         /** @var class-string $className */
-        public string $className,
-        public ?string $group = null,
-        public ?int $code = 200
+        public string   $className,
+        public ?int     $code       = 200,
+        public ?array   $groups     = null,
     ){
     }
 }

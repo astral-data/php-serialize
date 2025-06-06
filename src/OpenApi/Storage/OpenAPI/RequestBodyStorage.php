@@ -12,16 +12,27 @@ use Astral\Serialize\OpenApi\Storage\StorageInterface;
  */
 class RequestBodyStorage implements StorageInterface
 {
+    public array $parameters;
+
     public function __construct(
         public ContentTypeEnum $contentType = ContentTypeEnum::JSON,
-        /** @var array<string,SchemaStorage> 参数类型 */
-        public array $content = []
     ) {
-        $this->content[$this->contentType->value]['schema'] = [];
     }
 
     public function withParameter(SchemaStorage $schema): void
     {
-        $this->content[$this->contentType->value]['schema'] = $schema->getData();
+        $this->parameters = $schema->getData();
+    }
+
+    public function getData(): array
+    {
+        return [
+            'required' => true,
+            'content' => [
+                $this->contentType->value => [
+                    'schema' => $this->parameters
+                ]
+            ]
+        ];
     }
 }

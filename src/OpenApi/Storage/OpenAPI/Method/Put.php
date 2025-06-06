@@ -4,6 +4,6 @@ declare(strict_types=1);
 
 namespace Astral\Serialize\OpenApi\Storage\OpenAPI\Method;
 
-interface MethodInterface
+class Put extends Method implements MethodInterface
 {
 }

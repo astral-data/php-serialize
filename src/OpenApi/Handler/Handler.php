@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Astral\Serialize\OpenApi\Handler;
 
 use Astral\Serialize\OpenApi\Collections\OpenApiCollection;
+use Astral\Serialize\OpenApi\Storage\OpenAPI\ApiInfo;
 use Astral\Serialize\OpenApi\Storage\OpenAPI\OpenAPI;
 use Astral\Serialize\OpenApi\Storage\OpenAPI\ParameterStorage;
 use Astral\Serialize\OpenApi\Storage\OpenAPI\SchemaStorage;
@@ -22,7 +23,7 @@ abstract class Handler implements HandleInterface
     public function __construct(
         protected readonly ParameterStorage $headerParameterStorages = new ParameterStorage()
     ) {
-        self::$OpenAPI ?: self::$OpenAPI = new OpenAPI();
+        self::$OpenAPI ??= (new OpenAPI())->withApiInfo(new ApiInfo('API 接口',''));
     }
 
     /**
@@ -32,7 +33,7 @@ abstract class Handler implements HandleInterface
      * @throws ReflectionException
      * @throws Exception
      */
-    abstract public function createOpenAPIByClass(string $className): void;
+    abstract public function buildByClass(string $className): void;
 
     /**
      * 向全局头部参数存储中添加一个新的头部参数。
@@ -78,24 +79,28 @@ abstract class Handler implements HandleInterface
         return $this;
     }
 
+    /**
+     * @throws ReflectionException
+     */
     public function handleByAutoLoad(): void
     {
-        $classMap    = require base_path('vendor/composer/autoload_classmap.php');
-        $appClassMap = array_keys(array_filter($classMap, function ($key) {
+        $classMap    = require dir('vendor/composer/autoload_classmap.php');
+        $appClassMap = array_keys(array_filter($classMap, static function ($key) {
             return (str_starts_with($key, 'App\\') && str_ends_with($key, 'Controller'))
                    || (str_starts_with($key, 'April\\') && str_ends_with($key, 'Controller'));
         }, ARRAY_FILTER_USE_KEY));
 
         foreach ($appClassMap as $className) {
-            $this->createOpenAPIByClass($className);
+            $this->buildByClass($className);
         }
     }
 
     /**
      * 解析Controller文件
      *
-     * @param  array<string,string>  $folders  文件路径 => 命名空间
+     * @param array<string,string> $folders 文件路径 => 命名空间
      * @return $this
+     * @throws ReflectionException
      */
     public function handleByFolders(array $folders): self
     {
@@ -109,7 +114,7 @@ abstract class Handler implements HandleInterface
             foreach (scandir($folder) as $file) {
 
                 $path = $folder . '/' . $file;
-                if ($file == '.' || $file == '..' || strpos($file, '.') === 0) {
+                if ($file === '.' || $file === '..' || str_starts_with($file, '.')) {
                     continue;
                 }
 
@@ -134,34 +139,14 @@ abstract class Handler implements HandleInterface
                     }
                 }
 
-                $this->createOpenAPIByClass($className);
+                $this->buildByClass($className);
             }
         }
 
         return $this;
     }
 
-    /**
-     * 根据类信息构建Schema
-     * @throws Exception
-     */
-    public function buildSchemaByClass(string $className, ?string $group = null): SchemaStorage
-    {
-        $schema = new SchemaStorage();
 
-        if (! $className) {
-            return $schema;
-        }
-
-        $ParserPartaker = new ParserPartaker();
-        $ParserPartaker->addNode($className, $group, null);
-
-        $tree = $ParserPartaker->getTree();
-
-        $schema->createTree($tree->getChildren());
-
-        return $schema;
-    }
 
     public function output(string $path): bool
     {
