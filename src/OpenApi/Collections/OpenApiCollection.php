@@ -10,6 +10,7 @@ use Astral\Serialize\OpenApi\Annotations\Route;
 use Astral\Serialize\OpenApi\Annotations\Summary;
 use Astral\Serialize\OpenApi\Annotations\Tag;
 use Astral\Serialize\OpenApi\Enum\ContentTypeEnum;
+use Astral\Serialize\OpenApi\Enum\ParameterTypeEnum;
 use Astral\Serialize\OpenApi\Storage\OpenAPI\Method\Method;
 use Astral\Serialize\OpenApi\Storage\OpenAPI\RequestBodyStorage;
 use Astral\Serialize\OpenApi\Storage\OpenAPI\ResponseStorage;
@@ -109,7 +110,7 @@ class OpenApiCollection
             $vol = new ParameterCollection(
                 name: current($property->getInputNamesByGroups($groups,$className)),
                 descriptions: '',
-                type: current($property->getTypes())->kind ?: TypeKindEnum::STRING,
+                type: ParameterTypeEnum::getByTypes($property->getTypes()),
                 required: !$property->isNullable(),
                 ignore: false,
             );
@@ -153,7 +154,7 @@ class OpenApiCollection
             $vol  =  new  ParameterCollection(
                 name:current($property->getOutNamesByGroups($groups,$responseClass)),
                 descriptions: '',
-                type: current($property->getTypes())->kind ?: TypeKindEnum::STRING,
+                type: ParameterTypeEnum::getByTypes($property->getTypes()),
                 required: !$property->isNullable(),
                 ignore: false,
             );

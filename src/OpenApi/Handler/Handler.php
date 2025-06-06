@@ -16,9 +16,7 @@ use ReflectionException;
 abstract class Handler implements HandleInterface
 {
     /** @var OpenAPI */
-    protected static OpenAPI $OpenAPI;
-    private string $controllerPrefix = '';
-    private string $controllerSuffix = '';
+    public static OpenAPI $OpenAPI;
 
     public function __construct(
         protected readonly ParameterStorage $headerParameterStorages = new ParameterStorage()
@@ -50,100 +48,98 @@ abstract class Handler implements HandleInterface
     }
 
     /**
-     * Undocumented function
-     */
-    public function getOpenAPI(): OpenAPI
+    * 遍历整个项目根目录，自动扫描所有 PHP 文件，
+    * 如果文件内容中包含 "Astral\Serialize\OpenApi\Annotations"，
+    * 则认为它是需要处理的 Controller，进而调用 buildByClass。
+    *
+    * @return $this
+    * @throws ReflectionException
+    */
+    public function handleByFolders(): self
     {
-        return self::$OpenAPI;
-    }
+        // 1. 取项目根目录
+        $projectRoot = getcwd();
 
-    /**
-     * 增加类前缀标识
-     *
-     * @return $this
-     */
-    public function withControllerPrefix(string $value): self
-    {
-        $this->controllerPrefix = $value;
-        return $this;
-    }
-
-    /**
-     * 增加类后缀标识
-     *
-     * @return $this
-     */
-    public function withControllerSuffix(string $value): self
-    {
-        $this->controllerSuffix = $value;
-        return $this;
-    }
-
-    /**
-     * @throws ReflectionException
-     */
-    public function handleByAutoLoad(): void
-    {
-        $classMap    = require dir('vendor/composer/autoload_classmap.php');
-        $appClassMap = array_keys(array_filter($classMap, static function ($key) {
-            return (str_starts_with($key, 'App\\') && str_ends_with($key, 'Controller'))
-                   || (str_starts_with($key, 'April\\') && str_ends_with($key, 'Controller'));
-        }, ARRAY_FILTER_USE_KEY));
-
-        foreach ($appClassMap as $className) {
-            $this->buildByClass($className);
+        if ($projectRoot === false) {
+            return $this;
         }
+
+        // 2. 默认根命名空间留空（根据项目实际情况可改为 "App"、"App\\Http\\Controllers" 等）
+        //    如果你希望扫描时拼接命名空间前缀，可以在这里做修改。
+        $rootNamespace = '';
+
+        // 3. 调用内部递归方法开始扫描
+        $this->scanFolderRecursively($projectRoot, $rootNamespace);
+
+        return $this;
     }
 
     /**
-     * 解析Controller文件
+     * 递归扫描指定目录下的所有子目录和文件。
+     * @param string $folder      要扫描的文件夹路径
+     * @param string $namespace   该文件夹对应的 PHP 命名空间前缀
      *
-     * @param array<string,string> $folders 文件路径 => 命名空间
-     * @return $this
      * @throws ReflectionException
      */
-    public function handleByFolders(array $folders): self
+    protected function scanFolderRecursively(string $folder, string $namespace): void
     {
+        // 如果不是目录，跳过
+        if (! is_dir($folder)) {
+            return;
+        }
 
-        foreach ($folders as $folder => $namespace) {
-
-            if (! is_dir($folder)) {
+        // 遍历当前文件夹下的所有内容
+        foreach (scandir($folder) as $file) {
+            // 跳过 . 和 .. ，以及隐藏文件夹/文件
+            if ($file === '.' || $file === '..' || str_starts_with($file, '.')) {
                 continue;
             }
 
-            foreach (scandir($folder) as $file) {
+            $path = $folder . DIRECTORY_SEPARATOR . $file;
 
-                $path = $folder . '/' . $file;
-                if ($file === '.' || $file === '..' || str_starts_with($file, '.')) {
-                    continue;
-                }
+            // 如果是子目录，则递归，并拼接命名空间
+            if (is_dir($path)) {
 
-                if (is_dir($path)) {
-                    $this->handleByFolders([$path => $namespace . '\\' . $file]);
-
-                    continue;
-                }
-
-                if (pathinfo($file, PATHINFO_EXTENSION) !== 'php') {
-                    continue;
-                }
-
-                $fileName  = $this->controllerPrefix . trim(substr($file, 0, strpos($file, '.'))) . $this->controllerSuffix;
-                $className = $namespace ? $namespace . '\\' . $fileName : $fileName;
-
-                if (! class_exists($className)) {
-                    include_once $folder . '/' . $file;
-                    ob_clean(); // 清除一些引入进来的莫名其妙输出文件
-                    if (! class_exists($className)) {
-                        continue;
-                    }
-                }
-
-                $this->buildByClass($className);
+                // 例如，如果当前命名空间是 "App"：
+                // 子目录 "Http" 则新的命名空间为 "App\Http"
+                $newNamespace = $namespace !== '' ? ($namespace . '\\' . $file) : $file;
+                $this->scanFolderRecursively($path, $newNamespace);
+                continue;
             }
-        }
 
-        return $this;
+            // 只处理 .php 文件
+            if (pathinfo($file, PATHINFO_EXTENSION) !== 'php') {
+                continue;
+            }
+
+            // 读取文件内容，检查是否包含 Annotations 关键字
+            $fileContent = @file_get_contents($path);
+            if ($fileContent === false) {
+                continue;
+            }
+
+            // 如果文件中没有引入 Astral\Serialize\OpenApi\Annotations，就跳过
+            if (!str_contains($fileContent, 'Astral\\Serialize\\OpenApi\\Annotations')) {
+                continue;
+            }
+
+            // 计算类名：去掉 .php 之后，将命名空间前缀 + 文件名 组成完整类名
+            $baseName  = substr($file, 0, -4); // 去掉 ".php"
+            $className = $namespace !== '' ? ($namespace . '\\' . $baseName) : $baseName;
+
+            // 如果类尚未加载，则尝试 include
+            if (! class_exists($className)) {
+                include_once $path;
+                @ob_clean();
+                if (! class_exists($className)) {
+                    // 如果 include 后仍然不存在该类，跳过
+                    continue;
+                }
+            }
+
+            // 调用子类实现的 buildByClass
+            $this->buildByClass($className);
+        }
     }
 
 
@@ -158,6 +154,6 @@ abstract class Handler implements HandleInterface
      */
     public function toString(): string
     {
-        return json_encode(self::$OpenAPI, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE);
+        return json_encode(self::$OpenAPI, JSON_THROW_ON_ERROR);
     }
 }

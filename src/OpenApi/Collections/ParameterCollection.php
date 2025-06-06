@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Astral\Serialize\OpenApi\Collections;
 
 use Astral\Serialize\Enums\TypeKindEnum;
+use Astral\Serialize\OpenApi\Enum\ParameterTypeEnum;
 use Attribute;
 
 class ParameterCollection
@@ -14,7 +15,7 @@ class ParameterCollection
         public string       $name,
         /** @var string descriptions  */
         public string       $descriptions = '',
-        public TypeKindEnum $type = TypeKindEnum::STRING,
+        public ParameterTypeEnum $type = ParameterTypeEnum::STRING,
         /** @var mixed 示例值 */
         public mixed        $example = '',
         /** @var bool 是否必填 */

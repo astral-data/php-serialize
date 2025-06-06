@@ -57,10 +57,7 @@ beforeAll(function () {
 
 //
 it('test openapi build by class', function () {
-
-       $api =  new  \Astral\Serialize\OpenApi\OpenApi();
-       $api->buildByClass(TestOpenApiController::class);
-       $res = $api->toString();
-       print_r($res);
-
+    $api =  new  \Astral\Serialize\OpenApi\OpenApi();
+    $api->buildByClass(TestOpenApiController::class);
+    $res = $api->toString();
 });

@@ -69,16 +69,4 @@ enum TypeKindEnum
             default  => throw new RuntimeException("not found type $type"),
         };
     }
-
-    public function getOpenApiName(): string
-    {
-        return match ($this) {
-            self::INT => 'integer',
-            self::FLOAT => 'number',
-            self::BOOLEAN => 'boolean',
-            self::OBJECT, self::CLASS_OBJECT => 'object',
-            self::ARRAY, self::COLLECT_SINGLE_OBJECT , self::COLLECT_UNION_OBJECT => 'array',
-            default  => 'string',
-        };
-    }
 }
