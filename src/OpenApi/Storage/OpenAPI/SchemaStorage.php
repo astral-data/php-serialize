@@ -5,92 +5,154 @@ declare(strict_types=1);
 namespace Astral\Serialize\OpenApi\Storage\OpenAPI;
 
 use Astral\Serialize\OpenApi\Collections\ParameterCollection;
+use Astral\Serialize\OpenApi\Enum\ParameterTypeEnum;
 use Astral\Serialize\OpenApi\Storage\StorageInterface;
-use Exception;
 
 /**
- * 文档开发者介绍
+ * OpenAPI Schema 数据存储和构建器
+ * 用于生成符合 OpenAPI 规范的 Schema 结构
  */
 class SchemaStorage implements StorageInterface
 {
-    private array|SchemaStorage $data = [
+    /**
+     * Schema 数据结构
+     */
+    private array $data = [
         'type'       => 'object',
         'properties' => [],
     ];
 
-    public function getData(): SchemaStorage|array
+    /**
+     * 获取构建的 Schema 数据
+     */
+    public function getData(): array
     {
         return $this->data;
     }
 
     /**
-     * Undocumented function
+     * 构建 OpenAPI Schema 数据结构
      *
-     * @param array<string,ParameterCollection> $tree
-     * @param mixed|null $node
-     * @return SchemaStorage
+     * @param array<ParameterCollection> $parameterTree 参数集合树
+     * @param array|null $currentNode 当前构建节点的引用
+     * @return static
      */
-    public function build(array $tree, mixed &$node = null): static
+    public function build(array $parameterTree, array &$currentNode = null): static
     {
-        if ($node === null) {
-            $node = &$this->data;
+        if ($currentNode === null) {
+            $currentNode = &$this->data;
         }
 
-        foreach ($tree as $item) {
+        foreach ($parameterTree as $parameter) {
 
-            if ($item->ignore) {
+
+            // 跳过被标记为忽略的参数
+            if ($parameter->ignore) {
                 continue;
             }
 
-            $node['properties'][$item->name] = [
-                'type'        => strtolower($item->type->getOpenApiName()),
-                'description' => $item->descriptions,
-                'example'     => $item->example,
-            ];
+            // 构建基础属性 Schema
+            $this->buildBasicPropertySchema($parameter, $currentNode);
 
-            if ($item->required) {
-                $node['required'][] = $item->name;
+            // oneOf/anyOf/allOf 格式
+            if($parameter->type->isOf()){
+                $this->buildOfProperties($parameter, $currentNode);
             }
-
-            if ($item->children) {
-                // list对象
-                if ($item->type->isCollect()) {
-                    $node['properties'][$item->name]['items'] = [
-                        'type'       => 'object',
-                        'properties' => [],
-                    ];
-                    $tree = &$node['properties'][$item->name]['items'];
-                }
-                // 单个对象
-                elseif ($item->type->existsCollectClass()) {
-                    $node['properties'][$item->name] = [
-                        'type'       => 'object',
-                        'properties' => [],
-                    ];
-                    $tree = &$node['properties'][$item->name];
-                }
-
-                foreach ($item->children as $v){
-                    $this->build($v, $tree);
-                }
-
+            // 处理嵌套子属性
+            else if ($parameter->children) {
+                $this->buildNestedProperties($parameter, $currentNode);
             }
         }
 
         return $this;
     }
 
-    public function addProperties(string $name, string $type, string $description, string $example, bool $required = false): void
+    /**
+     * 构建基础属性的 Schema 结构
+     */
+    private function buildBasicPropertySchema(ParameterCollection $parameter, array &$currentNode): void
     {
-        $this->data['properties'][$name] = [
-            'type'        => $type,
-            'description' => $description,
-            'example'     => $example,
+        $propertyName = $parameter->name;
+
+        $currentNode['properties'][$propertyName] = [
+            'type'        => $parameter->type->value,
+            'description' => $parameter->descriptions,
+            'example'     => $parameter->example,
         ];
 
-        if ($required) {
-            $this->data['required'][] = $name;
+        // 添加必填字段标记
+        if ($parameter->required) {
+            $currentNode['required'][] = $propertyName;
         }
     }
 
+    /**
+     * 构建 oneOf/anyOf/allOf 属性结构
+     */
+    public function buildOfProperties(ParameterCollection $topParameter, array &$currentNode): void
+    {
+        $propertyName = $topParameter->name;
+        // 重构属性结构为 oneOf/anyOf/allOf 格式
+        $node = &$currentNode['properties'][$propertyName][$topParameter->type->value];
+
+        $i = 0;
+        foreach ($topParameter->types as $kindType){
+            $type = ParameterTypeEnum::getBaseEnumByTypeKindEnum($kindType);
+            if($type){
+                $node[$i] = ['type'=> $type];
+                $i++;
+            }
+        }
+
+        if($topParameter->children){
+            foreach ($topParameter->children as $className => $child){
+                $type = ParameterTypeEnum::getArrayAndObjectEnumBy($topParameter->types,$className);
+                if($type->isObject()){
+                    $node[$i] = ['type'=>'object','properties' => []];
+                    $childNode = &$node[$i];
+                    $i++;
+                }else if($type->isArray()){
+                    $node[$i] = ['type'=>'array','items'=> ['type'=>'object','properties' => []]];
+                    $childNode = &$node[$i]['items'];
+                    $i++;
+                }
+
+                $this->build($child,$childNode);
+            }
+        }
+
+    }
+
+    /**
+     * 构建嵌套属性结构
+     */
+    private function buildNestedProperties(ParameterCollection $topParameter, array &$currentNode): void
+    {
+        $propertyName = $topParameter->name;
+        $nestedNode = null;
+
+        if ($topParameter->type->isArray()) {
+            // 数组类型：创建 items 结构
+            $currentNode['properties'][$propertyName]['items'] = [
+                'type'       => 'object',
+                'properties' => [],
+            ];
+            $nestedNode = &$currentNode['properties'][$propertyName]['items'];
+        } elseif ($topParameter->type->isObject()) {
+            // 对象类型：重构为嵌套对象结构
+            $currentNode['properties'][$propertyName] = [
+                'type'       => 'object',
+                'properties' => [],
+                'description' => $topParameter->descriptions,
+            ];
+            $nestedNode = &$currentNode['properties'][$propertyName];
+        }
+
+        // 递归构建子属性
+        if ($nestedNode !== null) {
+            foreach ($topParameter->children as $childParameter) {
+                $this->build($childParameter, $nestedNode);
+            }
+        }
+    }
 }

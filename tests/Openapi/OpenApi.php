@@ -9,7 +9,8 @@ beforeAll(function () {
         public string $name_one;
         public int $id_one;
 
-        public OtherOpenApiArrayNestedTwo $otherNestedTwo;
+        public OtherOpenApiArrayNestedTwo $object_test;
+
     }
 
     class OtherOpenApiArrayNestedTwo
@@ -22,10 +23,10 @@ beforeAll(function () {
     class TestOpenApiRequest extends Serialize
     {
         public string $name;
-        public int $id;
+        public int|float|string $id;
 
-        /** @var OtherOpenApiArrayNestedOne[] $otherNestedOne  */
-        public array $otherNestedOne;
+        /** @var OtherOpenApiArrayNestedOne[]|OtherOpenApiArrayNestedTwo[]|string[] $any_array  */
+        public array $any_array;
     }
 
     class TestOpenApiResponse extends Serialize
@@ -39,18 +40,10 @@ beforeAll(function () {
 
         #[\Astral\Serialize\OpenApi\Annotations\Summary('测试方法一')]
         #[\Astral\Serialize\OpenApi\Annotations\Route('/test/one-action')]
-        public function one(TestOpenApiRequest $request): TestOpenApiResponse
+        public function one(TestOpenApiRequest $request)
         {
            return new TestOpenApiResponse();
         }
-
-
-//        #[\Astral\Serialize\OpenApi\Annotations\Summary('测试方法二')]
-//        #[\Astral\Serialize\OpenApi\Annotations\Route('test/two-action')]
-//        #[\Astral\Serialize\OpenApi\Annotations\Response(TestOpenApiResponse::class)]
-//        public function one2(TestOpenApiRequest $request): void
-//        {
-//        }
     }
 
 });
@@ -60,4 +53,5 @@ it('test openapi build by class', function () {
     $api =  new  \Astral\Serialize\OpenApi\OpenApi();
     $api->buildByClass(TestOpenApiController::class);
     $res = $api->toString();
+    var_dump($res);
 });

@@ -105,11 +105,14 @@ class OpenApiCollection
         $serializeContext->from();
         $properties = $serializeContext->getGroupCollection()->getProperties();
 
+
         $vols = [];
         foreach ($properties as $property){
             $vol = new ParameterCollection(
+                className: $className,
                 name: current($property->getInputNamesByGroups($groups,$className)),
                 descriptions: '',
+                types: $property->getTypes(),
                 type: ParameterTypeEnum::getByTypes($property->getTypes()),
                 required: !$property->isNullable(),
                 ignore: false,
@@ -117,7 +120,8 @@ class OpenApiCollection
 
             if($property->getChildren()){
                 foreach ($property->getChildren() as $children){
-                    $vol->children[] = $this->buildRequestBodyParameterCollections($children->getClassName());
+                    $className = $children->getClassName();
+                    $vol->children[$className] = $this->buildRequestBodyParameterCollections($className);
                 }
             }
 
@@ -144,7 +148,7 @@ class OpenApiCollection
             return  [];
         }
 
-        $groups = $this->response ? $this->response->groups : ['default'];
+        $groups = $this->response && is_array($this->response->groups) ?  $this->response->groups : ['default'];
         $serializeContext =  ContextFactory::build($responseClass);
         $serializeContext->from();
         $properties = $serializeContext->getGroupCollection()->getProperties();
@@ -152,8 +156,10 @@ class OpenApiCollection
         $vols = [];
         foreach ($properties as $property){
             $vol  =  new  ParameterCollection(
+                className: $responseClass,
                 name:current($property->getOutNamesByGroups($groups,$responseClass)),
                 descriptions: '',
+                types: $property->getTypes(),
                 type: ParameterTypeEnum::getByTypes($property->getTypes()),
                 required: !$property->isNullable(),
                 ignore: false,

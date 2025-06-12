@@ -17,6 +17,56 @@ enum ParameterTypeEnum: string
     case ANY_OF = 'anyOf';
     case ALL_OF = 'allOf';
 
+    public function isObject(): bool
+    {
+        return $this === self::OBJECT;
+    }
+
+    public function isArray(): bool
+    {
+        return $this === self::ARRAY;
+    }
+
+    public function isOf(): bool
+    {
+        return $this === self::ONE_OF ||  $this === self::ANY_OF || $this === self::ALL_OF;
+    }
+
+    public static function getBaseEnumByTypeKindEnum(TypeCollection $collection, string $className = null): ?ParameterTypeEnum
+    {
+        return match (true){
+            $collection->kind === TypeKindEnum::STRING && !$className => self::STRING,
+            $collection->kind === TypeKindEnum::INT && !$className => self::INTEGER,
+            $collection->kind === TypeKindEnum::FLOAT && !$className => self::NUMBER,
+            $collection->kind === TypeKindEnum::BOOLEAN  && !$className=> self::BOOLEAN,
+            in_array($collection->kind, [TypeKindEnum::CLASS_OBJECT, TypeKindEnum::OBJECT], true) && $className === $collection->className => self::OBJECT,
+            in_array($collection->kind, [TypeKindEnum::ARRAY, TypeKindEnum::COLLECT_SINGLE_OBJECT, TypeKindEnum::COLLECT_UNION_OBJECT], true) && $className === $collection->className => self::ARRAY,
+            default => null,
+        };
+    }
+
+    /**
+     * @param TypeCollection[] $types
+     * @param string $className
+     * @return ParameterTypeEnum|null
+     */
+
+    public static function getArrayAndObjectEnumBy(array $types, string $className): ?ParameterTypeEnum
+    {
+
+        foreach ($types as $collection){
+            if($className === $collection->className && in_array($collection->kind, [TypeKindEnum::CLASS_OBJECT, TypeKindEnum::OBJECT], true)){
+                return self::OBJECT;
+            }
+
+            if( $className === $collection->className && in_array($collection->kind, [TypeKindEnum::ARRAY, TypeKindEnum::COLLECT_SINGLE_OBJECT, TypeKindEnum::COLLECT_UNION_OBJECT], true)){
+                return self::ARRAY;
+            }
+        }
+
+        return null;
+    }
+
     /**
      * @param TypeCollection[] $types
      */
