@@ -45,13 +45,12 @@ class OpenApi extends Handler
                 continue;
             }
 
-            $routeDoc = $summaryDoc = $requestBodyDoc = $responseDoc = $headersDoc = null;
             $instances = [
-                Route::class       => &$routeDoc,
-                Summary::class     => &$summaryDoc,
-                RequestBody::class => &$requestBodyDoc,
-                Response::class    => &$responseDoc,
-                Headers::class     => &$headersDoc,
+                Route::class       => null,
+                Summary::class     => null,
+                RequestBody::class => null,
+                Response::class    => null,
+                Headers::class     => null,
             ];
 
             foreach ($methodAttributes as $methodAttribute) {
@@ -61,7 +60,7 @@ class OpenApi extends Handler
                 }
             }
 
-            if (! $routeDoc || ! $summaryDoc) {
+            if ($instances[Route::class] === null || $instances[Summary::class] === null) {
                 continue;
             }
 
@@ -70,20 +69,15 @@ class OpenApi extends Handler
                 methodName: $item->getName(),
                 reflectionMethod: $item,
                 tag: $tagDoc,
-                summary: $summaryDoc,
-                route: $routeDoc,
-                headers: $headersDoc,
+                summary: $instances[Summary::class],
+                route: $instances[Route::class],
+                headers: $instances[Headers::class],
                 attributes: $methodAttributes,
-                requestBody: $requestBodyDoc,
-                response: $responseDoc,
+                requestBody: $instances[RequestBody::class],
+                response: $instances[Response::class],
             );
-
 
             self::$OpenAPI->addPath($openApiCollection);
         }
     }
-
-
-
-
 }

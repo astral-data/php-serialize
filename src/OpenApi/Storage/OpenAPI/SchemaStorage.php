@@ -35,6 +35,7 @@ class SchemaStorage implements StorageInterface
      *
      * @param array<ParameterCollection> $parameterTree 参数集合树
      * @param array|null $currentNode 当前构建节点的引用
+     * @param-out array $currentNode 当前构建节点的引用
      * @return static
      */
     public function build(array $parameterTree, array &$currentNode = null): static
