@@ -32,15 +32,13 @@ enum ParameterTypeEnum: string
         return $this === self::ONE_OF ||  $this === self::ANY_OF || $this === self::ALL_OF;
     }
 
-    public static function getBaseEnumByTypeKindEnum(TypeCollection $collection, string $className = null): ?ParameterTypeEnum
+    public static function getBaseEnumByTypeKindEnum(TypeCollection $collection): ?ParameterTypeEnum
     {
         return match (true){
-            $collection->kind === TypeKindEnum::STRING && !$className => self::STRING,
-            $collection->kind === TypeKindEnum::INT && !$className => self::INTEGER,
-            $collection->kind === TypeKindEnum::FLOAT && !$className => self::NUMBER,
-            $collection->kind === TypeKindEnum::BOOLEAN  && !$className=> self::BOOLEAN,
-            in_array($collection->kind, [TypeKindEnum::CLASS_OBJECT, TypeKindEnum::OBJECT], true) && $className === $collection->className => self::OBJECT,
-            in_array($collection->kind, [TypeKindEnum::ARRAY, TypeKindEnum::COLLECT_SINGLE_OBJECT, TypeKindEnum::COLLECT_UNION_OBJECT], true) && $className === $collection->className => self::ARRAY,
+            $collection->kind === TypeKindEnum::STRING => self::STRING,
+            $collection->kind === TypeKindEnum::INT => self::INTEGER,
+            $collection->kind === TypeKindEnum::FLOAT => self::NUMBER,
+            $collection->kind === TypeKindEnum::BOOLEAN => self::BOOLEAN,
             default => null,
         };
     }

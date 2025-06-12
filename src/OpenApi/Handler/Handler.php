@@ -129,12 +129,7 @@ abstract class Handler implements HandleInterface
 
             // 如果类尚未加载，则尝试 include
             if (! class_exists($className)) {
-                include_once $path;
-                @ob_clean();
-                if (! class_exists($className)) {
-                    // 如果 include 后仍然不存在该类，跳过
-                    continue;
-                }
+                continue;
             }
 
             // 调用子类实现的 buildByClass

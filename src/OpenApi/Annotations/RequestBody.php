@@ -11,7 +11,7 @@ use Attribute;
 class RequestBody
 {
     public function __construct(
-        /** @var class-string $className */
+        /** @var class-string|string $className */
         public string $className = '',
         public ContentTypeEnum $contentType = ContentTypeEnum::JSON,
         public array|null $group = null

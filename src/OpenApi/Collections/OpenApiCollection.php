@@ -19,6 +19,7 @@ use Astral\Serialize\Serialize;
 use Astral\Serialize\Support\Factories\ContextFactory;
 use Psr\SimpleCache\InvalidArgumentException;
 use ReflectionMethod;
+use ReflectionNamedType;
 
 class OpenApiCollection
 {
@@ -73,7 +74,8 @@ class OpenApiCollection
     {
         $openAPIRequestBody = new RequestBodyStorage(ContentTypeEnum::JSON);
         $methodParam = $this->reflectionMethod->getParameters()[0] ?? null;
-        $requestBodyClass = $methodParam ? $methodParam->getType()?->getName() : '';
+        $type = $methodParam?->getType();
+        $requestBodyClass = $type instanceof ReflectionNamedType  ? $type->getName() : '';
         if (is_subclass_of($requestBodyClass, Serialize::class)) {
             $schemaStorage = (new SchemaStorage())->build($this->buildRequestBodyParameterCollections($requestBodyClass),$node);
             $openAPIRequestBody->withParameter($schemaStorage);
@@ -96,7 +98,7 @@ class OpenApiCollection
     /**
      * @param string $className
      * @param array $groups
-     * @return array<string, ParameterCollection>
+     * @return array<ParameterCollection>
      * @throws InvalidArgumentException
      */
     public function buildRequestBodyParameterCollections(string $className, array $groups = ['default']): array
@@ -111,9 +113,9 @@ class OpenApiCollection
             $vol = new ParameterCollection(
                 className: $className,
                 name: current($property->getInputNamesByGroups($groups,$className)),
-                descriptions: '',
                 types: $property->getTypes(),
                 type: ParameterTypeEnum::getByTypes($property->getTypes()),
+                descriptions: '',
                 required: !$property->isNullable(),
                 ignore: false,
             );
@@ -132,7 +134,7 @@ class OpenApiCollection
     }
 
     /**
-     * @return array<string, ParameterCollection>
+     * @return array<ParameterCollection>
      * @throws InvalidArgumentException
      */
     public function buildResponseParameterCollections(): array
@@ -157,10 +159,10 @@ class OpenApiCollection
         foreach ($properties as $property){
             $vol  =  new  ParameterCollection(
                 className: $responseClass,
-                name:current($property->getOutNamesByGroups($groups,$responseClass)),
-                descriptions: '',
+                name: current($property->getOutNamesByGroups($groups,$responseClass)),
                 types: $property->getTypes(),
                 type: ParameterTypeEnum::getByTypes($property->getTypes()),
+                descriptions: '',
                 required: !$property->isNullable(),
                 ignore: false,
             );
