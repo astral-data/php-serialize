@@ -8,11 +8,10 @@ use Astral\Serialize\Contracts\Attribute\OutValueCastInterface;
 use Astral\Serialize\Support\Collections\DataCollection;
 use Astral\Serialize\Support\Context\OutContext;
 use Attribute;
-use DateInvalidTimeZoneException;
-use DateMalformedStringException;
 use DateTime;
 use DateTimeInterface;
 use DateTimeZone;
+use Exception;
 
 /**
  * toArray 输出值为 固定日期格式 默认 YYYY-MM-DD HH:ii:ss的日期格式
@@ -31,19 +30,12 @@ class OutputDateFormat implements OutValueCastInterface
         return is_string($value) || is_numeric($value) || is_subclass_of($value, DateTimeInterface::class);
     }
 
-    /**
-     * @throws DateMalformedStringException
-     * @throws DateInvalidTimeZoneException
-     */
+
     public function resolve(mixed $value, DataCollection $collection, OutContext $context): string|DateTime|null
     {
         return $this->formatValue($value);
     }
 
-    /**
-     * @throws DateMalformedStringException
-     * @throws DateInvalidTimeZoneException
-     */
     private function formatValue(mixed $value): ?string
     {
         $timezone = $this->timezone ? new DateTimeZone($this->timezone) : null;
@@ -57,7 +49,7 @@ class OutputDateFormat implements OutValueCastInterface
     }
 
     /**
-     * @throws DateMalformedStringException
+     * @throws Exception
      */
     private function formatDateTime(DateTimeInterface $dateTime, ?DateTimeZone $timezone): string
     {
@@ -69,7 +61,7 @@ class OutputDateFormat implements OutValueCastInterface
     }
 
     /**
-     * @throws DateMalformedStringException
+     * @throws Exception
      */
     private function formatTimestamp(int $timestamp, ?DateTimeZone $timezone): string
     {
@@ -82,7 +74,7 @@ class OutputDateFormat implements OutValueCastInterface
     }
 
     /**
-     * @throws DateMalformedStringException
+     * @throws Exception
      */
     private function formatStringDate(string $value, ?DateTimeZone $timezone): string
     {
