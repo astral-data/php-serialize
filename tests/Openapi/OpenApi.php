@@ -1,5 +1,6 @@
 <?php
 
+use Astral\Serialize\OpenApi\OpenApi;
 use Astral\Serialize\Serialize;
 
 beforeAll(static function () {
@@ -51,7 +52,7 @@ beforeAll(static function () {
 
 test('OpenAPI structure is correct', function () {
 
-    $api =  new \Astral\Serialize\OpenApi\OpenApi();
+    $api =  new OpenApi();
     $api->buildByClass(TestOpenApiController::class);
 
     $openApi = $api::$OpenAPI;
