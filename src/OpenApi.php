@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Astral\Serialize\OpenApi;
+namespace Astral\Serialize;
 
 use Astral\Serialize\OpenApi\Annotations\Headers;
 use Astral\Serialize\OpenApi\Annotations\RequestBody;
@@ -53,12 +53,16 @@ class OpenApi extends Handler
                 Headers::class     => null,
             ];
 
+
             foreach ($methodAttributes as $methodAttribute) {
-                $name = $methodAttribute->getName();
-                if (array_key_exists($name,$instances)) {
-                    $instances[$name] = $methodAttribute->newInstance();
+                $inst =  $methodAttribute->newInstance();
+                foreach (array_keys($instances) as $anchorClass) {
+                    if ($inst instanceof $anchorClass) {
+                        $instances[$anchorClass] = $inst;
+                    }
                 }
             }
+
 
             if ($instances[Route::class] === null || $instances[Summary::class] === null) {
                 continue;

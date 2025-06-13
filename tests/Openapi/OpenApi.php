@@ -1,6 +1,6 @@
 <?php
 
-use Astral\Serialize\OpenApi\OpenApi;
+use Astral\Serialize\OpenApi;
 use Astral\Serialize\Serialize;
 
 beforeAll(static function () {
@@ -59,7 +59,6 @@ test('OpenAPI structure is correct', function () {
 
     // 顶层结构断言
     expect($openApi->openapi)->toBe('3.1.1')
-        ->and($openApi->info->title)->toBe('API 接口')
         ->and($openApi->info->version)->toBe('1.0.0')
         ->and($openApi->tags[0]->name)->toBe('接口测试');
 

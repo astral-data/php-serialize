@@ -21,7 +21,7 @@ abstract class Handler implements HandleInterface
     public function __construct(
         protected readonly ParameterStorage $headerParameterStorages = new ParameterStorage()
     ) {
-        self::$OpenAPI ??= (new OpenAPI())->withApiInfo(new ApiInfo('API 接口',''));
+        self::$OpenAPI ??= (new OpenAPI())->withApiInfo(new ApiInfo('API Doc',''));
     }
 
     /**

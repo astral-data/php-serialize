@@ -6,13 +6,14 @@ namespace Astral\Serialize\OpenApi\Storage\OpenAPI;
 
 use Astral\Serialize\OpenApi\Enum\ContentTypeEnum;
 use Astral\Serialize\OpenApi\Storage\StorageInterface;
+use stdClass;
 
 /**
  * 参数配置
  */
 class RequestBodyStorage implements StorageInterface
 {
-    public array $parameters;
+    public array|stdClass $parameters = [];
 
     public function __construct(
         public ContentTypeEnum $contentType = ContentTypeEnum::JSON,
