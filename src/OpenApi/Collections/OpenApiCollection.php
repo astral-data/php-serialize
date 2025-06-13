@@ -2,7 +2,6 @@
 
 namespace Astral\Serialize\OpenApi\Collections;
 
-use Astral\Serialize\Enums\TypeKindEnum;
 use Astral\Serialize\OpenApi\Annotations\Headers;
 use Astral\Serialize\OpenApi\Annotations\RequestBody;
 use Astral\Serialize\OpenApi\Annotations\Response;
@@ -52,7 +51,6 @@ class OpenApiCollection
 
         $openAPIMethod->withRequestBody($this->requestBody !== null ? $this->buildRequestBodyByAttribute() : $this->buildRequestBodyByParameters());
         $openAPIMethod->addResponse(200, $this->buildResponse());
-
         return $openAPIMethod;
     }
 
@@ -62,7 +60,7 @@ class OpenApiCollection
     public function buildRequestBodyByAttribute(): RequestBodyStorage
     {
         $openAPIRequestBody = new RequestBodyStorage($this->requestBody->contentType);
-        $schemaStorage = (new SchemaStorage())->build($this->buildRequestBodyParameterCollections($this->requestBody->className,$this->requestBody->group),$n);
+        $schemaStorage = (new SchemaStorage())->build($this->buildParameterCollections($this->requestBody->className,$this->requestBody->group),$n);
         $openAPIRequestBody->withParameter($schemaStorage);
         return $openAPIRequestBody;
     }
@@ -77,7 +75,7 @@ class OpenApiCollection
         $type = $methodParam?->getType();
         $requestBodyClass = $type instanceof ReflectionNamedType  ? $type->getName() : '';
         if (is_subclass_of($requestBodyClass, Serialize::class)) {
-            $schemaStorage = (new SchemaStorage())->build($this->buildRequestBodyParameterCollections($requestBodyClass),$node);
+            $schemaStorage = (new SchemaStorage())->build($this->buildParameterCollections($requestBodyClass),$node);
             $openAPIRequestBody->withParameter($schemaStorage);
         }
 
@@ -89,9 +87,23 @@ class OpenApiCollection
      */
     public function buildResponse(): ResponseStorage
     {
+        $returnClass = $this->reflectionMethod->getReturnType();
+        $returnClass = $returnClass instanceof ReflectionNamedType ? $returnClass->getName() : null;
+        $responseClass =  match(true){
+            $this->response !== null => $this->response->className,
+            $returnClass && is_subclass_of($returnClass,Serialize::class) => $returnClass,
+            default => null,
+        };
+
         $responseStorage = new ResponseStorage();
-        $schemaStorage = (new SchemaStorage())->build($this->buildResponseParameterCollections());
-        $responseStorage->withParameter($schemaStorage);
+
+
+        if($responseClass) {
+            $groups = $this->response && is_array($this->response->groups) ?  $this->response->groups : ['default'];
+            $schemaStorage = (new SchemaStorage())->build($this->buildParameterCollections($responseClass, $groups));
+            $responseStorage->withParameter($schemaStorage);
+        }
+
         return $responseStorage;
     }
 
@@ -101,12 +113,11 @@ class OpenApiCollection
      * @return array<ParameterCollection>
      * @throws InvalidArgumentException
      */
-    public function buildRequestBodyParameterCollections(string $className, array $groups = ['default']): array
+    public function buildParameterCollections(string $className, array $groups = ['default']): array
     {
         $serializeContext =  ContextFactory::build($className);
         $serializeContext->from();
         $properties = $serializeContext->getGroupCollection()->getProperties();
-
 
         $vols = [];
         foreach ($properties as $property){
@@ -123,53 +134,7 @@ class OpenApiCollection
             if($property->getChildren()){
                 foreach ($property->getChildren() as $children){
                     $className = $children->getClassName();
-                    $vol->children[$className] = $this->buildRequestBodyParameterCollections($className);
-                }
-            }
-
-            $vols[] = $vol;
-        }
-
-        return $vols;
-    }
-
-    /**
-     * @return array<ParameterCollection>
-     * @throws InvalidArgumentException
-     */
-    public function buildResponseParameterCollections(): array
-    {
-        $returnClass = $this->reflectionMethod->getReturnType();
-        $responseClass =  match(true){
-            $this->response !== null => $this->response->className,
-            $returnClass && is_subclass_of($returnClass,Serialize::class) => $returnClass,
-            default => null,
-        };
-
-        if(!$responseClass){
-            return  [];
-        }
-
-        $groups = $this->response && is_array($this->response->groups) ?  $this->response->groups : ['default'];
-        $serializeContext =  ContextFactory::build($responseClass);
-        $serializeContext->from();
-        $properties = $serializeContext->getGroupCollection()->getProperties();
-
-        $vols = [];
-        foreach ($properties as $property){
-            $vol  =  new  ParameterCollection(
-                className: $responseClass,
-                name: current($property->getOutNamesByGroups($groups,$responseClass)),
-                types: $property->getTypes(),
-                type: ParameterTypeEnum::getByTypes($property->getTypes()),
-                descriptions: '',
-                required: !$property->isNullable(),
-                ignore: false,
-            );
-
-            if($property->getChildren()){
-                foreach ($property->getChildren() as $children){
-                    $vol->children[] = $this->buildRequestBodyParameterCollections($children->getClassName());
+                    $vol->children[$className] = $this->buildParameterCollections($className);
                 }
             }
 

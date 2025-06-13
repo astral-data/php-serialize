@@ -8,7 +8,7 @@ use Astral\Serialize\OpenApi\Storage\StorageInterface;
 
 class ResponseStorage implements StorageInterface
 {
-    public array $parameter;
+    public array $parameter = [];
 
     public function __construct(
         public string $contentType = 'application/json',

@@ -137,8 +137,6 @@ abstract class Handler implements HandleInterface
         }
     }
 
-
-
     public function output(string $path): bool
     {
         return true;
