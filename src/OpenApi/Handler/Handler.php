@@ -24,6 +24,21 @@ abstract class Handler implements HandleInterface
         self::$OpenAPI ??= (new OpenAPI())->withApiInfo(new ApiInfo('API Doc',''));
     }
 
+    public function rootPath(): string
+    {
+        return dirname(__DIR__, 3);
+    }
+
+    public function config()
+    {
+        $path = $this->rootPath().'/.openapi.php';
+        if(is_file($path)){
+            return include $path;
+        }
+
+        return include dirname(__DIR__, 3).'/.openapi.php';
+    }
+
     /**
      * 构建OpenApi结构文档
      *
