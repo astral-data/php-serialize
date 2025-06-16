@@ -15,8 +15,7 @@ use ReflectionException;
 
 class Config
 {
-
-    public static $config;
+    public static array $config;
 
     public static function rootPath(): string
     {
@@ -29,12 +28,11 @@ class Config
             return self::$config;
         }
 
+        self::$config = include dirname(__DIR__, 3).'/.openapi.php';
+
         $path = self::rootPath().'/.openapi.php';
         if(is_file($path)){
-            self::$config = include $path;
-        }
-        else{
-            self::$config = include dirname(__DIR__, 3).'/.openapi.php';
+            self::$config = array_merge(self::$config,include $path);
         }
 
         return self::$config;
@@ -43,6 +41,11 @@ class Config
     public static function get($key)
     {
         return self::build()[$key] ?? '';
+    }
+
+    public static function has($key): bool
+    {
+        return isset(self::build()[$key]);
     }
 
 }

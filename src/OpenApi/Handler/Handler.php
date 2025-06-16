@@ -15,13 +15,22 @@ use ReflectionException;
 
 abstract class Handler implements HandleInterface
 {
-    /** @var OpenAPI */
-    public static OpenAPI $OpenAPI;
+    /** @var OpenAPI|null */
+    public static ?OpenAPI $OpenAPI = null;
 
     public function __construct(
         protected readonly ParameterStorage $headerParameterStorages = new ParameterStorage()
     ) {
-        self::$OpenAPI ??= (new OpenAPI())->withApiInfo(new ApiInfo('API Doc',''));
+
+        self::$OpenAPI ??= (new OpenAPI())
+            ->withApiInfo(new ApiInfo(Config::get('title'), Config::get('description')))
+            ->withServers(Config::get('service'));
+
+        if(Config::has('headers')) {
+            foreach (Config::get('headers') as $header) {
+                $this->headerParameterStorages->addHeaderProperties($header['name'], $header['description'], $header['example']);
+            }
+        }
     }
 
     public function rootPath(): string
@@ -114,7 +123,6 @@ abstract class Handler implements HandleInterface
 
             // 如果是子目录，则递归，并拼接命名空间
             if (is_dir($path)) {
-
                 // 例如，如果当前命名空间是 "App"：
                 // 子目录 "Http" 则新的命名空间为 "App\Http"
                 $newNamespace = $namespace !== '' ? ($namespace . '\\' . $file) : $file;
@@ -150,11 +158,6 @@ abstract class Handler implements HandleInterface
             // 调用子类实现的 buildByClass
             $this->buildByClass($className);
         }
-    }
-
-    public function output(string $path): bool
-    {
-        return true;
     }
 
     /**

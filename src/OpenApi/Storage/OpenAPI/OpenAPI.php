@@ -10,7 +10,6 @@ use Astral\Serialize\OpenApi\Storage\StorageInterface;
 
 class OpenAPI implements StorageInterface
 {
-
     public string $openapi = '3.1.1';
 
     public ApiInfo $info;
@@ -33,6 +32,7 @@ class OpenAPI implements StorageInterface
         $this->info = $apiInfo;
         return $this;
     }
+
 
     public function withServers(array $servers): self
     {

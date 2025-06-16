@@ -53,7 +53,6 @@ class OpenApi extends Handler
                 Headers::class     => null,
             ];
 
-
             foreach ($methodAttributes as $methodAttribute) {
                 $inst =  $methodAttribute->newInstance();
                 foreach (array_keys($instances) as $anchorClass) {
@@ -62,7 +61,6 @@ class OpenApi extends Handler
                     }
                 }
             }
-
 
             if ($instances[Route::class] === null || $instances[Summary::class] === null) {
                 continue;

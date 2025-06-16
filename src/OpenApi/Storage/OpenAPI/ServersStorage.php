@@ -12,8 +12,17 @@ class ServersStorage implements StorageInterface
     public function __construct(
         public string $url,
         public string $description,
-        public array|stdClass|null $variables = null
+        public array|stdClass $variables = new stdClass(),
     ) {
-        $this->variables = $this->variables ?: new stdClass();
+
+    }
+
+    public function addVariable(string $name, $description, $default = ''): static
+    {
+        $this->variables  = $this->variables instanceof stdClass::class ? [] : $this->variables;
+
+        $this->variables[$name] = ['default' => $default, 'description'=> $description];
+
+        return $this;
     }
 }
