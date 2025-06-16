@@ -19,7 +19,7 @@ class ServersStorage implements StorageInterface
 
     public function addVariable(string $name, $description, $default = ''): static
     {
-        $this->variables  = $this->variables instanceof stdClass::class ? [] : $this->variables;
+        $this->variables  = $this->variables instanceof stdClass ? [] : $this->variables;
 
         $this->variables[$name] = ['default' => $default, 'description'=> $description];
 
