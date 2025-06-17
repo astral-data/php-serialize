@@ -19,7 +19,7 @@ It allows you to map objects to arrays/JSON and **automatically generate OpenAPI
 - 🏷️ Property aliasing with `#[SerializedName]`
 - 🔄 Automatic type casting (e.g. `DateTime ↔ string`)
 - 🔁 Deep object nesting support
-- ❌ Skip/exclude fields with `#[Skip]`
+- ❌ Skip/exclude fields with
 - 🧩 Recursive DTO serialization
 - 🧬 **Auto-generate OpenAPI schema** using object definitions
 - ⚙️ Framework-agnostic — works with Laravel, Symfony, etc.
