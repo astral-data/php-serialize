@@ -16,7 +16,7 @@ It allows you to map objects to arrays/JSON and **automatically generate OpenAPI
 
 ## ✨ Features
 
-- 🏷️ Property aliasing with `#[SerializedName]`
+- 🏷️ Property aliasing with
 - 🔄 Automatic type casting (e.g. `DateTime ↔ string`)
 - 🔁 Deep object nesting support
 - ❌ Skip/exclude fields with
