@@ -60,7 +60,7 @@ class OpenApiCollection
     public function buildRequestBodyByAttribute(): RequestBodyStorage
     {
         $openAPIRequestBody = new RequestBodyStorage($this->requestBody->contentType);
-        $schemaStorage = (new SchemaStorage())->build($this->buildParameterCollections($this->requestBody->className,$this->requestBody->group),$n);
+        $schemaStorage = (new SchemaStorage())->build($this->buildParameterCollections($this->requestBody->className,$this->requestBody->groups));
         $openAPIRequestBody->withParameter($schemaStorage);
         return $openAPIRequestBody;
     }
@@ -75,7 +75,7 @@ class OpenApiCollection
         $type = $methodParam?->getType();
         $requestBodyClass = $type instanceof ReflectionNamedType  ? $type->getName() : '';
         if (is_subclass_of($requestBodyClass, Serialize::class)) {
-            $schemaStorage = (new SchemaStorage())->build($this->buildParameterCollections($requestBodyClass),$node);
+            $schemaStorage = (new SchemaStorage())->build($this->buildParameterCollections($requestBodyClass));
             $openAPIRequestBody->withParameter($schemaStorage);
         }
 

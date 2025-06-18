@@ -22,7 +22,8 @@
         "phpdocumentor/reflection-docblock": "^5.5",
         "phpdocumentor/reflection": "^6.0",
         "fakerphp/faker": "^1.23",
-        "psr/simple-cache": "^3.0"
+        "psr/simple-cache": "^3.0",
+        "symfony/console": "^6.4"
     },
     "require-dev" : {
         "phpstan/phpstan": "^2.0.2",
@@ -38,6 +39,9 @@
             "Astral\\Benchmarks\\": "benchmarks/"
         }
     },
+    "bin": [
+        "src/OpenApi/bin/art"
+    ],
     "config": {
         "allow-plugins": {
             "pestphp/pest-plugin": true

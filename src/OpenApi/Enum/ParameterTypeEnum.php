@@ -17,6 +17,7 @@ enum ParameterTypeEnum: string
     case ANY_OF = 'anyOf';
     case ALL_OF = 'allOf';
 
+
     public function isObject(): bool
     {
         return $this === self::OBJECT;
@@ -35,7 +36,7 @@ enum ParameterTypeEnum: string
     public static function getBaseEnumByTypeKindEnum(TypeCollection $collection): ?ParameterTypeEnum
     {
         return match (true){
-            $collection->kind === TypeKindEnum::STRING => self::STRING,
+            $collection->kind === TypeKindEnum::STRING, $collection->kind === TypeKindEnum::ENUM => self::STRING,
             $collection->kind === TypeKindEnum::INT => self::INTEGER,
             $collection->kind === TypeKindEnum::FLOAT => self::NUMBER,
             $collection->kind === TypeKindEnum::BOOLEAN => self::BOOLEAN,
@@ -63,6 +64,17 @@ enum ParameterTypeEnum: string
         }
 
         return null;
+    }
+
+    public static function hasEnum(array $types): bool
+    {
+        foreach ($types as $type){
+            if($type->kind === TypeKindEnum::ENUM){
+              return true;
+            }
+        }
+
+        return false;
     }
 
     /**

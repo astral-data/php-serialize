@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Astral\Serialize\OpenApi\Storage\OpenAPI;
 
+use Astral\Serialize\Enums\TypeKindEnum;
 use Astral\Serialize\OpenApi\Collections\ParameterCollection;
 use Astral\Serialize\OpenApi\Enum\ParameterTypeEnum;
 use Astral\Serialize\OpenApi\Storage\StorageInterface;
@@ -77,7 +78,7 @@ class SchemaStorage implements StorageInterface
 
         $currentNode['properties'][$propertyName] = [
             'type'        => $parameter->type->value,
-            'description' => $parameter->descriptions,
+            'description' => $this->getDescriptions($parameter),
             'example'     => $parameter->example,
         ];
 
@@ -144,7 +145,7 @@ class SchemaStorage implements StorageInterface
             $currentNode['properties'][$propertyName] = [
                 'type'       => 'object',
                 'properties' => [],
-                'description' => $topParameter->descriptions,
+                'description' => $this->getDescriptions($topParameter),
             ];
             $nestedNode = &$currentNode['properties'][$propertyName];
         }
@@ -155,5 +156,27 @@ class SchemaStorage implements StorageInterface
                 $this->build($childParameter, $nestedNode);
             }
         }
+    }
+
+    public function getDescriptions(ParameterCollection $parameter):string
+    {
+        if(!ParameterTypeEnum::hasEnum($parameter->types)){
+            return  $parameter->descriptions;
+        }
+
+        $descriptions = $parameter->descriptions;
+
+        $names = [];
+        foreach ($parameter->types as $type) {
+            if (TypeKindEnum::ENUM === $type->kind && enum_exists($type->className)) {
+                foreach ($type->className::cases() as $case) {
+                    $names[$case->name] = $case->name;
+                }
+            }
+        }
+
+        $descriptions .= ' Optional values: ：' . implode('、', $names);
+
+        return $descriptions;
     }
 }
