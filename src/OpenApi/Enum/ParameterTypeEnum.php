@@ -98,14 +98,32 @@ enum ParameterTypeEnum: string
         }
 
         $hasUnion = false;
+        $unionTypes = [];
         foreach ($types as $type){
+
+            if($type->kind === TypeKindEnum::ENUM){
+                $unionTypes[TypeKindEnum::STRING->name] =  $type;
+            }else{
+                $unionTypes[$type->kind->name] =  $type;
+            }
+
             if($type->kind === TypeKindEnum::COLLECT_UNION_OBJECT){
                 $hasUnion = true;
             }
         }
 
-        return $hasUnion ? self::ANY_OF : self::ONE_OF;
+        if(!$hasUnion && count($unionTypes) === 1){
+            $type = current($types)->kind;
+            return match (true){
+                $type === TypeKindEnum::INT => self::INTEGER,
+                $type === TypeKindEnum::FLOAT => self::NUMBER,
+                $type === TypeKindEnum::BOOLEAN => self::BOOLEAN,
+                in_array($type, [TypeKindEnum::OBJECT, TypeKindEnum::CLASS_OBJECT, TypeKindEnum::ARRAY, TypeKindEnum::COLLECT_SINGLE_OBJECT, TypeKindEnum::COLLECT_UNION_OBJECT], true) => self::ONE_OF,
+                default => self::STRING,
+            };
+        }
 
+        return $hasUnion ? self::ANY_OF : self::ONE_OF;
 
     }
 }

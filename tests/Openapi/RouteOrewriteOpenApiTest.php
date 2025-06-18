@@ -32,7 +32,7 @@ beforeAll(static function () {
 
 });
 
-test('OpenAPI structure is correct', function () {
+test('OpenAPI customer route', function () {
 
     $api =  new OpenApi();
     $api->buildByClass(TestCustomerRouteController::class);

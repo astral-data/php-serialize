@@ -81,7 +81,7 @@ test('OpenAPI structure is correct', function () {
 
     // id 字段是 oneOf 并包含 string, integer, number
     $idOneOf = $schema['properties']['id']['oneOf'];
-    $types = array_map(static fn($item) => $item['type']->value, $idOneOf);
+    $types = array_map(static fn($item) => $item['type'], $idOneOf);
     expect($types)->toMatchArray(['string', 'integer', 'number']);
 
     // any_array 是 oneOf 并包含至少一个 array 类型

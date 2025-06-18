@@ -98,10 +98,12 @@ class SchemaStorage implements StorageInterface
         $node = &$currentNode['properties'][$propertyName][$topParameter->type->value];
 
         $i = 0;
+        $addedTypes = [];
         foreach ($topParameter->types as $kindType){
             $type = ParameterTypeEnum::getBaseEnumByTypeKindEnum($kindType);
-            if($type){
-                $node[$i] = ['type'=> $type];
+            if ($type && !in_array($type->value, $addedTypes, true)) {
+                $node[$i] = ['type' => $type->value];
+                $addedTypes[] = $type->value;
                 $i++;
             }
         }
@@ -175,7 +177,7 @@ class SchemaStorage implements StorageInterface
             }
         }
 
-        $descriptions .= ' Optional values: ：' . implode('、', $names);
+        $descriptions .= 'Optional values：' . implode('、', $names);
 
         return $descriptions;
     }

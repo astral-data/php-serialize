@@ -39,9 +39,6 @@
             "Astral\\Benchmarks\\": "benchmarks/"
         }
     },
-    "bin": [
-        "src/OpenApi/bin/art"
-    ],
     "config": {
         "allow-plugins": {
             "pestphp/pest-plugin": true

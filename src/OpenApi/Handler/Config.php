@@ -15,7 +15,7 @@ use ReflectionException;
 
 class Config
 {
-    public static array $config;
+    public static ?array $config = null;
 
     public static function rootPath(): string
     {
