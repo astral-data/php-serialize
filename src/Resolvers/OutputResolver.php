@@ -36,7 +36,7 @@ class OutputResolver
         $toArray  = [];
         foreach ($properties as $collection) {
 
-            $name = $collection->getName();
+            $name      = $collection->getName();
             $matchData = $this->matchNameAndValue($chooseContext, $collection, $object);
             if ($matchData === false) {
                 continue;

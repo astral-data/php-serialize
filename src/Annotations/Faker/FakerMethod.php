@@ -82,7 +82,7 @@ class FakerMethod implements FakerCastInterface
         return $reflectionClass->newInstanceArgs(array_map(function ($param) use ($dependencyChain) {
             $paramType = $param->getType();
 
-            if(!$paramType instanceof ReflectionNamedType){
+            if (!$paramType instanceof ReflectionNamedType) {
                 throw new \http\Exception\RuntimeException("$paramType is not ReflectionNamedType");
             }
 
@@ -90,8 +90,8 @@ class FakerMethod implements FakerCastInterface
 
             return match(true) {
                 !$paramType->isBuiltin() && class_exists($typeName) => $this->createInstanceWithResolvedConstructor($typeName, $dependencyChain),
-                $param->isDefaultValueAvailable()               => $param->getDefaultValue(),
-                default                                         => null,
+                $param->isDefaultValueAvailable()                   => $param->getDefaultValue(),
+                default                                             => null,
             };
 
         }, $constructor?->getParameters()));
@@ -112,7 +112,7 @@ class FakerMethod implements FakerCastInterface
         return array_map(function (ReflectionParameter $param) {
             $paramType = $param->getType();
 
-            if(!$paramType instanceof ReflectionNamedType){
+            if (!$paramType instanceof ReflectionNamedType) {
                 throw new \http\Exception\RuntimeException("$paramType is not ReflectionNamedType");
             }
 

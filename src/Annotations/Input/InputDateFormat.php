@@ -10,7 +10,6 @@ use Astral\Serialize\Support\Context\InputValueContext;
 use Attribute;
 use DateInvalidTimeZoneException;
 use DateTime;
-use DateTimeImmutable;
 use DateTimeInterface;
 use DateTimeZone;
 
@@ -36,7 +35,7 @@ class InputDateFormat implements InputValueCastInterface
     public function resolve(mixed $value, DataCollection $collection, InputValueContext $context): string|DateTime
     {
 
-        $timezone = $this->timezone ? new DateTimeZone($this->timezone) : null;
+        $timezone  = $this->timezone ? new DateTimeZone($this->timezone) : null;
         $className = current($collection->getTypes())->className;
 
         if (!$this->outFormat

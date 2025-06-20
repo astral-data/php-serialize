@@ -45,7 +45,7 @@ class InputResolver
 
         foreach ($properties as $collection) {
 
-            $name = $collection->getName();
+            $name       = $collection->getName();
             $matchInput = $this->matchInputNameAndValue($chooseContext, $collection, $groupCollection, $payload);
             if ($matchInput === false) {
                 continue;
