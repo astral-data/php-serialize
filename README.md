@@ -5,7 +5,7 @@
 # Languages
 
 - [Complete documen-English](./docs/en/README.md)
-- [完整文档-中文](./docs/zh/README.md)
+- [完整文档-中文](https://astrals-organization.gitbook.io/php-serialize)
 
 # php-serialize
 An advanced PHP serialization tool leveraging attributes for flexible object-to-array and JSON conversion. Supports property aliases, type conversions, and nested object handling. Ideal for APIs, data persistence, and configuration management.

@@ -1,0 +1,7 @@
+root: docs
+structure:
+  langs:
+    - label: 简体中文
+      path: zh
+    - label: English
+      path: en
