@@ -1,4 +1,4 @@
-### Mapper映射
+## Mapper映射
 
 ### 属性映射
 
@@ -105,7 +105,6 @@ use Astral\Serialize\Support\Mappers\{
     KebabCaseMapper
 };
 use Astral\Serialize\Serialize;
-
 
 #[InputName(SnakeCaseMapper::class, groups: 'external')]
 #[InputName(CamelCaseMapper::class, groups: 'api')]
