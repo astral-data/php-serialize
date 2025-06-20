@@ -1,4 +1,6 @@
-##### Mapper映射
+### Mapper映射
+
+### 属性映射
 
 ```php
 use Astral\Serialize\Attributes\InputName;
@@ -46,7 +48,7 @@ $userArray = $user->toArray();
 // ]
 ```
 
-##### 全局类映射
+### 全局类映射
 
 ```php
 use Astral\Serialize\Attributes\InputName;
@@ -88,33 +90,7 @@ $userArray = $user->toArray();
 // ]
 ```
 
-###### 属性映射大于类级映射
-
-```php
-
-#[InputName(SnakeCaseMapper::class)]
-class PartialOverrideUser extends Serialize {
-    #[InputName(PascalCaseMapper::class)]
-    public string $userName;  // 优先使用帕斯卡命名映射
-    
-    public string $userEmail;  // 继续使用类级别的全局映射
-}
-
-$partialUser = PartialOverrideUser::from([
-    'User_name' => '张三',     // 使用蛇形映射
-    'UserName' => '李四',     // 使用帕斯卡映射
-    'user_email' => 'user@example.com' // 使用蛇形映射
-]);
-
-$partialUser->toArray();
-// $partialUser 的内容:
-// [
-//     'userName' => '李四',
-//     'userEmail' => 'user@example.com',
-// ]
-```
-
-###### 全局类映射的分组使用
+### 全局类映射的分组使用
 
 需要搭配`Groups`注解一起使用
 
@@ -180,7 +156,7 @@ $complexUser = $complexUser->toArray();
 //     'userEmail' => 张三,
 // ]
 ```
-#### 自定义映射器
+### 自定义映射器
 
 ```php
 // 自定义映射器 需要继承NameMapper 并实现 resolve
@@ -195,4 +171,30 @@ class AdvancedUser extends Serialize {
     #[InputName(CustomMapper::class)]
     public string $name;
 }
+```
+
+### Tips：属性映射优先于类级映射
+
+```php
+
+#[InputName(SnakeCaseMapper::class)]
+class PartialOverrideUser extends Serialize {
+    #[InputName(PascalCaseMapper::class)]
+    public string $userName;  // 优先使用帕斯卡命名映射
+    
+    public string $userEmail;  // 继续使用类级别的全局映射
+}
+
+$partialUser = PartialOverrideUser::from([
+    'User_name' => '张三',     // 使用蛇形映射
+    'UserName' => '李四',     // 使用帕斯卡映射
+    'user_email' => 'user@example.com' // 使用蛇形映射
+]);
+
+$partialUser->toArray();
+// $partialUser 的内容:
+// [
+//     'userName' => '李四',
+//     'userEmail' => 'user@example.com',
+// ]
 ```

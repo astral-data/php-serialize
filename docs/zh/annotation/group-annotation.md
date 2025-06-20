@@ -1,8 +1,8 @@
-#### 属性分组
+## 属性分组
 
 属性分组提供了一种灵活的方式来控制属性的输入和输出行为，允许在不同场景下精细地管理数据转换。
 
-##### 基本用法
+### 基本用法
 
 在属性上使用 `#[Groups]` 注解来指定属性所属的分组。
 
@@ -148,7 +148,7 @@ $multiGroupArray = $user4->toArray();
 // ]
 ```
 
-##### 嵌套类指定Group类展示
+### 嵌套类指定Group类展示
 
 ```php
 class ComplexUser extends Serialize {

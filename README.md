@@ -4,7 +4,7 @@
 
 # Languages
 
-- [Complete documen-English](./docs/en/README.md)
+- [Complete documen-English](https://astrals-organization.gitbook.io/php-serialize/php-serialize-en)
 - [完整文档-中文](https://astrals-organization.gitbook.io/php-serialize)
 
 # php-serialize

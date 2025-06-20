@@ -14,10 +14,11 @@
 ## 注解类使用
 
 * [属性分组](annotation/group-annotation.md)
-* [输入/输入出名称映射](annotation/alisa-annotation.md)
+* [输入/输出映射](annotation/alisa-annotation.md)
 * [Mapper映射](annotation/mapper-annotation.md)
 * [输入/输出忽略](annotation/ignore-annotation.md)
 * [时间格式映射](annotation/date-annotation.md)
+* [自定义注解](annotation/customer-annotation.md)
 
 ## 参数快速Faker
 
@@ -25,3 +26,7 @@
 * [集合Faker](faker/collection-faker.md)
 * [嵌套Faker](faker/nested-faker.md)
 * [方法Faker](faker/method-faker.md)
+
+## 自动创建OpenApi文档
+
+* [基础演示](openapi/base-openapi.md)

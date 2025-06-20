@@ -1,4 +1,6 @@
-### Faker类方法模拟
+## Faker类方法模拟
+
+### 基本用法
 
 ```php
 class UserService {
@@ -13,7 +15,7 @@ class UserFaker extends Serialize {
 }
 ```
 
-#### 完整的示例
+### 完整的示例
 
 ```php
 use Astral\Serialize\Serialize;

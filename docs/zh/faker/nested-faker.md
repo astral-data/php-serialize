@@ -1,6 +1,6 @@
-### 嵌套对象模拟
+## 嵌套对象模拟
 
-#### 基本用法
+### 基本用法
 
 ```php
 class ComplexUserFaker extends Serialize {
@@ -9,7 +9,7 @@ class ComplexUserFaker extends Serialize {
 }
 ```
 
-#### 演示实例
+### 演示实例
 
 ```php
 use Astral\Serialize\Serialize;

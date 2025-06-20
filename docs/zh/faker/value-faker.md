@@ -1,4 +1,4 @@
-### 简单属性模拟
+## 简单属性模拟
 
 ```php
 class UserFaker extends Serialize {

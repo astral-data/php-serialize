@@ -1,6 +1,6 @@
-#### 名称映射
+## 名称映射
 
-##### 基础使用
+### 基础使用
 
 ```php
 use Astral\Serialize\Attributes\InputName;
@@ -39,7 +39,7 @@ $userArray = $user->toArray();
 // ]
 ```
 
-##### 多输入/输出名称处理
+### 多输入/输出名称处理
 
 ```php
 use Astral\Serialize\Attributes\InputName;
@@ -104,7 +104,7 @@ $userArray = $user->toArray();
 // ]
 ```
 
-##### 复杂映射场景
+### 复杂映射场景
 
 ```php
 use Astral\Serialize\Serialize;

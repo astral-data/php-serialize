@@ -1,8 +1,8 @@
-### 类型转换
+## 类型转换
 
-#### 基本类型转换
+### 基本类型转换
 
-##### 方式一：构造函数属性提升
+#### 方式一：构造函数属性提升
 
 ```php
 use Astral\Serialize\Serialize;
@@ -17,7 +17,7 @@ class Profile extends Serialize {
 }
 ```
 
-##### 方式二：传统属性定义
+#### 方式二：传统属性定义
 
 ```php
 use Astral\Serialize\Serialize;
@@ -41,7 +41,7 @@ $profile = Profile::from([
 $profileArray = $profile->toArray();
 ```
 
-##### 方式三：只读属性
+#### 方式三：只读属性
 
 ```php
 use Astral\Serialize\Serialize;
