@@ -147,7 +147,7 @@ $adminUser = ComplexUser::from([
 ]);
 
 // info只会输出$money
-// 因为ComplexNestedInfo 绑定了 ComplexUser的类Group
+// 因为 ComplexNestedInfo 绑定了 ComplexUser的类Group
 $adminUser->toArray();
 /*
 [
