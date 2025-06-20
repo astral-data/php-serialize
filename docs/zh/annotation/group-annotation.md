@@ -146,7 +146,8 @@ $adminUser = ComplexUser::from([
     ],
 ]);
 
-// 默认输出包含所有字段
+// info只会输出$money
+// 因为ComplexNestedInfo 绑定了 ComplexUser的类Group
 $adminUser->toArray();
 /*
 [
