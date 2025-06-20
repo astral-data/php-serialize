@@ -3,6 +3,7 @@
 namespace Astral\Serialize\OpenApi\Collections;
 
 use Astral\Serialize\OpenApi\Annotations\Headers;
+use Astral\Serialize\OpenApi\Annotations\OpenApi;
 use Astral\Serialize\OpenApi\Annotations\RequestBody;
 use Astral\Serialize\OpenApi\Annotations\Response;
 use Astral\Serialize\OpenApi\Annotations\Route;
@@ -126,7 +127,7 @@ class OpenApiCollection
                 name: current($property->getInputNamesByGroups($groups,$className)),
                 types: $property->getTypes(),
                 type: ParameterTypeEnum::getByTypes($property->getTypes()),
-                descriptions: '',
+                openApiAnnotation: $this->getOpenApiAnnotation($property->getAttributes()),
                 required: !$property->isNullable(),
                 ignore: false,
             );
@@ -142,5 +143,16 @@ class OpenApiCollection
         }
 
         return $vols;
+    }
+
+    public function getOpenApiAnnotation(array $attributes): OpenApi|null
+    {
+        foreach ($attributes as $attribute){
+            if($attribute->getName() === OpenApi::class){
+               return $attribute->newInstance();
+            }
+        }
+
+        return null;
     }
 }

@@ -6,11 +6,13 @@ namespace Astral\Serialize\OpenApi\Annotations;
 
 use Attribute;
 
-#[Attribute(Attribute::TARGET_METHOD)]
+#[Attribute(Attribute::TARGET_PROPERTY)]
 class OpenApi
 {
+
     public function __construct(
-        public string $descriptions,
+        public string $description = '',
+        public string $example = '',
     ) {
     }
 }

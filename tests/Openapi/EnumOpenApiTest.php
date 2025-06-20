@@ -25,6 +25,7 @@ beforeAll(static function () {
     class OpenapiEnumRequest extends Serialize
     {
         public OpenapiEnum $test_enum;
+
         public OpenapiEnum|OpenapiUnionEnum $test_string_enum;
 
         public OpenapiEnum|OpenapiUnionEnum|string $test_string_2_enum;
@@ -41,7 +42,6 @@ beforeAll(static function () {
         public function one(OpenapiEnumRequest $request): void
         {
         }
-
     }
 
 });
@@ -68,22 +68,22 @@ test('OpenAPI enums auto create description', function () {
         ])
         ->and($schema['properties']['test_enum'])->toMatchArray([
             'type' => 'string',
-            'description' => 'Optional values：ENUM_1、ENUM_2',
+            'description' => 'optional values：ENUM_1、ENUM_2',
             'example' => '',
         ])
         ->and($schema['properties']['test_string_enum'])->toMatchArray([
             'type' => 'string',
-            'description' => 'Optional values：ENUM_1、ENUM_2、ENUM_3、ENUM_4',
+            'description' => 'optional values：ENUM_1、ENUM_2、ENUM_3、ENUM_4',
             'example' => '',
         ])
         ->and($schema['properties']['test_string_2_enum'])->toMatchArray([
             'type' => 'string',
-            'description' => 'Optional values：ENUM_1、ENUM_2、ENUM_3、ENUM_4',
+            'description' => 'optional values：ENUM_1、ENUM_2、ENUM_3、ENUM_4',
             'example' => '',
         ])
         ->and($schema['properties']['test_one_of_enum'])->toMatchArray([
             'type' => 'oneOf',
-            'description' => 'Optional values：ENUM_1、ENUM_2、ENUM_3、ENUM_4',
+            'description' => 'optional values：ENUM_1、ENUM_2、ENUM_3、ENUM_4',
             'example' => '',
         ])
         ->and($schema['properties']['test_one_of_enum']['oneOf'])->toBeArray()->toHaveCount(2)

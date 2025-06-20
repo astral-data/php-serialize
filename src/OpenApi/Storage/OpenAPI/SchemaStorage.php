@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Astral\Serialize\OpenApi\Storage\OpenAPI;
 
 use Astral\Serialize\Enums\TypeKindEnum;
+use Astral\Serialize\OpenApi\Annotations\OpenApi;
 use Astral\Serialize\OpenApi\Collections\ParameterCollection;
 use Astral\Serialize\OpenApi\Enum\ParameterTypeEnum;
 use Astral\Serialize\OpenApi\Storage\StorageInterface;
@@ -79,7 +80,7 @@ class SchemaStorage implements StorageInterface
         $currentNode['properties'][$propertyName] = [
             'type'        => $parameter->type->value,
             'description' => $this->getDescriptions($parameter),
-            'example'     => $parameter->example,
+            'example'     => $parameter->openApiAnnotation?->example,
         ];
 
         // 添加必填字段标记
@@ -162,11 +163,10 @@ class SchemaStorage implements StorageInterface
 
     public function getDescriptions(ParameterCollection $parameter):string
     {
+        $description = $parameter->openApiAnnotation?->description ?? '';
         if(!ParameterTypeEnum::hasEnum($parameter->types)){
-            return  $parameter->descriptions;
+            return  $description;
         }
-
-        $descriptions = $parameter->descriptions;
 
         $names = [];
         foreach ($parameter->types as $type) {
@@ -177,8 +177,8 @@ class SchemaStorage implements StorageInterface
             }
         }
 
-        $descriptions .= 'Optional values：' . implode('、', $names);
+        $description .= ($description ? ' ' : '').'optional values：' . implode('、', $names);
 
-        return $descriptions;
+        return $description;
     }
 }
