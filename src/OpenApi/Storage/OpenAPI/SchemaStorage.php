@@ -163,7 +163,7 @@ class SchemaStorage implements StorageInterface
 
     public function getDescriptions(ParameterCollection $parameter):string
     {
-        $description = $parameter->openApiAnnotation?->description ?? '';
+        $description = $parameter->openApiAnnotation->description ?? '';
         if(!ParameterTypeEnum::hasEnum($parameter->types)){
             return  $description;
         }
