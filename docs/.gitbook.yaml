@@ -1,7 +1,4 @@
 root: ./
 structure:
-  langs:
-    - label: 简体中文
-      path: zh
-    - label: English
-      path: en
+  readme: ./zh/README.md
+  summary: ./zh/SUMMARY.md
