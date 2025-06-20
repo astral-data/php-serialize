@@ -1,8 +1,6 @@
 # Summary
 
-## Use headings to create page groups like this one
-
-* [介绍](description.md)
+* [介绍](README.md)
 * [快速开始](getting-started.md)
 
 ## 属性转换
