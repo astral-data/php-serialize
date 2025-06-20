@@ -20,7 +20,7 @@
 * [时间格式映射](annotation/date-annotation.md)
 * [自定义注解](annotation/customer-annotation.md)
 
-## 参数快速Faker
+## 参数快速模拟生成
 
 * [简单属性Faker](faker/value-faker.md)
 * [集合Faker](faker/collection-faker.md)
