@@ -136,9 +136,7 @@ class ComplexNestedInfo extends Serialize {
 
     public string $currency;
 }
-php
-复制
-编辑
+
 $adminUser = ComplexUser::from([
     'name' => '张三',
     'sex' => 1,
