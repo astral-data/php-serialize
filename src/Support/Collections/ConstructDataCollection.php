@@ -4,8 +4,6 @@ namespace Astral\Serialize\Support\Collections;
 
 class ConstructDataCollection
 {
-    //    private array $tranFromResolvers = [];
-
     public function __construct(
         public readonly string              $name,
         public readonly bool                $isPromoted,
