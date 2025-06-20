@@ -2,7 +2,8 @@
 
 namespace Astral\Serialize\Enums;
 
-use http\Exception\RuntimeException;
+
+use RuntimeException;
 
 enum TypeKindEnum
 {

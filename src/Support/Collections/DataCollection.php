@@ -3,6 +3,7 @@
 namespace Astral\Serialize\Support\Collections;
 
 use InvalidArgumentException;
+use ReflectionAttribute;
 use ReflectionProperty;
 
 class DataCollection
@@ -13,6 +14,7 @@ class DataCollection
         private readonly string              $name,
         private readonly bool                $isNullable,
         private readonly bool                $isReadonly,
+        /** @var ReflectionAttribute[] */
         private readonly array               $attributes,
         private readonly mixed               $defaultValue,
         private readonly ReflectionProperty  $property,

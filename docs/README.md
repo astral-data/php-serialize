@@ -39,7 +39,7 @@ $userArray = $user->toArray();
 // ]
 ```
 
-#### Other Features
+### Other Features
 
 1. **Immutability**: Read-only properties cannot be modified after construction
 
@@ -334,11 +334,11 @@ echo $profile->username;         // Output null
 
 1. Can mix basic and object types
 2. Object Hierarchy Matching
-    - For multiple object types, the most matching type will be selected
-    - Supports intelligent matching of inheritance hierarchy
+   - For multiple object types, the most matching type will be selected
+   - Supports intelligent matching of inheritance hierarchy
 3. Dynamic Type Handling
-    - Automatically handles input of different types
-    - Provides more flexible data modeling
+   - Automatically handles input of different types
+   - Provides more flexible data modeling
 
 ```php
 use Astral\Serialize\Serialize;
@@ -926,7 +926,7 @@ $userArray = $user->toArray(
     outputGroups: ['api']       // Use only output mappings in 'api' group
 );
 ```
-  
+
 ##### Global Class Mapping
 
 ```php
