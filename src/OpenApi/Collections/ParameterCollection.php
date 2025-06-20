@@ -7,8 +7,6 @@ namespace Astral\Serialize\OpenApi\Collections;
 use Astral\Serialize\OpenApi\Annotations\OpenApi;
 use Astral\Serialize\OpenApi\Enum\ParameterTypeEnum;
 use Astral\Serialize\Support\Collections\TypeCollection;
-use Attribute;
-use ReflectionAttribute;
 
 class ParameterCollection
 {
