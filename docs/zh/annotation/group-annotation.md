@@ -47,7 +47,7 @@ class User extends Serialize {
 }
 ```
 
-### 按分组接收
+### ✨按分组接收
 
 ```php
 // 使用 create 分组创建用户，只接受 group=create 的字段
@@ -71,7 +71,7 @@ $user->toArray();
 */
 ```
 
-### 按分组输出
+### ✨按分组输出
 
 ```php
 $user = User::from([
@@ -121,7 +121,7 @@ $user->withGroups(['detail', 'other'])->toArray();
 */
 ```
 
-### 嵌套对象的分组
+### ✨嵌套对象的分组
 
 ```php
 class ComplexUser extends Serialize {
