@@ -6,6 +6,5 @@ namespace Astral\Serialize\OpenApi\Handler;
 
 interface HandleInterface
 {
-
     public function toString(): string;
 }

@@ -2,7 +2,7 @@
 
 namespace Astral\Serialize\Faker;
 
-use Astral\Serialize\Casts\InputConstructCast;
+use Astral\Serialize\Casts\InputValue\InputConstructCast;
 use Astral\Serialize\Faker\Rule\FakerDefaultRules;
 use Astral\Serialize\Resolvers\GroupResolver;
 use Astral\Serialize\Support\Collections\DataCollection;

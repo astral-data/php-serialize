@@ -58,11 +58,11 @@ class SchemaStorage implements StorageInterface
             $this->buildBasicPropertySchema($parameter, $currentNode);
 
             // oneOf/anyOf/allOf 格式
-            if($parameter->type->isOf()){
+            if ($parameter->type->isOf()) {
                 $this->buildOfProperties($parameter, $currentNode);
             }
             // 处理嵌套子属性
-            else if ($parameter->children) {
+            elseif ($parameter->children) {
                 $this->buildNestedProperties($parameter, $currentNode);
             }
         }
@@ -98,31 +98,31 @@ class SchemaStorage implements StorageInterface
         // 重构属性结构为 oneOf/anyOf/allOf 格式
         $node = &$currentNode['properties'][$propertyName][$topParameter->type->value];
 
-        $i = 0;
+        $i          = 0;
         $addedTypes = [];
-        foreach ($topParameter->types as $kindType){
+        foreach ($topParameter->types as $kindType) {
             $type = ParameterTypeEnum::getBaseEnumByTypeKindEnum($kindType);
             if ($type && !in_array($type->value, $addedTypes, true)) {
-                $node[$i] = ['type' => $type->value];
+                $node[$i]     = ['type' => $type->value];
                 $addedTypes[] = $type->value;
                 $i++;
             }
         }
 
-        if($topParameter->children){
-            foreach ($topParameter->children as $className => $child){
-                $type = ParameterTypeEnum::getArrayAndObjectEnumBy($topParameter->types,$className);
-                if($type->isObject()){
-                    $node[$i] = ['type'=>'object','properties' => []];
+        if ($topParameter->children) {
+            foreach ($topParameter->children as $className => $child) {
+                $type = ParameterTypeEnum::getArrayAndObjectEnumBy($topParameter->types, $className);
+                if ($type->isObject()) {
+                    $node[$i]  = ['type' => 'object','properties' => []];
                     $childNode = &$node[$i];
                     $i++;
-                }else if($type->isArray()){
-                    $node[$i] = ['type'=>'array','items'=> ['type'=>'object','properties' => []]];
+                } elseif ($type->isArray()) {
+                    $node[$i]  = ['type' => 'array','items' => ['type' => 'object','properties' => []]];
                     $childNode = &$node[$i]['items'];
                     $i++;
                 }
 
-                $this->build($child,$childNode);
+                $this->build($child, $childNode);
             }
         }
 
@@ -134,7 +134,7 @@ class SchemaStorage implements StorageInterface
     private function buildNestedProperties(ParameterCollection $topParameter, array &$currentNode): void
     {
         $propertyName = $topParameter->name;
-        $nestedNode = null;
+        $nestedNode   = null;
 
         if ($topParameter->type->isArray()) {
             // 数组类型：创建 items 结构
@@ -146,8 +146,8 @@ class SchemaStorage implements StorageInterface
         } elseif ($topParameter->type->isObject()) {
             // 对象类型：重构为嵌套对象结构
             $currentNode['properties'][$propertyName] = [
-                'type'       => 'object',
-                'properties' => [],
+                'type'        => 'object',
+                'properties'  => [],
                 'description' => $this->getDescriptions($topParameter),
             ];
             $nestedNode = &$currentNode['properties'][$propertyName];
@@ -161,10 +161,10 @@ class SchemaStorage implements StorageInterface
         }
     }
 
-    public function getDescriptions(ParameterCollection $parameter):string
+    public function getDescriptions(ParameterCollection $parameter): string
     {
         $description = $parameter->openApiAnnotation->description ?? '';
-        if(!ParameterTypeEnum::hasEnum($parameter->types)){
+        if (!ParameterTypeEnum::hasEnum($parameter->types)) {
             return  $description;
         }
 
@@ -177,7 +177,7 @@ class SchemaStorage implements StorageInterface
             }
         }
 
-        $description .= ($description ? ' ' : '').'optional values：' . implode('、', $names);
+        $description .= ($description ? ' ' : '') . 'optional values：' . implode('、', $names);
 
         return $description;
     }

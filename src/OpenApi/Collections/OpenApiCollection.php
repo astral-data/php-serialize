@@ -34,13 +34,13 @@ class OpenApiCollection
         public array $attributes,
         public RequestBody|null $requestBody,
         public Response|null $response,
-    ){
+    ) {
     }
 
     /**
      * @throws InvalidArgumentException
      */
-    public function build() : Method
+    public function build(): Method
     {
         $methodClass = $this->route->method->value;
         /** @var Method $openAPIMethod */
@@ -61,7 +61,7 @@ class OpenApiCollection
     public function buildRequestBodyByAttribute(): RequestBodyStorage
     {
         $openAPIRequestBody = new RequestBodyStorage($this->requestBody->contentType);
-        $schemaStorage = (new SchemaStorage())->build($this->buildParameterCollections($this->requestBody->className,$this->requestBody->groups));
+        $schemaStorage      = (new SchemaStorage())->build($this->buildParameterCollections($this->requestBody->className, $this->requestBody->groups));
         $openAPIRequestBody->withParameter($schemaStorage);
         return $openAPIRequestBody;
     }
@@ -72,9 +72,9 @@ class OpenApiCollection
     public function buildRequestBodyByParameters(): RequestBodyStorage
     {
         $openAPIRequestBody = new RequestBodyStorage(ContentTypeEnum::JSON);
-        $methodParam = $this->reflectionMethod->getParameters()[0] ?? null;
-        $type = $methodParam?->getType();
-        $requestBodyClass = $type instanceof ReflectionNamedType  ? $type->getName() : '';
+        $methodParam        = $this->reflectionMethod->getParameters()[0] ?? null;
+        $type               = $methodParam?->getType();
+        $requestBodyClass   = $type instanceof ReflectionNamedType ? $type->getName() : '';
         if (is_subclass_of($requestBodyClass, Serialize::class)) {
             $schemaStorage = (new SchemaStorage())->build($this->buildParameterCollections($requestBodyClass));
             $openAPIRequestBody->withParameter($schemaStorage);
@@ -88,19 +88,19 @@ class OpenApiCollection
      */
     public function buildResponse(): ResponseStorage
     {
-        $returnClass = $this->reflectionMethod->getReturnType();
-        $returnClass = $returnClass instanceof ReflectionNamedType ? $returnClass->getName() : null;
-        $responseClass =  match(true){
-            $this->response !== null => $this->response->className,
-            $returnClass && is_subclass_of($returnClass,Serialize::class) => $returnClass,
-            default => null,
+        $returnClass   = $this->reflectionMethod->getReturnType();
+        $returnClass   = $returnClass instanceof ReflectionNamedType ? $returnClass->getName() : null;
+        $responseClass =  match(true) {
+            $this->response !== null                                       => $this->response->className,
+            $returnClass && is_subclass_of($returnClass, Serialize::class) => $returnClass,
+            default                                                        => null,
         };
 
         $responseStorage = new ResponseStorage();
 
 
-        if($responseClass) {
-            $groups = $this->response && is_array($this->response->groups) ?  $this->response->groups : ['default'];
+        if ($responseClass) {
+            $groups        = $this->response && is_array($this->response->groups) ? $this->response->groups : ['default'];
             $schemaStorage = (new SchemaStorage())->build($this->buildParameterCollections($responseClass, $groups));
             $responseStorage->withParameter($schemaStorage);
         }
@@ -121,10 +121,10 @@ class OpenApiCollection
         $properties = $serializeContext->getGroupCollection()->getProperties();
 
         $vols = [];
-        foreach ($properties as $property){
+        foreach ($properties as $property) {
             $vol = new ParameterCollection(
                 className: $className,
-                name: current($property->getInputNamesByGroups($groups,$className)),
+                name: current($property->getInputNamesByGroups($groups, $className)),
                 types: $property->getTypes(),
                 type: ParameterTypeEnum::getByTypes($property->getTypes()),
                 openApiAnnotation: $this->getOpenApiAnnotation($property->getAttributes()),
@@ -132,9 +132,9 @@ class OpenApiCollection
                 ignore: false,
             );
 
-            if($property->getChildren()){
-                foreach ($property->getChildren() as $children){
-                    $className = $children->getClassName();
+            if ($property->getChildren()) {
+                foreach ($property->getChildren() as $children) {
+                    $className                 = $children->getClassName();
                     $vol->children[$className] = $this->buildParameterCollections($className);
                 }
             }
@@ -147,9 +147,9 @@ class OpenApiCollection
 
     public function getOpenApiAnnotation(array $attributes): OpenApi|null
     {
-        foreach ($attributes as $attribute){
-            if($attribute->getName() === OpenApi::class){
-               return $attribute->newInstance();
+        foreach ($attributes as $attribute) {
+            if ($attribute->getName() === OpenApi::class) {
+                return $attribute->newInstance();
             }
         }
 

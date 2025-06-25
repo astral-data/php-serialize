@@ -33,7 +33,6 @@ class OpenAPI implements StorageInterface
         return $this;
     }
 
-
     public function withServers(array $servers): self
     {
         $this->servers = $servers;
@@ -62,6 +61,4 @@ class OpenAPI implements StorageInterface
         $this->paths[$openApiCollection->route->route][strtolower($openApiCollection->route->method->name)] = $openApiCollection->build();
         return $this;
     }
-
-
 }

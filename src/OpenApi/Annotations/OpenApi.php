@@ -9,7 +9,6 @@ use Attribute;
 #[Attribute(Attribute::TARGET_PROPERTY)]
 class OpenApi
 {
-
     public function __construct(
         public string $description = '',
         public string $example = '',

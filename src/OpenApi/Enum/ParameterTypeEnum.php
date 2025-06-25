@@ -7,16 +7,15 @@ use Astral\Serialize\Support\Collections\TypeCollection;
 
 enum ParameterTypeEnum: string
 {
-    case ARRAY  = 'array';
-    case STRING = 'string';
-    case OBJECT = 'object';
+    case ARRAY   = 'array';
+    case STRING  = 'string';
+    case OBJECT  = 'object';
     case BOOLEAN = 'boolean';
     case INTEGER = 'integer';
-    case NUMBER = 'number';
-    case ONE_OF = 'oneOf';
-    case ANY_OF = 'anyOf';
-    case ALL_OF = 'allOf';
-
+    case NUMBER  = 'number';
+    case ONE_OF  = 'oneOf';
+    case ANY_OF  = 'anyOf';
+    case ALL_OF  = 'allOf';
 
     public function isObject(): bool
     {
@@ -35,12 +34,12 @@ enum ParameterTypeEnum: string
 
     public static function getBaseEnumByTypeKindEnum(TypeCollection $collection): ?ParameterTypeEnum
     {
-        return match (true){
+        return match (true) {
             $collection->kind === TypeKindEnum::STRING, $collection->kind === TypeKindEnum::ENUM => self::STRING,
-            $collection->kind === TypeKindEnum::INT => self::INTEGER,
-            $collection->kind === TypeKindEnum::FLOAT => self::NUMBER,
+            $collection->kind === TypeKindEnum::INT     => self::INTEGER,
+            $collection->kind === TypeKindEnum::FLOAT   => self::NUMBER,
             $collection->kind === TypeKindEnum::BOOLEAN => self::BOOLEAN,
-            default => null,
+            default                                     => null,
         };
     }
 
@@ -49,16 +48,15 @@ enum ParameterTypeEnum: string
      * @param string $className
      * @return ParameterTypeEnum|null
      */
-
     public static function getArrayAndObjectEnumBy(array $types, string $className): ?ParameterTypeEnum
     {
 
-        foreach ($types as $collection){
-            if($className === $collection->className && in_array($collection->kind, [TypeKindEnum::CLASS_OBJECT, TypeKindEnum::OBJECT], true)){
+        foreach ($types as $collection) {
+            if ($className === $collection->className && in_array($collection->kind, [TypeKindEnum::CLASS_OBJECT, TypeKindEnum::OBJECT], true)) {
                 return self::OBJECT;
             }
 
-            if( $className === $collection->className && in_array($collection->kind, [TypeKindEnum::ARRAY, TypeKindEnum::COLLECT_SINGLE_OBJECT, TypeKindEnum::COLLECT_UNION_OBJECT], true)){
+            if ($className === $collection->className && in_array($collection->kind, [TypeKindEnum::ARRAY, TypeKindEnum::COLLECT_SINGLE_OBJECT, TypeKindEnum::COLLECT_UNION_OBJECT], true)) {
                 return self::ARRAY;
             }
         }
@@ -68,9 +66,9 @@ enum ParameterTypeEnum: string
 
     public static function hasEnum(array $types): bool
     {
-        foreach ($types as $type){
-            if($type->kind === TypeKindEnum::ENUM){
-              return true;
+        foreach ($types as $type) {
+            if ($type->kind === TypeKindEnum::ENUM) {
+                return true;
             }
         }
 
@@ -85,11 +83,11 @@ enum ParameterTypeEnum: string
 
         $count = count($types);
 
-        if($count === 1){
+        if ($count === 1) {
             $type = current($types)->kind;
-            return match (true){
-                $type === TypeKindEnum::INT => self::INTEGER,
-                $type === TypeKindEnum::FLOAT => self::NUMBER,
+            return match (true) {
+                $type === TypeKindEnum::INT     => self::INTEGER,
+                $type === TypeKindEnum::FLOAT   => self::NUMBER,
                 $type === TypeKindEnum::BOOLEAN => self::BOOLEAN,
                 $type === TypeKindEnum::OBJECT, $type === TypeKindEnum::CLASS_OBJECT => self::OBJECT,
                 $type === TypeKindEnum::ARRAY, $type === TypeKindEnum::COLLECT_SINGLE_OBJECT , $type === TypeKindEnum::COLLECT_UNION_OBJECT => self::ARRAY,
@@ -97,29 +95,29 @@ enum ParameterTypeEnum: string
             };
         }
 
-        $hasUnion = false;
+        $hasUnion   = false;
         $unionTypes = [];
-        foreach ($types as $type){
+        foreach ($types as $type) {
 
-            if($type->kind === TypeKindEnum::ENUM){
+            if ($type->kind === TypeKindEnum::ENUM) {
                 $unionTypes[TypeKindEnum::STRING->name] =  $type;
-            }else{
+            } else {
                 $unionTypes[$type->kind->name] =  $type;
             }
 
-            if($type->kind === TypeKindEnum::COLLECT_UNION_OBJECT){
+            if ($type->kind === TypeKindEnum::COLLECT_UNION_OBJECT) {
                 $hasUnion = true;
             }
         }
 
-        if(!$hasUnion && count($unionTypes) === 1){
+        if (!$hasUnion && count($unionTypes) === 1) {
             $type = current($types)->kind;
-            return match (true){
-                $type === TypeKindEnum::INT => self::INTEGER,
-                $type === TypeKindEnum::FLOAT => self::NUMBER,
-                $type === TypeKindEnum::BOOLEAN => self::BOOLEAN,
+            return match (true) {
+                $type === TypeKindEnum::INT                                                                                                                                             => self::INTEGER,
+                $type === TypeKindEnum::FLOAT                                                                                                                                           => self::NUMBER,
+                $type === TypeKindEnum::BOOLEAN                                                                                                                                         => self::BOOLEAN,
                 in_array($type, [TypeKindEnum::OBJECT, TypeKindEnum::CLASS_OBJECT, TypeKindEnum::ARRAY, TypeKindEnum::COLLECT_SINGLE_OBJECT, TypeKindEnum::COLLECT_UNION_OBJECT], true) => self::ONE_OF,
-                default => self::STRING,
+                default                                                                                                                                                                 => self::STRING,
             };
         }
 

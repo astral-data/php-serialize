@@ -29,7 +29,7 @@ class RequestBodyStorage implements StorageInterface
     {
         return [
             'required' => true,
-            'content' => [
+            'content'  => [
                 $this->contentType->value => [
                     'schema' => $this->parameters
                 ]

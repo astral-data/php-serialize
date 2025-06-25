@@ -35,8 +35,8 @@ beforeAll(static function () {
     }
 
     #[\Astral\Serialize\OpenApi\Annotations\Tag('接口测试')]
-    class OpenapiEnumController{
-
+    class OpenapiEnumController
+    {
         #[\Astral\Serialize\OpenApi\Annotations\Summary('测试方法一')]
         #[\Astral\Serialize\OpenApi\Annotations\Route('/test/enum-action')]
         public function one(OpenapiEnumRequest $request): void
@@ -51,13 +51,13 @@ test('OpenAPI enums auto create description', function () {
     $api =  new OpenApi();
     $api->buildByClass(OpenapiEnumController::class);
 
-    $openApi = $api::$OpenAPI;
+    $openApi = $api::$openAPI;
 
 
-    $paths = $openApi->paths;
-    $post = $paths['/test/enum-action']['post'];
+    $paths       = $openApi->paths;
+    $post        = $paths['/test/enum-action']['post'];
     $requestBody = $post->requestBody;
-    $schema = $requestBody['content']['application/json']['schema'];
+    $schema      = $requestBody['content']['application/json']['schema'];
 
     expect($schema['properties'])
         ->toHaveKeys([
@@ -67,24 +67,24 @@ test('OpenAPI enums auto create description', function () {
             'test_one_of_enum',
         ])
         ->and($schema['properties']['test_enum'])->toMatchArray([
-            'type' => 'string',
+            'type'        => 'string',
             'description' => 'optional values：ENUM_1、ENUM_2',
-            'example' => '',
+            'example'     => '',
         ])
         ->and($schema['properties']['test_string_enum'])->toMatchArray([
-            'type' => 'string',
+            'type'        => 'string',
             'description' => 'optional values：ENUM_1、ENUM_2、ENUM_3、ENUM_4',
-            'example' => '',
+            'example'     => '',
         ])
         ->and($schema['properties']['test_string_2_enum'])->toMatchArray([
-            'type' => 'string',
+            'type'        => 'string',
             'description' => 'optional values：ENUM_1、ENUM_2、ENUM_3、ENUM_4',
-            'example' => '',
+            'example'     => '',
         ])
         ->and($schema['properties']['test_one_of_enum'])->toMatchArray([
-            'type' => 'oneOf',
+            'type'        => 'oneOf',
             'description' => 'optional values：ENUM_1、ENUM_2、ENUM_3、ENUM_4',
-            'example' => '',
+            'example'     => '',
         ])
         ->and($schema['properties']['test_one_of_enum']['oneOf'])->toBeArray()->toHaveCount(2)
         ->and($schema['properties']['test_one_of_enum']['oneOf'][0])->toMatchArray(['type' => 'string'])

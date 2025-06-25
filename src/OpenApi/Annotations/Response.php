@@ -14,6 +14,6 @@ class Response
         public string   $className,
         public ?int     $code       = 200,
         public ?array   $groups     = null,
-    ){
+    ) {
     }
 }
