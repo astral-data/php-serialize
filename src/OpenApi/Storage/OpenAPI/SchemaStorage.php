@@ -40,7 +40,7 @@ class SchemaStorage implements StorageInterface
      * @param-out array $currentNode 当前构建节点的引用
      * @return static
      */
-    public function build(array $parameterTree, array &$currentNode = null): static
+    public function build(array $parameterTree, array|null &$currentNode = null): static
     {
         if ($currentNode === null) {
             $currentNode = &$this->data;

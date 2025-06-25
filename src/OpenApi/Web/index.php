@@ -1,9 +1,8 @@
 <?php
 
 use Astral\Serialize\OpenApi;
-use Astral\Serialize\OpenApi\Handler\Config;
 
-require_once Config::rootPath() . '/vendor/autoload.php';
+require_once  dirname(__DIR__, 6) . '/vendor/autoload.php';
 
 try {
     echo (new OpenApi())->handleByFolders()->toString();
