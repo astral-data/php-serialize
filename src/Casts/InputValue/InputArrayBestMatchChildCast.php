@@ -4,7 +4,6 @@ namespace Astral\Serialize\Casts\InputValue;
 
 use Astral\Serialize\Casts\InputValue\Trait\InputArrayTrait;
 use Astral\Serialize\Contracts\Attribute\InputValueCastInterface;
-use Astral\Serialize\Exceptions\NotFoundAttributePropertyResolver;
 use Astral\Serialize\Support\Collections\DataCollection;
 use Astral\Serialize\Support\Collections\GroupDataCollection;
 use Astral\Serialize\Support\Context\InputValueContext;

@@ -22,12 +22,12 @@ class ChoosePropertyContext
 
     }
 
-    public static function build(DataCollection $collection, ChooseSerializeContext $context,DataCollection $dataCollection): ChoosePropertyContext
+    public static function build(DataCollection $collection, ChooseSerializeContext $context, DataCollection $dataCollection): ChoosePropertyContext
     {
         return new self($collection->getName(), $dataCollection, $context);
     }
 
-    public function getDataCollection() : DataCollection
+    public function getDataCollection(): DataCollection
     {
         return $this->dataCollection;
     }
@@ -52,7 +52,7 @@ class ChoosePropertyContext
         $this->inputName = $inputName;
     }
 
-    public function getOutPutNames() : array
+    public function getOutPutNames(): array
     {
         return $this->outputName;
     }

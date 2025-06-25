@@ -4,7 +4,6 @@ namespace Astral\Serialize\Faker;
 
 use Astral\Serialize\Contracts\Attribute\FakerCastInterface;
 use Astral\Serialize\Support\Collections\DataCollection;
-use Astral\Serialize\Support\Config\ConfigManager;
 use InvalidArgumentException;
 
 class FakerCastResolver

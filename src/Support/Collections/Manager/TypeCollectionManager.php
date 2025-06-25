@@ -8,10 +8,8 @@ use Astral\Serialize\Resolvers\PropertyTypesContextResolver;
 use Astral\Serialize\Support\Collections\TypeCollection;
 use phpDocumentor\Reflection\Type;
 use phpDocumentor\Reflection\TypeResolver;
-use ReflectionException;
 use ReflectionNamedType;
 use ReflectionProperty;
-use ReflectionType;
 use ReflectionUnionType;
 
 class TypeCollectionManager
@@ -33,7 +31,7 @@ class TypeCollectionManager
         $type = $property->getType();
 
         $typeDocBlock = $this->propertyTypesContextResolver->resolveTypeFromDocBlock($property);
-        if ($typeDocBlock && ($type instanceof ReflectionUnionType || ($type instanceof ReflectionNamedType && in_array($type->getName(), ['array', 'object']))) ) {
+        if ($typeDocBlock && ($type instanceof ReflectionUnionType || ($type instanceof ReflectionNamedType && in_array($type->getName(), ['array', 'object'])))) {
             return $this->processDocCommentNamedType($typeDocBlock);
         }
 
