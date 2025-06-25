@@ -77,6 +77,7 @@ class OpenApi extends Handler
                 attributes: $methodAttributes,
                 requestBody: $instances[RequestBody::class],
                 response: $instances[Response::class],
+                groupResolver: SerializeContainer::get()->groupResolver(),
             );
 
             self::$openAPI->addPath($openApiCollection);

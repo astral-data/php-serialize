@@ -114,7 +114,7 @@ class DataCollection
             $vols =  isset($this->inputNames[$group]) ? array_merge($vols, $this->inputNames[$group]) : $vols;
         }
 
-        return array_unique($vols);
+        return  $vols ? array_unique($vols) : [$this->name];
     }
 
     public function getInputIgnoreGroups(): array
@@ -140,6 +140,7 @@ class DataCollection
 
     public function getOutNamesByGroups(array $groups, string $defaultGroup): array
     {
+
         if (count($groups) === 1 && current($groups) === $defaultGroup) {
             return $this->outNames[$defaultGroup] ?? $this->outNames['default'] ?? [$this->name];
         }
