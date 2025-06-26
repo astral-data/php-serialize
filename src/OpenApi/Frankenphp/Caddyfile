@@ -27,7 +27,7 @@
         #       }
         #}
 
-        root vendor/astral/php-serialize/src/OpenApi/Web
+        root vendor/astral/php-serialize/src/Frankenphp/Web
         encode zstd br gzip
 
         # Uncomment the following lines to enable Mercure and Vulcain modules
