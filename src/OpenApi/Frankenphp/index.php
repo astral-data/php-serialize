@@ -8,7 +8,7 @@ $handler = static function () {
     try {
         header('Content-Type: application/json');
         echo (new OpenApi())->handleByFolders()->toString();
-    } catch (JsonException|ReflectionException $e) {
+    } catch (ReflectionException $e) {
         http_response_code(500);
         echo json_encode(['error' => $e->getMessage(), 'code' => $e->getCode()]);
     }

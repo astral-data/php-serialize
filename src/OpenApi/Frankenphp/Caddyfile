@@ -11,7 +11,7 @@
         {$CADDY_GLOBAL_OPTIONS}
 
         frankenphp {
-               worker /app/vendor/astral/php-serialize/src/OpenApi/Web/index.php
+               worker /app/vendor/astral/php-serialize/src/OpenApi/Frankenphp/index.php
         }
 }
 
