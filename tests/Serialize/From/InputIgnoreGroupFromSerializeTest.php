@@ -1,7 +1,7 @@
 <?php
 
-use Astral\Serialize\Annotations\Groups;
 use Astral\Serialize\Annotations\DataCollection\InputIgnore;
+use Astral\Serialize\Annotations\Groups;
 use Astral\Serialize\Serialize;
 
 beforeAll(function () {
@@ -24,8 +24,8 @@ beforeAll(function () {
 it('tests InputIgnore Serialize class', function () {
 
     $object = InputIgnoreSerialize::from([
-        'name' => '张三',
-        'secretKey' => 'confidential',
+        'name'          => '张三',
+        'secretKey'     => 'confidential',
         'sensitiveInfo' => '机密信息',
     ]);
 
@@ -36,14 +36,14 @@ it('tests InputIgnore Serialize class', function () {
 
     $array = $object->toArray();
     expect($array)->toMatchArray([
-        'name' => '张三',
-        'secretKey' => 'confidential',
+        'name'          => '张三',
+        'secretKey'     => 'confidential',
         'sensitiveInfo' => null,
     ]);
 
     $object2 = InputIgnoreSerialize::setGroups('admin')->from([
-        'name' => '张三',
-        'secretKey' => 'confidential',
+        'name'          => '张三',
+        'secretKey'     => 'confidential',
         'sensitiveInfo' => '机密信息',
     ]);
 
@@ -53,8 +53,8 @@ it('tests InputIgnore Serialize class', function () {
 
     $array2 = $object2->toArray();
     expect($array2)->toMatchArray([
-        'name' => null,
-        'secretKey' => 'confidential',
+        'name'          => null,
+        'secretKey'     => 'confidential',
         'sensitiveInfo' => null,
     ]);
 });

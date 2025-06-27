@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Astral\Serialize\OpenApi\Annotations;
 
-use Astral\Serialize\OpenApi\Storage\OpenAPI\TagStorage;
 use Attribute;
 
 /**
@@ -18,5 +17,4 @@ class Tag
         public string $description = ''
     ) {
     }
-
 }

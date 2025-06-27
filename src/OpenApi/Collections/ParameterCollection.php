@@ -21,7 +21,6 @@ class ParameterCollection
         public bool               $ignore = false,
         /** @var array<ParameterCollection[]> $children */
         public array              $children  = [],
-    ){
+    ) {
     }
 }
-

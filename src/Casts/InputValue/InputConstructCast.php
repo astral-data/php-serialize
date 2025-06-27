@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Astral\Serialize\Casts;
+namespace Astral\Serialize\Casts\InputValue;
 
 use Astral\Serialize\Support\Collections\ConstructDataCollection;
 
@@ -18,7 +18,11 @@ class InputConstructCast
     {
         $args = [];
         foreach ($constructorParameters as $param) {
-            $args[] =  array_key_exists($param->name, $readonlyVols) ? $readonlyVols[$param->name] : $object->{$param->name};
+            $value = array_key_exists($param->name, $readonlyVols) ? $readonlyVols[$param->name] : $object->{$param->name};
+            if ($param->isNull === false && $value === null && $param->defaultValue !== null) {
+                $value = $param->defaultValue;
+            }
+            $args[] =  $value;
         }
 
         $object->__construct(...$args);

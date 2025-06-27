@@ -10,7 +10,6 @@ use stdClass;
 
 class Method
 {
-
     public function __construct(
         public array              $tags = [],
         public string             $summary = '',

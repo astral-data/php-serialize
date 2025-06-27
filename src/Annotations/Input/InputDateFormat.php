@@ -28,7 +28,6 @@ class InputDateFormat implements InputValueCastInterface
         return is_string($value) || is_numeric($value);
     }
 
-
     public function resolve(mixed $value, DataCollection $collection, InputValueContext $context): string|DateTime
     {
 

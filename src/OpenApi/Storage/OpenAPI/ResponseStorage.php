@@ -27,7 +27,7 @@ class ResponseStorage implements StorageInterface
     {
         return [
             'description' => $this->description,
-            'content' => [
+            'content'     => [
                 $this->contentType => [
                     'schema' => $this->parameter
                 ]

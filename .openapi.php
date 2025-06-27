@@ -3,21 +3,47 @@
 use Astral\Serialize\OpenApi\Storage\OpenAPI\ServersStorage;
 
 return [
+    // API Document Title
     'title' => 'API Docs',
 
+    // Description of the API document
     'description' => 'API Docs description.',
 
     /**
-     * 向全局头部参数存储中添加一个的头部参数。
-     * @param string $name
-     * @param string $example
-     * @param string $description
+     * Global headers to be added to every request.
+     * Each header should include name, example, and description.
+     *
+     * Example:
+     * [
+     *     'name'        => 'Authorization',
+     *     'example'     => 'Bearer token',
+     *     'description' => 'Authentication token'
+     * ]
      */
-    'headers' => [
+    'headers' => [],
 
-    ],
-
+    /**
+     * Service base URLs (servers).
+     * You can define multiple environments like production, staging, etc.
+     *
+     * @type ServersStorage[] $service
+     */
     'service' => [
-        new ServersStorage('http://127.0.0.1','默认环境'),
+        new ServersStorage('http://127.0.0.1', 'Default Environment'),
     ],
+
+    /**
+     * Directories to exclude from scanning.
+     * These paths are relative to the project root directory.
+     *
+     * Default excluded directories:
+     * - /vendor
+     * - /tests
+     * - /migrations
+     * Example:
+     * ['/sdk', '/app']
+     *
+     * You can override or extend this list in your config file.
+     */
+    'exclude_dirs' => [],
 ];

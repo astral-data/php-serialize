@@ -2,7 +2,7 @@
 
 namespace Astral\Serialize\Resolvers;
 
-use Astral\Serialize\Casts\InputConstructCast;
+use Astral\Serialize\Casts\InputValue\InputConstructCast;
 use Astral\Serialize\Resolvers\Casts\InputValueCastResolver;
 use Astral\Serialize\Support\Collections\DataCollection;
 use Astral\Serialize\Support\Collections\GroupDataCollection;

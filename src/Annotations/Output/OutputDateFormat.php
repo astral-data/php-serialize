@@ -30,7 +30,6 @@ class OutputDateFormat implements OutValueCastInterface
         return is_string($value) || is_numeric($value) || is_subclass_of($value, DateTimeInterface::class);
     }
 
-
     public function resolve(mixed $value, DataCollection $collection, OutContext $context): string|DateTime|null
     {
         return $this->formatValue($value);

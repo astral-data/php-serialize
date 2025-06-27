@@ -10,10 +10,10 @@ use Attribute;
 class Response
 {
     public function __construct(
-        /** @var class-string $className */
-        public string   $className,
-        public ?int     $code       = 200,
+        /** @var class-string|string $className */
+        public string   $className  = '',
         public ?array   $groups     = null,
-    ){
+        public ?int     $code       = 200,
+    ) {
     }
 }

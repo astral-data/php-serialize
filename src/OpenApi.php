@@ -34,7 +34,7 @@ class OpenApi extends Handler
         $tagDoc = isset($tagDoc[0]) ? $tagDoc[0]->newInstance() : null;
 
         if ($tagDoc) {
-            self::$OpenAPI->addTag(new TagStorage($tagDoc->value, $tagDoc->description));
+            self::$openAPI->addTag(new TagStorage($tagDoc->value, $tagDoc->description));
         }
 
         foreach ($classRefection->getMethods() as $item) {
@@ -77,9 +77,10 @@ class OpenApi extends Handler
                 attributes: $methodAttributes,
                 requestBody: $instances[RequestBody::class],
                 response: $instances[Response::class],
+                groupResolver: SerializeContainer::get()->groupResolver(),
             );
 
-            self::$OpenAPI->addPath($openApiCollection);
+            self::$openAPI->addPath($openApiCollection);
         }
     }
 }

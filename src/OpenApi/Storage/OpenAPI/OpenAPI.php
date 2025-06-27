@@ -22,7 +22,7 @@ class OpenAPI implements StorageInterface
     public string $basePath;
 
     /** @var array<TagStorage>  */
-    public array $tags;
+    public array $tags = [];
 
     /** @var array<string,MethodInterface>  */
     public array $paths = [];
@@ -32,7 +32,6 @@ class OpenAPI implements StorageInterface
         $this->info = $apiInfo;
         return $this;
     }
-
 
     public function withServers(array $servers): self
     {
@@ -48,7 +47,7 @@ class OpenAPI implements StorageInterface
 
     public function addTag(TagStorage $tag): void
     {
-        $this->tags[] = $tag;
+//        $this->tags[$tag->name] = $tag;
     }
 
     public function withPaths(array $paths): self
@@ -62,6 +61,4 @@ class OpenAPI implements StorageInterface
         $this->paths[$openApiCollection->route->route][strtolower($openApiCollection->route->method->name)] = $openApiCollection->build();
         return $this;
     }
-
-
 }

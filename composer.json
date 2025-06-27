@@ -21,11 +21,10 @@
         "illuminate/support": "^6.0||^7.0||^8.0||^9.0||^10.0||^11.0||^12.0",
         "phpdocumentor/reflection-docblock": "^5.5",
         "phpdocumentor/reflection": "^6.0",
-        "fakerphp/faker": "^1.23",
-        "psr/simple-cache": "^3.0",
-        "symfony/console": "^6.4"
+        "psr/simple-cache": "^3.0"
     },
     "require-dev" : {
+        "fakerphp/faker": "^1.23",
         "phpstan/phpstan": "^2.0.2",
         "friendsofphp/php-cs-fixer": "^3.0",
         "mockery/mockery": "^1.6",

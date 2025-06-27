@@ -1,4 +1,4 @@
-## 创建Request
+## Creating Request
 
 ```php
 use Astral\Serialize\Serialize;
@@ -13,7 +13,7 @@ class UserDetailRequest extends Serialize {
 }
 ```
 
-## 创建Repose
+## Creating Response
 ```php
 use Astral\Serialize\Serialize;
 
@@ -23,15 +23,15 @@ class UserDto extends Serialize {
 }
 ```
 
-## 创建Controller
+## Creating Controller
 ```php
 use Astral\Serialize\Serialize;
 use Astral\Serialize\OpenApi\Enum\MethodEnum;
 
-#[\Astral\Serialize\OpenApi\Annotations\Tag('用户模块管理')]
+#[\Astral\Serialize\OpenApi\Annotations\Tag('User Module Management')]
 class UserController {
 
-    #[\Astral\Serialize\OpenApi\Annotations\Summary('创建用户')]
+    #[\Astral\Serialize\OpenApi\Annotations\Summary('Create User')]
     #[\Astral\Serialize\OpenApi\Annotations\Route('/user/create')]
     #[\Astral\Serialize\OpenApi\Annotations\RequestBody(UserAddRequest::class)]
      #[\Astral\Serialize\OpenApi\Annotations\Response(UserDto::class)]
@@ -40,7 +40,7 @@ class UserController {
         return new UserDto(); 
     }
     
-    #[\Astral\Serialize\OpenApi\Annotations\Summary('用户详情')]
+    #[\Astral\Serialize\OpenApi\Annotations\Summary('User Detail')]
     #[\Astral\Serialize\OpenApi\Annotations\Route(route:'/user/detail', method: MethodEnum::GET)]
     public function detail(UserDetailRequest $request): UserDto  
     {
@@ -48,15 +48,15 @@ class UserController {
     }
 }
 ```
-## 启动服务
+## Starting the Service
 
-### Docker启动
+### Docker Deployment
 
-先进入项目根目录
+Navigate to the project root directory first:
 
 ```shell
 docker run  -v $PWD/vendor/astral/php-serialize/src/OpenApi/Frankenphp/Caddyfile:/etc/frankenphp/Caddyfile -v $PWD:/app -p 8089:80 dunglas/frankenphp
 ```
-访问 `http://127.0.0.1:8089/docs` 查看文档
+Access `http://127.0.0.1:8089/docs` to view the documentation.
 
 ![UI-IMG](./ui.png)

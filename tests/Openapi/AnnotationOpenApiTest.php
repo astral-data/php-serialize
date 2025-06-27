@@ -26,8 +26,8 @@ beforeAll(static function () {
     }
 
     #[\Astral\Serialize\OpenApi\Annotations\Tag('接口测试')]
-    class AnnotationOpenApiController{
-
+    class AnnotationOpenApiController
+    {
         #[\Astral\Serialize\OpenApi\Annotations\Summary('测试方法一')]
         #[\Astral\Serialize\OpenApi\Annotations\Route('/test/description-action')]
         public function one(AnnotationOpenApiRequest $request): void
@@ -41,11 +41,11 @@ test('OpenAPI build description', function () {
     $api = new OpenApi();
     $api->buildByClass(AnnotationOpenApiController::class);
 
-    $openApi = $api::$OpenAPI;
-    $paths = $openApi->paths;
-    $post = $paths['/test/description-action']['post'];
+    $openApi     = $api::$openAPI;
+    $paths       = $openApi->paths;
+    $post        = $paths['/test/description-action']['post'];
     $requestBody = $post->requestBody;
-    $schema = $requestBody['content']['application/json']['schema'];
+    $schema      = $requestBody['content']['application/json']['schema'];
 
     expect(array_keys($schema['properties']))->toMatchArray([
         'test_enum',

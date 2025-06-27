@@ -1,10 +1,10 @@
 <?php
 
 
-use Astral\Serialize\Support\Mappers\PascalCaseMapper;
 use Astral\Serialize\Annotations\DataCollection\InputName;
 use Astral\Serialize\Serialize;
 use Astral\Serialize\Support\Mappers\CamelCaseMapper;
+use Astral\Serialize\Support\Mappers\PascalCaseMapper;
 use Astral\Serialize\Support\Mappers\SnakeCaseMapper;
 
 beforeAll(function () {
@@ -164,7 +164,7 @@ it('test data inputName greater than class InputName', function () {
 
     $res = InputNameAllCamelMapper::from(
         oneText:'0',
-        OneText:"456",
+        OneText:'456',
         twoText:'123',
     );
 
