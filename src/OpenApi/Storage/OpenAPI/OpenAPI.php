@@ -47,7 +47,7 @@ class OpenAPI implements StorageInterface
 
     public function addTag(TagStorage $tag): void
     {
-        $this->tags[] = $tag;
+//        $this->tags[$tag->name] = $tag;
     }
 
     public function withPaths(array $paths): self

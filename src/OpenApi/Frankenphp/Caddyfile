@@ -2,7 +2,6 @@
 #
 # https://frankenphp.dev/docs/config
 # https://caddyserver.com/docs/caddyfile
-
 {
         skip_install_trust
 
@@ -11,7 +10,7 @@
         {$CADDY_GLOBAL_OPTIONS}
 
         frankenphp {
-               worker /app/vendor/astral/php-serialize/src/OpenApi/Frankenphp/index.php
+            {$FRANKENPHP_CONFIG}
         }
 }
 
@@ -50,6 +49,9 @@
         {$CADDY_SERVER_EXTRA_DIRECTIVES}
 
         php_server {
-                #worker /path/to/your/worker.php
+                worker {
+                    file /app/vendor/astral/php-serialize/src/OpenApi/Frankenphp/index.php
+                    watch /app
+                }
         }
 }
