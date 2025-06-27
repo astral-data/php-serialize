@@ -52,6 +52,17 @@ class UserController {
 
 ### Docker启动
 
+进入项目根目录
+
+```shell
+docker run  -v $PWD/vendor/astral/php-serialize/src/OpenApi/Frankenphp/Caddyfile:/etc/frankenphp/Caddyfile -v $PWD:/app -p 8089:80 dunglas/frankenphp
+```
+访问 `http://127.0.0.1:8089/docs` 查看文档
+
+![UI-IMG](./ui.png)
+
+### Docker启动
+
 先进入项目根目录
 
 ```shell
