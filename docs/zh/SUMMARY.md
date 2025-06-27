@@ -30,3 +30,7 @@
 ## 自动创建OpenApi文档
 
 * [基础演示](openapi/base-openapi.md)
+* [参数注解](openapi/annotation.md)
+* [重写注解](openapi/override-annotation.md)
+* [配置](openapi/config.md)
+* [启动服务](openapi/launch.md)

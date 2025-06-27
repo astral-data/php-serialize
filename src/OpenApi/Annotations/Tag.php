@@ -6,15 +6,13 @@ namespace Astral\Serialize\OpenApi\Annotations;
 
 use Attribute;
 
-/**
- * 栏目注解类
- */
 #[Attribute(Attribute::TARGET_CLASS)]
 class Tag
 {
     public function __construct(
         public string $value,
-        public string $description = ''
+        public string $description = '',
+        public int $sort = 0,
     ) {
     }
 }
