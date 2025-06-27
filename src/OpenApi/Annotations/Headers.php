@@ -13,7 +13,7 @@ class Headers
      * @param array $headers
      * @param array $withOutHeaders
      * @example
-     *   headers: [['company-id'=>'1'],['test-header'=>'test']]
+     *   headers: ['company-id'=>'1','test-header'=>'test']
      *   withOutHeaders: ['test-header','company-id']
      */
     public function __construct(

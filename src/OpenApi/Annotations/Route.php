@@ -12,8 +12,7 @@ class Route
 {
     public function __construct(
         public string $route,
-        public MethodEnum $method = MethodEnum::POST,
-        public array $attributes = [],
+        public MethodEnum $method = MethodEnum::POST
     ) {
     }
 }

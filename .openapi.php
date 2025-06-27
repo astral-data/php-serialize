@@ -3,6 +3,9 @@
 use Astral\Serialize\OpenApi\Storage\OpenAPI\ServersStorage;
 
 return [
+
+    'doc_url' => 'http://127.0.0.1:8089',
+
     // API Document Title
     'title' => 'API Docs',
 
@@ -29,7 +32,7 @@ return [
      * @type ServersStorage[] $service
      */
     'service' => [
-        new ServersStorage('http://127.0.0.1', 'Default Environment'),
+        new ServersStorage('http://127.0.0.1', 'Default'),
     ],
 
     /**
