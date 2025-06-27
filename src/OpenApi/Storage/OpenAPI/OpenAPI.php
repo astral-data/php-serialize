@@ -22,7 +22,7 @@ class OpenAPI implements StorageInterface
     public string $basePath;
 
     /** @var array<TagStorage>  */
-    public array $tags;
+    public array $tags = [];
 
     /** @var array<string,MethodInterface>  */
     public array $paths = [];
