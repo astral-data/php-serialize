@@ -1,14 +1,14 @@
-## 快速开始
+## Quick Start
 
-### 安装
+### Installation
 
-使用 Composer 安装：
+Install using Composer:
 
 ```bash
-composer require astral/serialize
+composer require astral/php-serialize
 ```
 
-### 基本用法
+### Basic Usage
 
 ```php
 use Astral\Serialize\Serialize;
@@ -18,28 +18,28 @@ class User extends Serialize {
     public int $age
 }
 
-// 从数组创建对象
+// Create object from array
 $user = User::from([
-    'name' => '张三',
+    'name' => 'John Doe',
     'age' => 30
 ]);
 
-// 访问对象属性
-echo $user->name;  // 输出: 张三
-echo $user->age;   // 输出: 30
+// Access object properties
+echo $user->name;  // Output: John Doe
+echo $user->age;   // Output: 30
 
-// 转换为数组
+// Convert to array
 $userArray = $user->toArray();
-// $userArray 的内容:
+// $userArray contents:
 // [
-//     'name' => '张三',
+//     'name' => 'John Doe',
 //     'age' => 30
 // ]
 ```
 
-### 其他特性
+#### Other Features
 
-#### **不可变性**：只读属性在构造后无法修改
+1. **Immutability**: Read-only properties cannot be modified after construction
 
 ```php
 use Astral\Serialize\Serialize;
@@ -52,30 +52,30 @@ class User extends Serialize {
 }
 
 $user = User::from([
-    'name' => '张三',
+    'name' => 'John Doe',
     'age' => 30
 ]);
 
 try {
-    $user->name = '李四';  // 编译时错误：无法修改只读属性
+    $user->name = 'Jane Doe';  // Compile-time error: cannot modify read-only property
 } catch (Error $e) {
-    echo "只读属性不能被重新赋值";
+    echo "Read-only properties cannot be reassigned";
 }
 ```
 
-#### **类型安全的初始化**
+2. **Type-Safe Initialization**
 
 ```php
 $user = User::from([
-    'name' => 123,       // 整数会被转换为字符串
-    'age' => '35'        // 字符串会被转换为整数
+    'name' => 123,       // Integer will be converted to string
+    'age' => '35'        // String will be converted to integer
 ]);
 
-echo $user->name;  // 输出: "123"
-echo $user->age;   // 输出: 35
+echo $user->name;  // Output: "123"
+echo $user->age;   // Output: 35
 ```
 
-#### **构造函数初始化**
+3. **Constructor Initialization**
 
 ```php
 use Astral\Serialize\Serialize;
@@ -85,9 +85,9 @@ class User extends Serialize {
         public readonly string $name,
         public readonly int $age
     ) {
-        // 可以在构造函数中添加额外的验证或处理逻辑
+        // Can add additional validation or processing logic in the constructor
         if (strlen($name) < 2) {
-            throw new \InvalidArgumentException('名称太短');
+            throw new \InvalidArgumentException('Name is too short');
         }
     }
 }
