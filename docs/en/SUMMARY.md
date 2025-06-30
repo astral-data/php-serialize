@@ -1,36 +1,36 @@
 # Summary
 
-* [介绍](README.md)
-* [快速开始](getting-started.md)
+* [Introduction](README.md)
+* [Getting Started](getting-started.md)
 
-## 属性转换
+## Attribute Conversion
 
-* [基本类型转换](mapper/base-mapper.md)
-* [Null值转换](mapper/null-mapper.md)
-* [枚举转换](mapper/enum-mapper.md)
-* [数组对象转换](mapper/array-mapper.md)
-* [联合类型转换](mapper/union-mapper.md)
+* [Basic Type Mapping](mapper/base-mapper.md)
+* [Null Value Mapping](mapper/null-mapper.md)
+* [Enum Mapping](mapper/enum-mapper.md)
+* [Array Object Mapping](mapper/array-mapper.md)
+* [Union Type Mapping](mapper/union-mapper.md)
 
-## 注解类使用
+## Annotation Usage
 
-* [属性分组](annotation/group-annotation.md)
-* [输入/输出映射](annotation/alisa-annotation.md)
-* [Mapper映射](annotation/mapper-annotation.md)
-* [输入/输出忽略](annotation/ignore-annotation.md)
-* [时间格式映射](annotation/date-annotation.md)
-* [自定义注解](annotation/customer-annotation.md)
+* [Attribute Grouping](annotation/group-annotation.md)
+* [Input/Output Mapping](annotation/alisa-annotation.md)
+* [Mapper Mapping](annotation/mapper-annotation.md)
+* [Input/Output Ignoring](annotation/ignore-annotation.md)
+* [Date Format Mapping](annotation/date-annotation.md)
+* [Custom Annotation](annotation/customer-annotation.md)
 
-## 参数快速模拟生成
+## Parameter Mock Generation
 
-* [简单属性Faker](faker/value-faker.md)
-* [集合Faker](faker/collection-faker.md)
-* [嵌套Faker](faker/nested-faker.md)
-* [方法Faker](faker/method-faker.md)
+* [Simple Value Faker](faker/value-faker.md)
+* [Collection Faker](faker/collection-faker.md)
+* [Nested Faker](faker/nested-faker.md)
+* [Method Faker](faker/method-faker.md)
 
-## 自动创建OpenApi文档
+## Automatic OpenAPI Documentation
 
-* [基础演示](openapi/base-openapi.md)
-* [参数注解](openapi/annotation.md)
-* [重写注解](openapi/override-annotation.md)
-* [配置](openapi/config.md)
-* [启动服务](openapi/launch.md)
+* [Basic Demo](openapi/base-openapi.md)
+* [Parameter Annotations](openapi/annotation.md)
+* [Override Annotations](openapi/override-annotation.md)
+* [Configuration](openapi/config.md)
+* [Launch Service](openapi/launch.md)
