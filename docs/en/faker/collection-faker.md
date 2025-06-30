@@ -1,4 +1,4 @@
-## 集合模拟
+## Collection Faker
 
 ```php
 
@@ -22,7 +22,7 @@ $userList = UserListFaker::faker();
 $complexUserListFaker = UserListFaker::faker();
 
 $complexUserListFakerArray = $complexUserListFaker->toArray();
-// $complexUserListFakerArray 的内容:
+// Content of $complexUserListFakerArray:
 // [
 //     'profile' => [
 //        [0] => UserProfile Object (

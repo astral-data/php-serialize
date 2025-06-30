@@ -1,20 +1,20 @@
-## 属性分组（Groups）
+## Property Grouping (Groups)
 
-属性分组提供了一种灵活的方式来控制属性的输入和输出行为，允许在不同场景下精细地管理数据转换。
-
----
-
-### 分组原理说明
-
-- 使用 `#[Groups(...)]` 注解可将属性归类到一个或多个分组中。
-- 支持：
-    - **输入时** 按分组过滤数据字段
-    - **输出时** 按分组筛选输出字段
-- 未指定分组的属性将自动归入 `"default"` 分组。
+Property grouping provides a flexible way to control the input and output behavior of properties, allowing fine-grained management of data conversion in different scenarios.
 
 ---
 
-### 基本示例
+### Explanation of Grouping Principle
+
+- Use the `#[Groups(...)]` annotation to assign a property to one or more groups.
+- Supports:
+    - **For input:** Filter data fields by group
+    - **For output:** Select output fields by group
+- Properties without a specified group will automatically be assigned to the `"default"` group.
+
+---
+
+### Basic Example
 
 ```php
 use Astral\Serialize\Attributes\Groups;
@@ -34,7 +34,7 @@ class User extends Serialize {
     #[Groups('other')]
     public string $sensitiveData;
 
-    // 未指定分组，默认为 default 分组
+    // Not assigned to a group, defaults to the 'default' group
     public string $noGroupInfo;
 
     public function __construct(
@@ -47,41 +47,41 @@ class User extends Serialize {
 }
 ```
 
-### 按分组接收
+### Receive by Group
 
 ```php
-// 使用 create 分组创建用户，只接受 group=create 的字段
+// Create a user with the 'create' group, only accepts fields in group=create
 $user = User::setGroups(['create'])->from([
     'id' => 1,
-    'name' => '李四',
+    'name' => 'Job',
     'score' => 100,
     'username' => 'username',
-    'email' => 'zhangsan@example.com',
-    'sensitiveData' => '机密信息',
-    'noGroupInfo' => '默认信息'
+    'email' => 'Job@example.com',
+    'sensitiveData' => 'sensitive',
+    'noGroupInfo' => 'noGroup'
 ]);
 
 $user->toArray();
 /*
 [
-    'name' => '李四',
+    'name' => 'Job',
     'username' => 'username',
-    'email' => 'zhangsan@example.com',
+    'email' => 'Job@example.com',
 ]
 */
 ```
 
-### 按分组输出
+### Output by Group
 
 ```php
 $user = User::from([
     'id' => 1,
-    'name' => '李四',
+    'name' => 'Job',
     'score' => 100,
     'username' => 'username',
-    'email' => 'zhangsan@example.com',
-    'sensitiveData' => '机密信息',
-    'noGroupInfo' => '默认信息'
+    'email' => 'Job@example.com',
+    'sensitiveData' => 'sensitive',
+    'noGroupInfo' => 'noGroup'
 ]);
 
 // 默认输出所有字段
@@ -89,12 +89,12 @@ $user->toArray();
 /*
 [
     'id' => '1',
-    'name' => '李四',
+    'name' => 'Job',
     'username' => 'username',
     'score' => 100,
-    'email' => 'zhangsan@example.com',
-    'sensitiveData' => '机密信息',
-    'noGroupInfo' => '默认信息'
+    'email' => 'Job@example.com',
+    'sensitiveData' => 'sensitive',
+    'noGroupInfo' => 'noGroup'
 ]
 */
 
@@ -102,9 +102,9 @@ $user->toArray();
 $user->withGroups('create')->toArray();
 /*
 [
-    'name' => '李四',
+    'name' => 'Job',
     'username' => 'username',
-    'email' => 'zhangsan@example.com',
+    'email' => 'Job@example.com',
 ]
 */
 
@@ -112,16 +112,16 @@ $user->withGroups(['detail', 'other'])->toArray();
 /*
 [
     'id' => '1',
-    'name' => '李四',
+    'name' => 'Job',
     'username' => 'username',
     'score' => 100,
-    'email' => 'zhangsan@example.com',
-    'sensitiveData' => '机密信息',
+    'email' => 'Job@example.com',
+    'sensitiveData' => 'sensitive',
 ]
 */
 ```
 
-### 嵌套对象的分组
+### Grouping of Nested Objects
 
 ```php
 class ComplexUser extends Serialize {
@@ -138,7 +138,7 @@ class ComplexNestedInfo extends Serialize {
 }
 
 $adminUser = ComplexUser::from([
-    'name' => '张三',
+    'name' => 'Job',
     'sex' => 1,
     'info' => [
         'money' => 100.00,
@@ -146,12 +146,12 @@ $adminUser = ComplexUser::from([
     ],
 ]);
 
-// info只会输出$money
-// 因为 ComplexNestedInfo 绑定了 ComplexUser的类Group
+// Only $money will be output in info
+// Because ComplexNestedInfo is bound to the class Group of ComplexUser
 $adminUser->toArray();
 /*
 [
-    'name' => '张三',
+    'name' => 'Job',
     'sex' => 1,
     'info' => [
         'money' => 100.00

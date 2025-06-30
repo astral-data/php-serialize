@@ -43,7 +43,7 @@ $userArray = $user->toArray();
 // $userArray 的内容:
 // [
 //     'userName' => '张三',
-//     'user_id' => '三',
+//     'user_id' => '123',
 //     'userEmail' => user@example.com,
 // ]
 ```
@@ -124,7 +124,7 @@ class ComplexMappedUser extends Serialize {
     public string $fullName;
 }
 
-// 使用admin分组
+// 使用external分组
 $complexUser = ComplexMappedUser::setGroup('external')->from(
     first_name :'张',    
     last_name :'三'
@@ -140,7 +140,7 @@ $complexUser = $complexUser->toArray();
 // ]
 
 // 如果熟悉指定了OutputName/InputName 则属性规则优先
-// 使用public分组
+// 使用api分组
 $complexUser = ComplexMappedUser::setGroup('api')->from(
     first_name :'张',    
     last_name :'三'

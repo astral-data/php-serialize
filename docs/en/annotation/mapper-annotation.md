@@ -1,6 +1,6 @@
-## Mapper映射
+## Mapper Mapping
 
-### 属性映射
+### Property Mapping
 
 ```php
 use Astral\Serialize\Attributes\InputName;
@@ -15,40 +15,40 @@ use Astral\Serialize\Serialize;
 
 #[Groups('profile','api')]
 class User extends Serialize {
-    // 直接指定映射名称
+    // Directly specify the mapping name
     #[InputName('user_name', groups: ['profile','api'])]
     #[OutputName('userName', groups: ['profile','api'])]
     public string $name;
 
-    // 使用映射器进行风格转换
+    // Use a mapper for style conversion
     #[InputName(CamelCaseMapper::class, groups: ['profile','api'])]
     #[OutputName(SnakeCaseMapper::class, groups: ['profile','api'])]
     public int $userId;
 
-    // 支持多个映射和分组
+    // Supports multiple mappings and groups
     #[InputName('profile-email', groups: 'profile')]
     #[OutputName('userEmail', groups: 'profile')]
     public string $email;
 }
 
-// 使用不同的映射策略
+// Use different mapping strategies
 $user = User::setGroups('profile')::from([
-    'user_name' => '张三',       // 映射到 $name
-    'userId' => 123,           // 使用 CamelCaseMapper 转换
-    'profile-email' => 'user@example.com' // 仅在 'profile' 分组生效
+    'user_name' => 'Job',       // Mapped to $name
+    'userId' => 123,           // Converted by CamelCaseMapper
+    'profile-email' => 'user@example.com' // Only effective in 'profile' group
 ]);
 
-// 输出时应用不同的映射
+// Apply different mappings on output
 $userArray = $user->toArray();
-// $userArray 的内容:
+// $userArray toArray:
 // [
-//     'userName' => '张三',
-//     'user_id' => '三',
+//     'userName' => 'Job',
+//     'user_id' => '123',
 //     'userEmail' => user@example.com,
 // ]
 ```
 
-### 全局类映射
+### Global Class Mapping
 
 ```php
 use Astral\Serialize\Attributes\InputName;
@@ -64,35 +64,35 @@ use Astral\Serialize\Serialize;
 #[InputName(SnakeCaseMapper::class)]
 #[OutputName(CamelCaseMapper::class)]
 class GlobalMappedUser extends Serialize {
-    // 类级别的映射会自动应用到所有属性
+    // Class-level mapping is automatically applied to all properties
     public string $firstName;
     public string $lastName;
     public int $userId;
     public DateTime $registeredAt;
 }
 
-// 使用全局映射
+// Use global mapping
 $user = GlobalMappedUser::from([
-    'first_name' => '张',        // 从蛇形映射到 firstName
-    'last_name' => '三',         // 从蛇形映射到 lastName
-    'user_id' => 123,            // 从蛇形映射到 userId
-    'registered_at' => '2023-01-01' // 从蛇形映射到 registeredAt
+    'first_name' => 'Job',        // Mapped from snake_case to firstName
+    'last_name' => 'Doe',         // Mapped from snake_case to lastName
+    'user_id' => 123,            // Mapped from snake_case to userId
+    'registered_at' => '2023-01-01' // Mapped from snake_case to registeredAt
 ]);
 
-// 输出时会转换为驼峰命名
+// Output will be converted to camelCase
 $userArray = $user->toArray();
-// $userArray 的内容:
+// $userArray toArray:
 // [
-//     'firstName' => '张',
-//     'lastName' => '三',
+//     'firstName' => 'Job',
+//     'lastName' => 'Doe',
 //     'userId' => 123,
 //     'registeredAt' => '2023-01-01'
 // ]
 ```
 
-### 全局类映射的分组使用
+### Grouped Usage of Global Class Mapping
 
-需要搭配`Groups`注解一起使用
+Requires use with the `Groups` annotation
 
 ```php
 use Astral\Serialize\Attributes\Groups;
@@ -124,44 +124,43 @@ class ComplexMappedUser extends Serialize {
     public string $fullName;
 }
 
-// 使用admin分组
+// Using 'external' group
 $complexUser = ComplexMappedUser::setGroup('external')->from(
-    first_name :'张',    
-    last_name :'三'
-    full_name: '张三'
+    first_name :'Job',    
+    last_name :'Doe'
+    full_name: 'Job Don'
 );
 
 $complexUser = $complexUser->toArray();
-// $complexUser 的内容:
+// $complexUser toArray:
 // [
-//     'FirstName' => '张',
-//     'LastName' => '三',
-//     'FullName' => 张三,
+//     'FirstName' => 'Job',
+//     'LastName' => 'Don',
+//     'FullName' => Job Don,
 // ]
 
-// 如果熟悉指定了OutputName/InputName 则属性规则优先
-// 使用public分组
+// If InputName/OutputName is specified, property rules take precedence
+// Using 'api' group
 $complexUser = ComplexMappedUser::setGroup('api')->from(
-    first_name :'张',    
-    last_name :'三'
-    full_name: '张三'
+    first_name :'Job',    
+    last_name :'Don'
+    full_name: 'Job Don'
 );
 
 $complexUser = $complexUser->toArray();
-// $complexUser 的内容:
+// $complexUser toArray:
 // [
-//     'FirstName' => '张',
-//     'LastName' => '三',
-//     'userEmail' => 张三,
+//     'FirstName' => 'Job',
+//     'LastName' => 'Don',
+//     'userEmail' => Job Don,
 // ]
 ```
-### 自定义映射器
+### Custom Mapper
 
 ```php
-// 自定义映射器 需要继承NameMapper 并实现 resolve
-class CustomMapper implements NameMapper {
+// Custom mappers need to inherit NameMapper and implement resolveclass CustomMapper implements NameMapper {
     public function resolve(string $name): string {
-        // 实现自定义的命名转换逻辑
+        // Implement custom naming conversion logic
         return str_replace('user', 'customer', $name);
     }
 }
@@ -172,28 +171,28 @@ class AdvancedUser extends Serialize {
 }
 ```
 
-### Tips：属性映射优先于类级映射
+### Tips: Property mapping takes precedence over class-level mapping
 
 ```php
 
 #[InputName(SnakeCaseMapper::class)]
 class PartialOverrideUser extends Serialize {
     #[InputName(PascalCaseMapper::class)]
-    public string $userName;  // 优先使用帕斯卡命名映射
+    public string $userName;   // Uses PascalCase mapping preferentially
     
-    public string $userEmail;  // 继续使用类级别的全局映射
+    public string $userEmail;  // Continues to use class-level global mapping
 }
 
 $partialUser = PartialOverrideUser::from([
-    'User_name' => '张三',     // 使用蛇形映射
-    'UserName' => '李四',     // 使用帕斯卡映射
-    'user_email' => 'user@example.com' // 使用蛇形映射
+    'User_name' => 'Tom',      // Uses SnakeCase mapping
+    'UserName' => 'Job Don',      // Uses PascalCase mapping
+    'user_email' => 'user@example.com' // Uses SnakeCase mapping
 ]);
 
 $partialUser->toArray();
-// $partialUser 的内容:
+// Content of $partialUser:
 // [
-//     'userName' => '李四',
+//     'userName' => 'Tom',
 //     'userEmail' => 'user@example.com',
 // ]
 ```

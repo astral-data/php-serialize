@@ -1,8 +1,8 @@
-## 类型转换
+## Type Conversion
 
-### 基本类型转换
+### Basic Type Conversion
 
-#### 方式一：构造函数属性提升
+#### Method 1: Constructor Property Promotion
 
 ```php
 use Astral\Serialize\Serialize;
@@ -17,7 +17,7 @@ class Profile extends Serialize {
 }
 ```
 
-#### 方式二：传统属性定义
+#### Method 2: Traditional Property Definition
 
 ```php
 use Astral\Serialize\Serialize;
@@ -29,19 +29,19 @@ class Profile extends Serialize {
     public bool $isActive;
 }
 
-// 两种方式都支持相同的类型转换
+// Both methods support the same type conversion
 $profile = Profile::from([
-    'username' => 123,        // 整数转换为字符串
-    'score' => '100',         // 字符串转换为整数
-    'balance' => '99.99',     // 字符串转换为浮点数
-    'isActive' => 1           // 数字转换为布尔值
+    'username' => 123,        // Integer to string conversion
+    'score' => '100',         // String to integer conversion
+    'balance' => '99.99',     // String to float conversion
+    'isActive' => 1           // Number to boolean conversion
 ]);
 
-// 转换为数组
+// Convert to array
 $profileArray = $profile->toArray();
 ```
 
-#### 方式三：只读属性
+#### Method 3: Readonly Properties
 
 ```php
 use Astral\Serialize\Serialize;
@@ -52,7 +52,7 @@ class Profile extends Serialize {
     public readonly float $balance;
     public readonly bool $isActive;
 
-    // 手动初始化
+    // Manual initialization
     public function __construct(
         string $username, 
         int $score, 
@@ -67,4 +67,4 @@ class Profile extends Serialize {
 }
 ```
 
-无论使用哪种方式，`Serialize` 类都能正常工作，并提供相同的类型转换和序列化功能。
+No matter which method is used, the `Serialize` class works properly and provides the same type conversion and serialization features.

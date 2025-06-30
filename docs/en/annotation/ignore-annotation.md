@@ -1,18 +1,18 @@
-## 字段忽略
+## Field Ignoring
 
-1. **安全性控制**
-    - 防止敏感信息的意外泄露
-    - 精细控制数据的输入和输出
+1. **Security Control**
+    - Prevent accidental leakage of sensitive information
+    - Fine-grained control of data input and output
 
-2. **数据过滤**
-    - 根据不同场景过滤字段
-    - 为不同的 API 或用户角色定制数据视图
+2. **Data Filtering**
+    - Filter fields according to different scenarios
+    - Customize data views for different APIs or user roles
 
-3. **性能优化**
-    - 减少不必要字段的序列化开销
-    - 精简数据传输
+3. **Performance Optimization**
+    - Reduce serialization overhead of unnecessary fields
+    - Streamline data transmission
 
-### 基础使用
+### Basic Usage
 
 ```php
 use Astral\Serialize\Attributes\InputIgnore;
@@ -24,36 +24,36 @@ class User extends Serialize {
 
     public string $name;
 
-    // 输入时忽略的字段
+    // Field ignored during input
     #[InputIgnore]
     public string $internalId;
 
-    // 输出时忽略的字段
+    // Field ignored during output
     #[OutputIgnore]
     public string $tempData;
 }
 
-// 创建用户对象
+// Create user object
 $user = User::from([
-    'name' => '张三',
-    'internalId' => 'secret123',  // 这个字段会被忽略
-    'tempData' => 'temporary'     // 这个字段会被忽略
+    'name' => 'Job',
+    'internalId' => 'secret123',  // This field will be ignored
+    'tempData' => 'temporary'     // This field will be ignored
 ]);
 
-echo  $user->internalId; // 这里会输出 ''
+echo  $user->internalId; // This will output ''
 
-// 转换为数组
+// Convert to array
 $userArray = $user->toArray();
-// $userArray 的内容:
+// Content of $userArray:
 // [
-//     'name' => '张三',
+//     'name' => 'John Doe',
 //     'internalId' => '',
 // ]
 ```
 
-### 分组忽略
+### Ignore by Group
 
-忽略分组需要搭配Groups注解一起使用
+Ignoring by group requires using the Groups annotation together
 
 ```php
 use Astral\Serialize\Attributes\Input\InputIgnore;
@@ -83,58 +83,58 @@ class ComplexUser extends Serialize {
     public string $globalOutputIgnore;
 }
 
-// 默认分组
+// Default group
 $complexUser = ComplexUser::from([
     'name' => '张三',
     'secretKey' => 'confidential',
-    'sensitiveInfo' => '机密信息',
+    'sensitiveInfo' => 'Confidential info',
     'globalInputIgnore' => '全局输入忽略',
     'globalOutputIgnore' => '全局输出忽略'
 ]);
 
-echo $complexUser->globalInputIgnore; // 输出 ‘’
-echo $complexUser->globalOutputIgnore; // 输出 ‘全局输出忽略’
+echo $complexUser->globalInputIgnore; // Output ''
+echo $complexUser->globalOutputIgnore; // Output 'Global output ignore'
 
 $complexUser = $complexUser->toArray();
-// $complexUser 的内容:
+// $complexUser toArray:
 // [
-//    'name' => '张三',
+//    'name' => 'Job',
 //    'secretKey' => 'confidential',
-//    'sensitiveInfo' => '机密信息',
+//    'sensitiveInfo' => 'Confidential info',
 //    'globalInputIgnore' => '',
 // ]
 
 
-// 使用admin分组
+// Use admin group
 $complexUser = ComplexUser::setGroups('admin')->from([
-    'name' => '张三',
+    'name' => 'Job Doe',
     'secretKey' => 'confidential',
-    'sensitiveInfo' => '机密信息'
-    'globalInputIgnore' => '全局输入忽略',
-    'globalOutputIgnore' => '全局输出忽略'
+    'sensitiveInfo' => 'Confidential info',
+    'globalInputIgnore' => 'Global input ignore',
+    'globalOutputIgnore' => 'Global output ignore'
 ]);
 
 $complexUser = $complexUser->toArray();
-// $complexUser 的内容:
+// $complexUser toArray:
 // [
 //     'name' => '',
 //     'secretKey' => 'confidential',
 // 'globalInputIgnore' => '',
 // ]
 
-// 使用public分组
+// Use public group
 $complexUser = ComplexUser::setGroups('public')->from([
-    'name' => '张三',
+    'name' => 'Job Doe',
     'secretKey' => 'confidential',
-    'sensitiveInfo' => '机密信息'
-    'globalInputIgnore' => '全局输入忽略',
-    'globalOutputIgnore' => '全局输出忽略'
+    'sensitiveInfo' => 'Confidential info',
+    'globalInputIgnore' => 'Global input ignore',
+    'globalOutputIgnore' => 'Global output ignore'
 ]);
 
 $complexUser = $complexUser->toArray();
-// $complexUser 的内容:
+// Content of $complexUser:
 // [
-//     'name' => '张三',
+//     'name' => 'Job Doe',
 ///    'globalInputIgnore' => '',
 // ]
 ```

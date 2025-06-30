@@ -1,6 +1,6 @@
-## Faker类方法模拟
+## Faker Class Method Simulation
 
-### 基本用法
+### Basic Usage
 
 ```php
 class UserService {
@@ -15,7 +15,7 @@ class UserFaker extends Serialize {
 }
 ```
 
-### 完整的示例
+### Demonstration Example
 
 ```php
 use Astral\Serialize\Serialize;
@@ -23,7 +23,7 @@ use Astral\Serialize\Attributes\Faker\FakerMethod;
 use Astral\Serialize\Attributes\Faker\FakerObject;
 use Astral\Serialize\Attributes\Faker\FakerCollection;
 
-// 用户配置文件类
+// User profile class
 class UserProfile extends Serialize {
     public string $nickname;
     public int $age;
@@ -31,7 +31,7 @@ class UserProfile extends Serialize {
     public array $types = ['type1' => 'money', 'type2' => 'score'];
 }
 
-// 用户服务类，提供数据生成方法
+// User service class, provides data generation methods
 class UserService {
     public function generateUserData(): array {
         return [
@@ -57,13 +57,13 @@ class UserService {
     }
 }
 
-// Faker 方法模拟示例
+// Faker method simulation example
 class UserFaker extends Serialize {
-    // 使用方法生成简单数据
+    // Use method to generate simple data
     #[FakerMethod(UserService::class, 'generateUserData')]
     public array $userData;
 
-    // 使用方法生成对象
+    // Use method to generate object
     #[FakerMethod(UserService::class, 'generateUserProfile')]
     public UserProfile $userProfile;
 
@@ -71,21 +71,21 @@ class UserFaker extends Serialize {
     #[FakerMethod(UserService::class, 'generateUserProfile',returnType:'age')]
     public int $age;
 
-    // 获取指定属性 多级可以使用[.]链接
+    // Get specified property, use [.] for multiple levels
     #[FakerMethod(UserService::class, 'generateUserProfile',returnType:'types.type2')]
     public string $type2;
 
-    // 传入参数
+    // Pass parameters
     #[FakerMethod(UserService::class, 'generateUserList',params:['count'=> 3])]
     public array $userList;
 }
 
-// 生成模拟数据
+// Generate fake data
 $userFaker = UserFaker::faker();
 
-// 转换为数组
+// Convert to array
 $userFakerArray = $userFaker->toArray();
-// $userFakerArray 的内容:
+// Content of $userFakerArray:
 // [
 //     'userData' => [
 //         'name' => 'Generated User',
@@ -95,12 +95,12 @@ $userFakerArray = $userFaker->toArray();
 //     'userProfile' => UserProfile Object (
 //         [
 //             'nickname' => 'GeneratedNickname', 
-//             'age' => 25, // 随机生成
+//             'age' => 25, // Randomly generated
 //             'email' => 'profile@example.com'
 //             'types' => ['type1' => 'money', 'type2' => 'score']
 //         ]
 //     ),
-//     'age' => 99 , // 随机生成
+//     'age' => 99 , // rand 
 //     'type2' => 'score',
 //     'userList' => [
 //         ['name' => 'User 0', 'email' => 'user0@example.com'],

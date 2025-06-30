@@ -1,6 +1,6 @@
-## 嵌套对象模拟
+## Nested Object Faker
 
-### 基本用法
+### Basic Usage
 
 ```php
 class ComplexUserFaker extends Serialize {
@@ -9,7 +9,7 @@ class ComplexUserFaker extends Serialize {
 }
 ```
 
-### 演示实例
+### Demonstration Example
 
 ```php
 use Astral\Serialize\Serialize;
@@ -40,7 +40,7 @@ class ComplexUserFaker extends Serialize {
 $complexUserFaker = ComplexUserFaker::faker();
 
 $complexUserFakerArray = $complexUserFaker->toArray();
-// $complexUserFakerArray 的内容:
+// Content of $complexUserFakerArray:
 // [
 //     'profile' => UserProfile Object (
 //         ['nickname' => 'RandomNickname', 'age' => 28, 'email' => 'random.user@example.com', 'avatar' => 'https://example.com/avatars/random-avatar.jpg']

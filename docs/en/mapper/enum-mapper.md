@@ -1,13 +1,13 @@
-## 枚举转换
+## Enum Mapping
 
-枚举转换提供了强大且灵活的枚举处理机制，支持多种枚举类型和转换场景。
+Enum mapping provides a powerful and flexible mechanism for handling enums, supporting multiple enum types and conversion scenarios.
 
-- 支持 `tryFrom()` 和 `cases()` 方法的枚举类型
-- 输入时自动将字符串转换为枚举实例
-- 输出时自动将枚举转换为字符串（枚举名称）
-- 提供灵活且安全的枚举处理机制
+- Supports enum types with `tryFrom()` and `cases()` methods
+- Automatically converts strings to enum instances on input
+- Automatically converts enums to strings (enum name) on output
+- Provides a flexible and safe mechanism for enum handling
 
-### 普通枚举
+### Regular Enum
 
 ```php
 enum UserRole {
@@ -20,26 +20,26 @@ class ComplexUser extends Serialize {
 
     public UserRole $role;
 
-    // 支持多种枚举类型
+    // Supports multiple enum types
     public UserStatus|UserRole $mixedStatus;
 }
 
 $complexUser = ComplexUser::from([
-    'role' => 'ADMIN',           // 自动转换为 UserRole::ADMIN
-    'mixedStatus' => 'ACTIVE'    // 可以是 UserStatus 或 UserRole
+    'role' => 'ADMIN',           // Automatically converts to UserRole::ADMIN
+    'mixedStatus' => 'ACTIVE'    // Can be UserStatus or UserRole
 ]);
 
-echo $complexUser->role; // 返回 UserRole枚举实例
+echo $complexUser->role; // Returns UserRole enum instance
 
 $complexUserArray = $complexUser->toArray();
-// $complexUserArray 的内容:
+// Content of $complexUserArray:
 // [
 //     'role' => 'ADMIN',
 //     'mixedStatus' => 'ACTIVE'
 // ]
 ```
 
-### 回退枚举
+### Backed Enum
 
 ```php
 use Astral\Serialize\Serialize;
@@ -51,32 +51,32 @@ enum UserStatus: string {
     case SUSPENDED = 'suspended';
 }
 
-// 定义带有枚举的用户类
+// Define a user class with enums
 class User extends Serialize {
     public string $name;
 
-    // 支持 UnitEnum 和 BackedEnum
+    // Supports UnitEnum and BackedEnum
     public UserStatus $status;
 
-    // 支持多枚举类型
+    // Supports multiple enum types
     public UserStatus|string $alternateStatus;
 }
 
-// 创建用户对象
+// Create user object
 $user = User::from([
-    'name' => '张三',
-    'status' => 'active',           // 自动转换为 UserStatus::ACTIVE
-    'alternateStatus' => 'inactive' // 支持字符串或枚举值
+    'name' => 'Job',
+    'status' => 'active',           // Automatically converts to UserStatus::ACTIVE
+    'alternateStatus' => 'inactive' // Supports string or enum value
 ]);
 
-var_dump($user->status); // 输出: UserStatus::ACTIVE
+var_dump($user->status); // Output: UserStatus::ACTIVE
 
-// 转换为数组
+// Convert to array
 $userArray = $user->toArray();
-// $userArray 的内容:
+// Content of $userArray:
 // [
-//     'name' => '张三',
-//     'status' => 'ACTIVE',        // 输出枚举名称
+//     'name' => 'Job',
+//     'status' => 'ACTIVE',        // Output enum name
 //     'alternateStatus' => 'INACTIVE'
 // ]
 ```

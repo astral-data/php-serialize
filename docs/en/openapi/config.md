@@ -1,61 +1,61 @@
-# 配置
+# Configuration
 
-在项目根目录创建 `.openapi.php` 文件会覆盖默认配置
+Creating a `.openapi.php` file in the project root will override the default configuration.
 
 ```php
 use Astral\Serialize\OpenApi\Storage\OpenAPI\ServersStorage;
 
 return [
     /**
-     * OpenApi UI 获取OpenApi Json 的地址
+     * The address for OpenApi UI to get OpenApi Json.
      */
     'doc_url' => 'http://127.0.0.1:8089',
 
      /**
-     * API 文档的标题。
+     * Title of the API documentation.
      */
     'title' => 'API Docs',
 
      /**
-     * API 文档的描述。
+     * Description of the API documentation.
      */
     'description' => 'API Docs description.',
 
     /**
-     * 每个请求中需要添加的全局请求头。
-     * 每个请求头应包含名称、示例和描述。
+     * Global request headers to be added to each request.
+     * Each request header should include a name, example, and description.
      *
-     * 示例：
+     * Example:
      * [
      *     'name'        => 'Authorization',
      *     'example'     => 'Bearer true',
-     *     'description' => '认证令牌'
+     *     'description' => 'Authentication token'
      * ]
      */
     'headers' => [],
 
      /**
-     * 服务的基础 URL（服务器）。
-     * 可以定义多个环境，例如生产环境、测试环境等。
+     * Base URL (server) for the API documentation.
+     * Multiple environments can be defined, such as production, testing, etc.
      *
      * @type ServersStorage[] $service
      */
     'service' => [
         new ServersStorage('http://127.0.0.1', 'Dev'),
-        // 测试环境 同时增加环境变量
+        // Test environment, also add environment variable
         (new ServersStorage('http://test.explore.com', 'Test'))
-            ->addVariable('admin_token', '变量说明', '123'),
+            ->addVariable('admin_token', 'variable description', '123'),
     ],
 
     /**
-     * 需要排除的扫描目录。
-     * 这些路径是相对于项目根目录的。
+     * Directories to be excluded from scanning.
+     * These paths are relative to the project root directory.
      *
-     * 默认排除的目录：
+     * Default excluded directories:
      * - /vendor
      * - /tests
      * - /migrations
-     * 示例：
+     * Example:
      * ['/sdk', '/app']
      *
      */

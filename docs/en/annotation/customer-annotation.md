@@ -1,17 +1,17 @@
-### 自定义注解类实现
+### Custom Annotation Class Implementation
 
-你可以通过自定义注解类，灵活地扩展序列化库的输入输出处理逻辑。
+You can flexibly extend the input/output handling logic of the serialization library by defining custom annotation classes.
 
 ---
 
-#### 入参处理注解类
+#### Input Processing Annotation Class
 
-实现 `InputValueCastInterface` 接口，重写其中的 `match` 和 `resolve` 方法，来自定义输入数据的转换和处理。
+Implement the `InputValueCastInterface` interface, and override its `match` and `resolve` methods to customize the conversion and handling of input data.
 
-- **`match`**：用于判断是否对当前值进行处理，返回 `true` 表示进入 `resolve`。
-- **`resolve`**：对匹配的输入值进行转换，并返回转换后的结果。
+- **`match`**: Used to determine whether to process the current value; returning `true` means `resolve` will be called.
+- **`resolve`**: Converts the matched input value and returns the result.
 
-示例：给输入值添加自定义前缀的注解类
+Example: Annotation class that adds a custom prefix to the input value
 
 ```php
 use Astral\Serialize\Contracts\Attribute\InputValueCastInterface;
@@ -27,23 +27,23 @@ class CustomerInput implements InputValueCastInterface
     
     public function match(mixed $value, DataCollection $collection, InputValueContext $context): bool
     {
-        // 对所有输入值都生效
+        // Applies to all input values
         return true;
     }
 
     public function resolve(mixed $value, DataCollection $collection, InputValueContext $context): mixed
     {
-        // 给输入值添加前缀
+        // Add prefix to input value
         return $this->prefix . $value;
     }
 }
-````
+```
 
-### 输出处理注解类
+### Output Processing Annotation Class
 
-输出处理注解与输入处理注解类似，只是实现的接口不同——需要实现 `OutputValueCastInterface`，用以对序列化输出的值进行自定义转换。
+The output processing annotation is similar to the input processing annotation, but implements a different interface—`OutputValueCastInterface`, which is used to customize the conversion of serialized output values.
 
-示例：给序列化输出的值添加自定义后缀的注解类
+Example: Annotation class that adds a custom suffix to the serialized output value
 
 ```php
 use Astral\Serialize\Contracts\Attribute\OutputValueCastInterface;
@@ -59,13 +59,13 @@ class CustomerOutput implements OutputValueCastInterface
     
     public function match(mixed $value, DataCollection $collection, OutputValueContext $context): bool
     {
-        // 对所有输出值都生效
+        // Applies to all output values
         return true;
     }
 
     public function resolve(mixed $value, DataCollection $collection, OutputValueContext $context): mixed
     {
-        // 给输出值添加后缀
+        // Add suffix to output value
         return $value . $this->suffix;
     }
 }

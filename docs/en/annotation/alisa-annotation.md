@@ -1,6 +1,6 @@
-## 名称映射
+## Name Mapping
 
-### 基础使用
+### Basic Usage
 
 ```php
 use Astral\Serialize\Attributes\InputName;
@@ -8,38 +8,38 @@ use Astral\Serialize\Attributes\OutputName;
 use Astral\Serialize\Serialize;
 
 class User extends Serialize {
-    // 输入时使用不同的属性名
+    // Use a different property name for input
     #[InputName('user_name')]
     public string $name;
 
-    // 输出时使用不同的属性名
+    // Use a different property name for output
     #[OutputName('user_id')]
     public int $id;
 
-    // 同时支持输入和输出不同名称
+    // Support different names for both input and output
     #[InputName('register_time')]
     #[OutputName('registeredAt')]
     public DateTime $createdAt;
 }
 
-// 使用不同名称的输入数据
+// Input data with different names
 $user = User::from([
-    'user_name' => '张三',       // 映射到 $name
-    'id' => 123,                // 保持不变
-    'register_time' => '2023-01-01 10:00:00'  // 映射到 $createdAt
+    'user_name' => 'Job',       // Mapped to $name
+    'id' => 123,                // Remains unchanged
+    'register_time' => '2023-01-01 10:00:00'  // Mapped to $createdAt
 ]);
 
-// 输出数据
+// Output data
 $userArray = $user->toArray();
-// $userArray 的内容:
+// $userArray toArray:
 // [
-//     'name' => '张三',
+//     'name' => 'Job',
 //     'user_id' => 123,
 //     'registeredAt' => '2023-01-01 10:00:00'
 // ]
 ```
 
-### 多输入/输出名称处理
+### Handling Multiple Input/Output Names
 
 ```php
 use Astral\Serialize\Attributes\InputName;
@@ -47,13 +47,13 @@ use Astral\Serialize\Attributes\OutputName;
 use Astral\Serialize\Serialize;
 
 class MultiOutputUser extends Serialize {
-    // 多个输出名称
+    // output multiple names
     #[OutputName('user_id')]
     #[OutputName('id')]
     #[OutputName('userId')]
     public int $id;
 
-    // 多个输出名称 按照声明顺序取地一个匹配的name
+    // Multiple input names, the first matching name in declaration order will be used
     #[InputName('user_name')]
     #[InputName('other_name')]
     #[InputName('userName')]
@@ -61,42 +61,42 @@ class MultiOutputUser extends Serialize {
 
 }
 
-// 场景1：使用第一个匹配的输入名称
+// Scenario 1: Use the first matching input name
 $user1 = MultiInputUser::from([
-    'user_name' => '张三'  // 使用 'user_name'
+    'user_name' => 'Job'  // Use 'user_name'
 ]);
-echo $user1->name;  // 输出 '张三'
+echo $user1->name;  // Output 'Job'
 
-// 场景2：使用第二个匹配的输入名称
+// Scenario 2: Use the second matching input name
 $user2 = MultiInputUser::from([
-    'other_name' => '李四'  // 使用 'other_name'
+    'other_name' => 'Tom'  // Use 'Tom'
 ]);
-echo $user2->name;  // 输出 '李四'
+echo $user2->name;  // Output 'Tom'
 
-// 场景3：使用最后的输入名称
+// Scenario 3: Use the last input name
 $user3 = MultiInputUser::from([
-    'userName' => '王五'  // 使用 'userName'
+    'userName' => 'Lin'  // Use 'userName'
 ]);
-echo $user3->name;  // 输出 '王五'
+echo $user3->name;  // Output 'Lin'
 
-// 场景4：传入多个的时候 按照声明顺序取地一个匹配的name
+// Scenario 4: When multiple are passed, the first matching name in declaration order is used
 $user4 = MultiInputUser::from([
-    'userName' => '王五',
-    'other_name' => '李四',
-    'user_name' => '张三',
+    'userName' => 'Job',
+    'other_name' => 'Tom',
+    'user_name' => 'Lin',
 ]);
-echo $user4->name;  // 输出 '张三'
+echo $user4->name;  // Output 'Job'
 
-// 创建用户对象
+// Create user object
 $user = MultiOutputUser::from([
     'id' => 123,
-    'name' => '张三'
+    'name' => 'Job'
 ]);
 
-// 转换为数组
-// tips: 因为id 有多个outputname 所以输出了 ['user_id','id','userId']
+// Convert to array
+// tips: Since id has multiple output names, the output includes ['user_id','id','userId']
 $userArray = $user->toArray();
-// $userArray 的内容:
+// $userArray toArray:
 // [
 //     'user_id' => 123,
 //     'id' => 123,
@@ -104,36 +104,36 @@ $userArray = $user->toArray();
 // ]
 ```
 
-### 复杂映射场景
+### Complex Mapping Scenarios
 
 ```php
 use Astral\Serialize\Serialize;
 
 class ComplexUser extends Serialize {
-    // 嵌套对象的名称映射
+    // Name mapping for nested objects
     #[InputName('user_profile')]
     public UserProfile $profile;
 
-    // 数组元素的名称映射
+    // Name mapping for array elements
     #[InputName('user_tags')]
     public array $tags;
 }
 
-// 处理复杂的输入结构
+// Handle complex input structure
 $complexUser = ComplexUser::from([
     'user_profile' => [
-        'nickname' => '小明',
+        'nickname' => 'job',
         'age' => 25
     ],
     'user_tags' => ['developer', 'programmer']
 ]);
 
-// 转换为标准数组
+// Convert to standard array
 $complexUserArray = $complexUser->toArray();
-// $complexUserArray 的内容:
+// $complexUserArray toArray:
 // [
 //     'profile' => UserProfile Object ([
-//         'nickname' => '小明',
+//         'nickname' => 'job',
 //         'age' => 25
 //     ]),
 //     'tags' => ['developer', 'programmer']

@@ -1,22 +1,22 @@
-# 启动服务
+# Start Service
 
-## 1. Docker启动
+## 1. Start with Docker
 
-进入项目根目录，运行下面的docker命令启动服务
+Go to the project root directory and run the following docker command to start the service.
 
 ```shell
 docker run  -v $PWD/vendor/astral/php-serialize/src/OpenApi/Frankenphp/Caddyfile:/etc/frankenphp/Caddyfile -v $PWD:/app -p 8089:80 dunglas/frankenphp
 ```
 
-访问  `http://127.0.0.1:8089` 展示OpenApi JSON文档
+Visit `http://127.0.0.1:8089` to display the OpenApi JSON documentation.
 
-访问 `http://127.0.0.1:8089/docs` 展示UI文档
+Visit `http://127.0.0.1:8089/docs` to display the UI documentation.
 
 ![UI-IMG](./ui.png)
 
-## 2. 框架内启动
+## 2. Start within Framework
 
-输出 OpenApi Json 
+Output OpenApi Json
 
 ```php
 use Astral\Serialize\OpenApi;
@@ -24,9 +24,9 @@ use Astral\Serialize\OpenApi;
 echo (new OpenApi())->handleByFolders()->toString();
 ```
 
-### 以 Laravel 为例
+### Example with Laravel
 
-#### 2.1 创建一个路由用于访问 JSON 文档
+#### 2.1 Create a route to access the JSON documentation
 
 ```php
 use Illuminate\Support\Facades\Route;
@@ -38,21 +38,21 @@ Route::get('/openapi.json', function () {
 });
 ```
 
-#### 2.2 OpenApi Json 访问路径
+#### 2.2 OpenApi Json access path
 
 `http://your-domain.com/openapi.json`
 
-#### 2.3 接入UI
+#### 2.3 Integrate UI
 
-##### 2.3.1 接入 Swagger UI 展示页面
+##### 2.3.1 Integrate Swagger UI display page
 
-将以下 HTML 保存为 public/swagger.html：
+Save the following HTML as public/swagger.html:
 
 ```html
 <!DOCTYPE html>
 <html>
 <head>
-  <title>API 文档</title>
+  <title>API Doc</title>
   <link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist/swagger-ui.css" />
 </head>
 <body>
@@ -68,8 +68,8 @@ Route::get('/openapi.json', function () {
 </html>
 ```
 
-访问地址：`http://your-domain.com/swagger.html`
+Access address: `http://your-domain.com/swagger.html`
 
-##### 2.3.2 接入 `Apifox` `Postman` `Apipost` 等客户端工具
+##### 2.3.2 Integrate with client tools like `Apifox`, `Postman`, `Apipost`, etc.
 
-在客户端工具创建项目后，选择`导入`，输入 `http://your-domain.com/openapi.json`
+After creating a project in the client tool, select `Import` and enter `http://your-domain.com/openapi.json`

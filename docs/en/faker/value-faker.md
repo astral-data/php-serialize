@@ -1,4 +1,4 @@
-## 简单属性模拟
+## Simple Property Faker
 
 ```php
 class UserFaker extends Serialize {
@@ -24,7 +24,7 @@ class UserFaker extends Serialize {
 $user = UserFaker::faker();
 
 $userArray = $user->toArray();
-// $userArray 的内容:
+// Content of $userArray:
 // [
 //    "name" => "John Doe"
 //    "email" => "john.doe@example.com"

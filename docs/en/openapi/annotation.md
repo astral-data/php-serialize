@@ -1,8 +1,8 @@
-# 启动服务
+# Start Service
 
-## [OpenApi] 添加属性说明 示例值
+## [OpenApi] Add Property Description and Example Value
 
-### 增加属性说明 示例值
+### Add Property Description and Example Value
 
 ```php
 use Astral\Serialize\Serialize;
@@ -10,17 +10,17 @@ use Astral\Serialize\OpenApi\Annotations\OpenApi;
 
 class UserAddRequest extends Serialize {
 
-    #[OpenApi(description: '姓名',example: '张三')]
+    #[OpenApi(description: 'this is name',example: 'Job')]
     public string $name;
     
-    #[OpenApi(description: 'ID',example: '1')]
+    #[OpenApi(description: 'this is id',example: '1')]
     public int $id;
 }
 ```
 
-### 隐藏输入属性
+### Hide Input Property
 
-添加了 `InputIgnore` 注解类 作为`Request`类 openapi 生成文档时会自动忽略
+Added `InputIgnore` annotation class. When generating OpenAPI docs for a `Request` class, these properties will be automatically ignored.
 
 ```php
 use Astral\Serialize\Serialize;
@@ -32,17 +32,17 @@ class UserAddRequest extends Serialize {
     #[InputIgnore]
     public object $admin;
         
-    #[OpenApi(description: '姓名',example: '张三')]
+    #[OpenApi(description: 'this is name',example: 'Job')]
     public string $name;
     
-    #[OpenApi(description: 'ID',example: '1')]
+    #[OpenApi(description: 'this is id',example: '1')]
     public int $id;
 }
 ```
 
-### 隐藏输出属性
+### Hide Output Property
 
-添加了 `OutputIgnore` 注解类 作为`Response`类 openapi 生成文档时会自动忽略
+Added `OutputIgnore` annotation class. When generating OpenAPI docs for a `Response` class, these properties will be automatically ignored.
 
 ```php
 use Astral\Serialize\Serialize;
@@ -54,30 +54,30 @@ class UserAddRequest extends Serialize {
     #[OutputIgnore]
     public object $admin;
         
-    #[OpenApi(description: '姓名')]
+    #[OpenApi(description: 'this is name')]
     public string $name;
     
-    #[OpenApi(description: 'ID')]
+    #[OpenApi(description: 'this is id')]
     public int $id;
 }
 ```
 
-tips: `OutputIgnore` 和 `InputIgnore` 的详细使用请查看 [属性忽略](../annotation/ignore-annotation.md)
+tips: For detailed usage of `OutputIgnore` and `InputIgnore`, see [Property Ignore](../annotation/ignore-annotation.md)
 
 
-## [Headers] 添加/剔除请求头
+## [Headers] Add/Remove Request Headers
 
-* 增加 `user-token` 设置默认值 `true`
-* 增加 `company-id` 设置默认值 `''`
-* 删除 `token` 请求头
+* Add `user-token` with default value `true`
+* Add `company-id` with default value `''`
+* Remove `token` request header
 
 ```php
 use Astral\Serialize\Serialize;
 
-#[\Astral\Serialize\OpenApi\Annotations\Tag('用户模块管理')]
+#[\Astral\Serialize\OpenApi\Annotations\Tag('user management')]
 class UserController {
 
-    #[\Astral\Serialize\OpenApi\Annotations\Summary('创建用户')]
+    #[\Astral\Serialize\OpenApi\Annotations\Summary('create user')]
     #[\Astral\Serialize\OpenApi\Annotations\Route('/user/create')]
     #[\Astral\Serialize\OpenApi\Annotations\Headers(headers:['user-token'=>'true','company-id'=>''], withOutHeaders: ['token'])]
     public function create() 
@@ -89,27 +89,27 @@ class UserController {
 }
 ```
 
-## [Tag] 添加栏目说明
+## [Tag] Add Tag Description
 
-每一个Controller必须添加`Tag`注解类才会正常生成openapi文档
-* `value` 栏目名称
-* `description` 栏目说明
-* `sort` 排序 值越大 栏目排序越靠前
+Each Controller must add a `Tag` annotation for OpenAPI documentation to be generated correctly.
+* `value` Tag name
+* `description` Tag description
+* `sort` Sort order. The higher the value, the earlier the tag appears.
 
 ```php
-#[\Astral\Serialize\OpenApi\Annotations\Tag(value:'用户模块管理', description: '说明文案', sort: 0 )]
+#[\Astral\Serialize\OpenApi\Annotations\Tag(value:'user management', description: 'user management description', sort: 0 )]
 class UserController {}
 ```
 
-## [Summary] 接口方法说明
+## [Summary] API Method Description
 
-* `value` 方法名称
-* `description` 方法介绍
+* `value` Method name
+* `description` Method description
 
 ```php
-#[\Astral\Serialize\OpenApi\Annotations\Tag(value:'用户模块管理', description: '说明文案', sort: 0 )]
+#[\Astral\Serialize\OpenApi\Annotations\Tag(value:'user management', description: 'user management description', sort: 0 )]
 class UserController {
-    #[\Astral\Serialize\OpenApi\Annotations\Summary('创建用户')]
+    #[\Astral\Serialize\OpenApi\Annotations\Summary('create user')]
     public function create() 
     {
         return new UserDto(); 
@@ -117,17 +117,17 @@ class UserController {
 }
 ```
 
-## [Route] 路由
+## [Route] Route
 
-必须存在`Route`注解类才会正常生成openapi文档 同时需要保证 路由地址唯一 如果地址重复会导致显示不一致
+A `Route` annotation class must exist for OpenAPI documentation to be generated correctly. The route address must be unique; duplicate addresses will cause inconsistent display.
 
-* `route` 求情路径
-* `method` 请求方法 默认POST 
+* `route` Request path
+* `method` Request method, default is POST 
 
 ```php
-#[\Astral\Serialize\OpenApi\Annotations\Tag('用户模块管理')]
+#[\Astral\Serialize\OpenApi\Annotations\Tag('user management')]
 class UserController {
-    #[\Astral\Serialize\OpenApi\Annotations\Summary('创建用户')]
+    #[\Astral\Serialize\OpenApi\Annotations\Summary('create user')]
     #[\Astral\Serialize\OpenApi\Annotations\Route('/user/create')]
     public function create() 
     {
@@ -136,11 +136,11 @@ class UserController {
 }
 ```
 
-## [RequestBody] 接口方法说明
+## [RequestBody] API Method Description
 
-### 隐式获取 RequestBody
+### Implicitly Obtain RequestBody
 
-当前接口入参对象 继承了 `Serialize`对象时，会自动获取该对象作为 `RequestBody`
+When the parameter object of the current API inherits from the `Serialize` object, it will automatically be used as the `RequestBody`.
 
 ```php
 use Astral\Serialize\Serialize;
@@ -150,9 +150,9 @@ class UserAddRequest extends Serialize {
     public int $id;
 }
 
-#[\Astral\Serialize\OpenApi\Annotations\Tag('用户模块管理')]
+#[\Astral\Serialize\OpenApi\Annotations\Tag('user management')]
 class UserController {
-    #[\Astral\Serialize\OpenApi\Annotations\Summary('创建用户')]
+    #[\Astral\Serialize\OpenApi\Annotations\Summary('create user')]
     #[\Astral\Serialize\OpenApi\Annotations\Route('/user/create')]
     public function create(UserAddRequest $request) 
     {
@@ -161,9 +161,9 @@ class UserController {
 }
 ```
 
-### RequestBody Group分组显示文档
+### RequestBody Grouped Documentation Display
 
-`RequestBody` 指定了 group openapi 生成文档会显示该分组下的属性
+When a group is specified in `RequestBody`, OpenAPI documentation will show the properties under that group.
 
 ```php
 use Astral\Serialize\Serialize;
@@ -177,21 +177,21 @@ class UserAddRequest extends Serialize {
     public int $id;
 }
 
-#[\Astral\Serialize\OpenApi\Annotations\Tag('用户模块管理')]
+#[\Astral\Serialize\OpenApi\Annotations\Tag('user management')]
 class UserController {
-    #[\Astral\Serialize\OpenApi\Annotations\Summary('创建用户')]
+    #[\Astral\Serialize\OpenApi\Annotations\Summary('create user')]
     #[\Astral\Serialize\OpenApi\Annotations\Route('/user/create')]
     #[\Astral\Serialize\OpenApi\Annotations\RequestBody(groups: ['edit'])]
     public function edit(UserAddRequest $request) {}
 }
 ```
-tips: Groups 详细使用请查看 [属性分组](../annotation/group-annotation.md)
+Tips: For more details on Groups usage, please refer to [Attribute Grouping](../annotation/group-annotation.md)
 
-## [Response] 接口方法说明
+## [Response] API Method Description
 
-### 隐式获取 Response
+### Implicitly Obtain Response
 
-当对象返回对象 继承了 `Serialize`对象时，会自动获取该对象作为 `Response`
+When an object returns another object that inherits from `Serialize`, it will automatically be used as the `Response`.
 
 ```php
 use Astral\Serialize\Serialize;
@@ -202,9 +202,9 @@ class UserResponse extends Serialize {
 }
 
 
-#[\Astral\Serialize\OpenApi\Annotations\Tag('用户模块管理')]
+#[\Astral\Serialize\OpenApi\Annotations\Tag('user management')]
 class UserController {
-    #[\Astral\Serialize\OpenApi\Annotations\Summary('创建用户')]
+    #[\Astral\Serialize\OpenApi\Annotations\Summary('create user')]
     #[\Astral\Serialize\OpenApi\Annotations\Route('/user/create')]
     public function create(UserAddRequest $request): UserResponse
     {
@@ -213,9 +213,9 @@ class UserController {
 }
 ```
 
-### Response Group分组显示文档
+### Response Grouped Documentation Display
 
-`Response` 指定了 group openapi 生成文档会显示该分组下的属性
+If a `Response` specifies a group, the OpenAPI documentation will display only the properties in that group.
 
 ```php
 use Astral\Serialize\Serialize;
@@ -229,13 +229,13 @@ class UserResponse extends Serialize {
     public int $mobile;
 }
 
-#[\Astral\Serialize\OpenApi\Annotations\Tag('用户模块管理')]
+#[\Astral\Serialize\OpenApi\Annotations\Tag('user management')]
 class UserController {
-    #[\Astral\Serialize\OpenApi\Annotations\Summary('创建用户')]
+    #[\Astral\Serialize\OpenApi\Annotations\Summary('create user')]
     #[\Astral\Serialize\OpenApi\Annotations\Route('/user/create')]
     #[\Astral\Serialize\OpenApi\Annotations\Response(className:UserAddRequest::class, groups: ['guest'])]
     public function edit($request) {}
 }
 ```
 
-tips: Groups 详细使用请查看 [属性分组](../annotation/group-annotation.md)
+Tips: For more details on Groups usage, please refer to [Attribute Grouping](../annotation/group-annotation.md)

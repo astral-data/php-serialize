@@ -1,10 +1,10 @@
-# 重写注解
+# Override Annotation
 
-`Route::class` `Summary::class` `RequestBody::class` `Response::class` `Headers::class` 可以根据自身业务重写注解
+`Route::class`, `Summary::class`, `RequestBody::class`, `Response::class`, and `Headers::class` annotations can be overridden according to your business needs.
 
-## 重写 Route 注解
+## Override Route Annotation
 
-重写Route注解 增加了 `withOutMiddleware` `withMiddleware` 属性
+Override the Route annotation to add `withOutMiddleware` and `withMiddleware` properties.
 
 ```php
 #[Attribute(Attribute::TARGET_METHOD)]
@@ -19,11 +19,12 @@
         }
     }
 
-    #[\Astral\Serialize\OpenApi\Annotations\Tag('用户模块管理')]
+    #[\Astral\Serialize\OpenApi\Annotations\Tag('user management')]
     class UserController {
     
-        #[\Astral\Serialize\OpenApi\Annotations\Summary('创建用户')]
-        #[CustomerRoute('/user/create', withMiddleware:['auth'])]  // 使用自定义注解也能识别生成json
+        #[\Astral\Serialize\OpenApi\Annotations\Summary('create user')]
+        // Using a custom annotation can also be recognized and generate JSON.
+        #[CustomerRoute('/user/create', withMiddleware:['auth'])]  
         public function create() 
         {
             return new UserDto(); 
