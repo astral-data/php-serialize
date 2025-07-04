@@ -24,6 +24,10 @@ It allows you to map objects to arrays/JSON and **automatically generate OpenAPI
 - 🧬 **Auto-generate OpenAPI schema** using object definitions
 - ⚙️ Framework-agnostic — works with Laravel, Symfony, etc.
 
+## Benchmark
+
+![benchmark](./docs/benchmark.png)
+
 ## Quick Start
 
 ### Installation
