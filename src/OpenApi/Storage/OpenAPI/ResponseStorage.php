@@ -25,9 +25,12 @@ class ResponseStorage implements StorageInterface
 
     public function addGlobParameters(array $vols): void
     {
-        foreach ($vols as $field => $description){
-            $parameters = $this->parameter;
+        $dates = $this->parameter['properties'] ?? [];
+        $required = $this->parameter['required'] ?? [];
 
+        $this->parameter['properties'] = [];
+
+        foreach ($vols as $field => $description){
             if($description !== 'object'){
                 $this->parameter['properties'][$field] = [
                     'type'        => 'string',
@@ -37,9 +40,11 @@ class ResponseStorage implements StorageInterface
                 $this->parameter['properties'][$field] = [
                     'type'        => 'object',
                     'description' => $description,
-                    'properties' => $parameters,
+                    'properties' => $dates,
+                    'required' => $required,
                 ];
             }
+
         }
 
     }

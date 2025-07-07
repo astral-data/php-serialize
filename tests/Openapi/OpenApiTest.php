@@ -93,9 +93,10 @@ test('OpenAPI structure is correct', function () {
     $response200 = $post->responses[200];
     expect($response200['description'])->toBe('成功');
 
-    $schema = $response200['content']['application/json']['schema'];
-    expect($schema['properties'])->toHaveKeys(['name', 'id'])
-        ->and($schema['required'])->toHaveCount(1)
-        ->and($schema['required'][0])->toBeString('id');
+    $data = $response200['content']['application/json']['schema']['properties']['data'];
+
+    expect($data['properties'])->toHaveKeys(['name', 'id'])
+        ->and($data['required'])->toHaveCount(1)
+        ->and($data['required'][0])->toBeString('id');
 
 });

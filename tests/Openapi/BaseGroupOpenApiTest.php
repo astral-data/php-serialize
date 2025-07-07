@@ -78,7 +78,7 @@ test('OpenAPI customer route', function () {
     expect($schema['properties'])->toHaveCount(3)->toHaveKeys(['input_change_group_1_33_2_11', 'input_group_2_22', 'input_group_2_33']);
 
 
-    $schema = $post->responses[200]['content']['application/json']['schema'];
+    $schema = $post->responses[200]['content']['application/json']['schema']['properties']['data'];
     expect($schema['properties'])->toHaveCount(3)->toHaveKeys(['out_group_1_11', 'out_group_1_22', 'out_group_1_33_2_11']);
 
 });
