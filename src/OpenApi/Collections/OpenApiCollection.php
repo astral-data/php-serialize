@@ -12,6 +12,7 @@ use Astral\Serialize\OpenApi\Annotations\Summary;
 use Astral\Serialize\OpenApi\Annotations\Tag;
 use Astral\Serialize\OpenApi\Enum\ContentTypeEnum;
 use Astral\Serialize\OpenApi\Enum\ParameterTypeEnum;
+use Astral\Serialize\OpenApi\Handler\Config;
 use Astral\Serialize\OpenApi\Storage\OpenAPI\Method\Method;
 use Astral\Serialize\OpenApi\Storage\OpenAPI\RequestBodyStorage;
 use Astral\Serialize\OpenApi\Storage\OpenAPI\ResponseStorage;
@@ -121,9 +122,15 @@ class OpenApiCollection
     {
         $responseStorage = new ResponseStorage();
 
+        $baseResponse = Config::get('response',[]);
+
         if ($className) {
             $schemaStorage = (new SchemaStorage())->build($this->buildResponseParameterCollections($className,$groups));
             $responseStorage->withParameter($schemaStorage);
+        }
+
+        if($baseResponse){
+            $responseStorage->addGlobParameters($baseResponse);
         }
 
         return $responseStorage;

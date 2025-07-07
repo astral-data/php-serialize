@@ -49,4 +49,9 @@ return [
      * You can override or extend this list in your config file.
      */
     'exclude_dirs' => [],
+    'response' => [
+        'code' => '状态码',
+        'message' => '返回信息',
+        'data' => 'object',
+    ]
 ];
