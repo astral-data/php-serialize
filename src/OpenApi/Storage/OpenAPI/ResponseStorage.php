@@ -30,18 +30,18 @@ class ResponseStorage implements StorageInterface
 
         $this->parameter['properties'] = [];
 
-        foreach ($vols as $field => $description){
-            if($description !== 'object'){
+        foreach ($vols as $field => $item){
+            if($item === 'T'){
                 $this->parameter['properties'][$field] = [
-                    'type'        => 'string',
-                    'description' => $description,
+                    'type'        => 'object',
+                    'properties' => $dates,
+                    'required' => $required,
                 ];
             }else{
                 $this->parameter['properties'][$field] = [
-                    'type'        => 'object',
-                    'description' => $description,
-                    'properties' => $dates,
-                    'required' => $required,
+                    'type'        => 'string',
+                    'description' => $item['description'] ?? '',
+                    'example'     => $item['example'],
                 ];
             }
 
