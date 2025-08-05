@@ -60,5 +60,17 @@ return [
      *
      */
     'exclude_dirs' => [],
+    
+    /**
+     * 响应数据结构定义
+     * 
+     * 定义API响应的基本结构，包含状态码、返回信息和数据主体
+     *
+     */
+    'response' => [
+        'code' => ['description' =>'状态码', 'example'=> 200],
+        'message' => ['description' =>'返回信息', 'example'=> '操作成功'],
+        'data' => 'T',
+    ]
 ];
 ```

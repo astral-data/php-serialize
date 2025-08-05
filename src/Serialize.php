@@ -2,10 +2,12 @@
 
 namespace Astral\Serialize;
 
+use Astral\Serialize\OpenApi\Handler\Config;
 use Astral\Serialize\Support\Context\SerializeContext;
 use Astral\Serialize\Support\Factories\ContextFactory;
+use JsonSerializable;
 
-abstract class Serialize
+abstract class Serialize implements JsonSerializable
 {
     private ?SerializeContext $_context = null;
 
@@ -70,5 +72,23 @@ abstract class Serialize
         $res['_context'] = null;
 
         return $res;
+    }
+
+    public function jsonSerialize(): array
+    {
+        $baseResponse = Config::get('response',[]);
+        if($baseResponse){
+            $resultData = [];
+            foreach ($baseResponse as $field => $item){
+                if($item === 'T'){
+                    $resultData[$field] = $this->toArray();
+                }else{
+                    $resultData[$field] = $item['example'] ?? '';
+                }
+            }
+            return $resultData;
+        }
+
+        return $this->toArray();
     }
 }
