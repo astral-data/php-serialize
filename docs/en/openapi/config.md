@@ -60,5 +60,17 @@ return [
      *
      */
     'exclude_dirs' => [],
+    
+    /**
+     * Response Data Structure Definition
+     *
+     * Defines the basic structure of API responses, including status code, return message, and data body
+     *
+     */
+    'response' => [
+        'code' => ['description' =>'状态码', 'example'=> 200],
+        'message' => ['description' =>'返回信息', 'example'=> '操作成功'],
+        'data' => 'T',
+    ]
 ];
 ```
