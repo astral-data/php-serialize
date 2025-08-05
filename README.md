@@ -24,6 +24,19 @@ It allows you to map objects to arrays/JSON and **automatically generate OpenAPI
 - 🧬 **Auto-generate OpenAPI schema** using object definitions
 - ⚙️ Framework-agnostic — works with Laravel, Symfony, etc.
 
+## Benchmark
+
+```bash
+    Run vendor/bin/phpbench run benchmarks/ --bootstrap=vendor/autoload.php
+    PHPBench (1.4.1) running benchmarks... #standwithukraine
+    with PHP version 8.4.8, xdebug ❌, opcache ❌
+
+    benchObjectCreation.....................I4 ✔ Mo117.841μs (±3.09%)
+    benchObjectCreationWithoutCache.........I4 ✔ Mo284.568μs (±0.71%)
+    benchObjectToArray......................I4 ✔ Mo62.883μs (±0.56%)
+    benchObjectToArrayWithoutCache..........I4 ✔ Mo211.700μs (±0.84%)
+```
+
 ## Quick Start
 
 ### Installation
