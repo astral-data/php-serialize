@@ -5,6 +5,7 @@ namespace Astral\Serialize\Support\Context;
 use Astral\Serialize\Exceptions\NotFoundGroupException;
 use Astral\Serialize\Faker\FakerResolver;
 use Astral\Serialize\Resolvers\Casts\DataCollectionCastResolver;
+use Astral\Serialize\Resolvers\Casts\NormalizerCastResolver;
 use Astral\Serialize\Resolvers\GroupResolver;
 use Astral\Serialize\Resolvers\InputResolver;
 use Astral\Serialize\Resolvers\OutputResolver;
@@ -38,6 +39,7 @@ class SerializeContext
         private readonly InputResolver                  $propertyInputValueResolver,
         private readonly OutputResolver                 $propertyToArrayResolver,
         private readonly FakerResolver                  $fakerResolver,
+        private readonly NormalizerCastResolver         $normalizerCastResolver,
     ) {
 
     }
@@ -187,8 +189,10 @@ class SerializeContext
      */
     public function from(mixed ...$payload): object
     {
+
         $payloads = [];
         foreach ($payload as $field => $itemPayload) {
+            $itemPayload = $this->normalizerCastResolver->resolve($itemPayload);
             $values   = is_numeric($field) && is_array($itemPayload) ? $itemPayload : [$field => $itemPayload];
             $payloads = [...$payloads, ...$values];
         }

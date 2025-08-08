@@ -8,6 +8,7 @@ use Astral\Serialize\Faker\FakerResolver;
 use Astral\Serialize\Faker\Rule\FakerDefaultRules;
 use Astral\Serialize\Resolvers\Casts\DataCollectionCastResolver;
 use Astral\Serialize\Resolvers\Casts\InputValueCastResolver;
+use Astral\Serialize\Resolvers\Casts\NormalizerCastResolver;
 use Astral\Serialize\Resolvers\Casts\OutputCastResolver;
 use Astral\Serialize\Resolvers\GroupResolver;
 use Astral\Serialize\Resolvers\InputResolver;
@@ -41,6 +42,7 @@ class SerializeContainer
     protected ?GroupResolver $groupResolver                                                 = null;
     protected ?ReflectionClassInstanceManager $reflectionClassInstanceManager               = null;
     protected ?SerializeInstanceManager $serializeInstanceManager                           = null;
+    protected ?NormalizerCastResolver $normalizerCastResolver                               = null;
     protected ?DataCollectionCastResolver $attributePropertyResolver                        = null;
     protected ?InputResolver $propertyInputValueResolver                                    = null;
     protected ?OutputResolver $propertyToArrayResolver                                      = null;
@@ -117,6 +119,11 @@ class SerializeContainer
             inputConstructCast:$this->inputConstructCast(),
             groupResolver: $this->groupResolver(),
         );
+    }
+
+    public function normalizerCastResolver(): NormalizerCastResolver
+    {
+        return $this->normalizerCastResolver ??= new NormalizerCastResolver(ConfigManager::getInstance());
     }
 
     public function inputValueCastResolver(): InputValueCastResolver

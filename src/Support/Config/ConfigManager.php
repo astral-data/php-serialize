@@ -7,12 +7,15 @@ use Astral\Serialize\Casts\InputValue\InputArraySingleChildCast;
 use Astral\Serialize\Casts\InputValue\InputObjectBestMatchChildCast;
 use Astral\Serialize\Casts\InputValue\InputValueEnumCast;
 use Astral\Serialize\Casts\InputValue\InputValueNullCast;
+use Astral\Serialize\Casts\Normalizer\ArrayNormalizerCast;
+use Astral\Serialize\Casts\Normalizer\JsonNormalizerCast;
 use Astral\Serialize\Casts\OutValue\OutArrayChildCast;
 use Astral\Serialize\Casts\OutValue\OutValueEnumCast;
 use Astral\Serialize\Casts\OutValue\OutValueGetterCast;
 use Astral\Serialize\Contracts\Attribute\DataCollectionCastInterface;
 use Astral\Serialize\Contracts\Attribute\InputValueCastInterface;
 use Astral\Serialize\Contracts\Attribute\OutValueCastInterface;
+use Astral\Serialize\Contracts\Normalizer\NormalizerCastInterface;
 use Astral\Serialize\Enums\CacheDriverEnum;
 use Astral\Serialize\Exceptions\NotFoundAttributePropertyResolver;
 use Astral\Serialize\Support\Caching\MemoryCache;
@@ -40,6 +43,12 @@ class ConfigManager
         OutValueGetterCast::class,
     ];
 
+    /** @var (NormalizerCastInterface|string)[] $normalizerCasts */
+    private array $normalizerCasts = [
+//        JsonNormalizerCast::class,
+        ArrayNormalizerCast::class,
+    ];
+
     /** @var CacheDriverEnum|class-string $cacheDriver */
     private string|CacheDriverEnum $cacheDriver = MemoryCache::class;
 
@@ -52,11 +61,28 @@ class ConfigManager
         foreach ($this->outputValueCasts as $key => $cast) {
             $this->outputValueCasts[$key] = new $cast();
         }
+
+        foreach ($this->normalizerCasts as $key => $cast) {
+            $this->normalizerCasts[$key] = new $cast();
+        }
     }
 
     public static function getInstance(): ConfigManager
     {
         return self::$instance ??= new self();
+    }
+
+    /**
+     * @throws NotFoundAttributePropertyResolver
+     */
+    public function addNormalizerCasts(NormalizerCastInterface|string $resolverClass): static
+    {
+        if (is_string($resolverClass) && !is_subclass_of($resolverClass, NormalizerCastInterface::class)) {
+            throw new NotFoundAttributePropertyResolver('Resolver class must be an instance of NormalizerCastInterface');
+        }
+        $this->attributePropertyResolver[] = (is_string($resolverClass) ? new $resolverClass() : $resolverClass);
+
+        return $this;
     }
 
     /**
@@ -111,6 +137,11 @@ class ConfigManager
     public function getOutValueCasts(): array
     {
         return $this->outputValueCasts;
+    }
+
+    public function getNormalizerCasts(): array
+    {
+        return $this->normalizerCasts;
     }
 
     public function getCacheDriver(): string
