@@ -26,6 +26,7 @@ use RuntimeException;
 class SerializeContext
 {
     private array $groups = [];
+    private array $responses = [];
 
     public function __construct(
         /** @var class-string<T> */
@@ -42,6 +43,27 @@ class SerializeContext
         private readonly NormalizerCastResolver         $normalizerCastResolver,
     ) {
 
+    }
+
+    public function setCode(string|int $code, $description ='' , $field = 'code'): void
+    {
+        $this->responses[$field] = ['description' => $description,'value' => $code];
+    }
+
+    public function setMessage(string $message, $description ='' , $field = 'message'): void
+    {
+        $this->responses[$field] = ['description' => $description,'value' => $message];
+    }
+
+    public function withResponses(array $responses): self
+    {
+        $this->responses = $responses;
+        return $this;
+    }
+
+    public function getResponses(): array
+    {
+        return $this->responses ?? [];
     }
 
     public function getChooseSerializeContext(): ChooseSerializeContext

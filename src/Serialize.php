@@ -7,6 +7,14 @@ use Astral\Serialize\Support\Context\SerializeContext;
 use Astral\Serialize\Support\Factories\ContextFactory;
 use JsonSerializable;
 
+/**
+ * @method void withResponses(array $responses) static
+ * @see SerializeContext::withResponses()
+ * @method void setCode(string|int $code) static
+ * @see SerializeContext::setCode()
+ * @method void setMessage(string $message) static
+ * @see SerializeContext::setMessage()
+ */
 abstract class Serialize implements JsonSerializable
 {
     private ?SerializeContext $_context = null;
@@ -76,19 +84,33 @@ abstract class Serialize implements JsonSerializable
 
     public function jsonSerialize(): array
     {
-        $baseResponse = Config::get('response',[]);
-        if($baseResponse){
+        $baseResponses = Config::get('response',[]);
+        $customerResponses = $this->getContext()?->getResponses() ?? [];
+        $responses = array_merge($baseResponses, $customerResponses);
+
+        if($responses){
             $resultData = [];
-            foreach ($baseResponse as $field => $item){
+            foreach ($responses as $field => $item){
                 if($item === 'T'){
                     $resultData[$field] = $this->toArray();
                 }else{
-                    $resultData[$field] = $item['example'] ?? '';
+                    $resultData[$field] = $item['value'] ?? ($item['example'] ?? '');
                 }
             }
             return $resultData;
         }
 
         return $this->toArray();
+    }
+
+    public function __call(string $name, array $arguments)
+    {
+        if ($this->getContext() === null) {
+            $this->setContext(ContextFactory::build(static::class));
+        }
+
+        $this->getContext()->{$name}(...$arguments);
+
+        return $this;
     }
 }

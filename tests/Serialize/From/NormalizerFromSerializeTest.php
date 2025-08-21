@@ -19,7 +19,6 @@ beforeAll(function () {
     {
         public NormalizerOne $one;
         public NormalizerTwo $two;
-
         public mixed $three;
     }
 
@@ -49,7 +48,31 @@ it('test normalizer Serialize class', function () {
             'id_one' => 1
         ]);
 
+
+});
+
+it('test json_encode Serialize class', function () {
+
+    $normalizerOne = new NormalizerOne();
+    $normalizerOne->name_one = 'one name';
+    $normalizerOne->id_one = 1;
+
+    $normalizerTwo = new NormalizerTwo();
+    $normalizerTwo->name_two = 'two name';
+    $normalizerTwo->id_two = 2;
+
+    $res = NormalizerClass::from(one: $normalizerOne, two: $normalizerTwo, three: $normalizerOne);
     $resJson = json_encode($res);
     expect($resJson)->toBe('{"code":200,"message":"\u64cd\u4f5c\u6210\u529f","data":{"one":{"code":200,"message":"\u64cd\u4f5c\u6210\u529f","data":{"name_one":"one name","id_one":1}},"two":{"code":200,"message":"\u64cd\u4f5c\u6210\u529f","data":{"name_two":"two name","id_two":2}},"three":{"name_one":"one name","id_one":1}}}');
+
+    $res->setMessage('233');
+    $resJson = json_encode($res);
+    expect($resJson)->toBe('{"code":200,"message":"233","data":{"one":{"code":200,"message":"\u64cd\u4f5c\u6210\u529f","data":{"name_one":"one name","id_one":1}},"two":{"code":200,"message":"\u64cd\u4f5c\u6210\u529f","data":{"name_two":"two name","id_two":2}},"three":{"name_one":"one name","id_one":1}}}');
+
+    $res->setCode(-1);
+    $resJson = json_encode($res);
+    expect($resJson)->toBe('{"code":-1,"message":"233","data":{"one":{"code":200,"message":"\u64cd\u4f5c\u6210\u529f","data":{"name_one":"one name","id_one":1}},"two":{"code":200,"message":"\u64cd\u4f5c\u6210\u529f","data":{"name_two":"two name","id_two":2}},"three":{"name_one":"one name","id_one":1}}}');
+
+
 });
 
