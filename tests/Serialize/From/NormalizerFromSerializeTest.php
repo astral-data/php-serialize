@@ -63,16 +63,21 @@ it('test json_encode Serialize class', function () {
 
     $res = NormalizerClass::from(one: $normalizerOne, two: $normalizerTwo, three: $normalizerOne);
     $resJson = json_encode($res);
-    expect($resJson)->toBe('{"code":200,"message":"\u64cd\u4f5c\u6210\u529f","data":{"one":{"code":200,"message":"\u64cd\u4f5c\u6210\u529f","data":{"name_one":"one name","id_one":1}},"two":{"code":200,"message":"\u64cd\u4f5c\u6210\u529f","data":{"name_two":"two name","id_two":2}},"three":{"name_one":"one name","id_one":1}}}');
+    expect($resJson)->toBe('{"code":200,"message":"\u64cd\u4f5c\u6210\u529f","data":{"one":{"name_one":"one name","id_one":1},"two":{"name_two":"two name","id_two":2},"three":{"name_one":"one name","id_one":1}}}');
 
     $res->setMessage('233');
     $resJson = json_encode($res);
-    expect($resJson)->toBe('{"code":200,"message":"233","data":{"one":{"code":200,"message":"\u64cd\u4f5c\u6210\u529f","data":{"name_one":"one name","id_one":1}},"two":{"code":200,"message":"\u64cd\u4f5c\u6210\u529f","data":{"name_two":"two name","id_two":2}},"three":{"name_one":"one name","id_one":1}}}');
+    expect($resJson)->toBe('{"code":200,"message":"233","data":{"one":{"name_one":"one name","id_one":1},"two":{"name_two":"two name","id_two":2},"three":{"name_one":"one name","id_one":1}}}');
 
     $res->setCode(-1);
     $resJson = json_encode($res);
-    expect($resJson)->toBe('{"code":-1,"message":"233","data":{"one":{"code":200,"message":"\u64cd\u4f5c\u6210\u529f","data":{"name_one":"one name","id_one":1}},"two":{"code":200,"message":"\u64cd\u4f5c\u6210\u529f","data":{"name_two":"two name","id_two":2}},"three":{"name_one":"one name","id_one":1}}}');
+    expect($resJson)->toBe('{"code":-1,"message":"233","data":{"one":{"name_one":"one name","id_one":1},"two":{"name_two":"two name","id_two":2},"three":{"name_one":"one name","id_one":1}}}');
 
+    $resJson = $res->withoutResponseToJsonString();
+    expect($resJson)->toBe('{"one":{"name_one":"one name","id_one":1},"two":{"name_two":"two name","id_two":2},"three":{"name_one":"one name","id_one":1}}');
+
+    $resJson = $res->toJsonString();
+    expect($resJson)->toBe('{"code":-1,"message":"233","data":{"one":{"name_one":"one name","id_one":1},"two":{"name_two":"two name","id_two":2},"three":{"name_one":"one name","id_one":1}}}');
 
 });
 

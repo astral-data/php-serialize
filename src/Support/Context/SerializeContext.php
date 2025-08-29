@@ -246,4 +246,18 @@ class SerializeContext
         $this->chooseSerializeContext->setGroups($this->getGroups());
         return $this->propertyToArrayResolver->resolve($this->chooseSerializeContext, $this->getGroupCollection(), $object);
     }
+
+    public function toArrayWithoutResponse($data)
+    {
+        if ($data instanceof Serialize) {
+            return $data->toArray();
+        } elseif (is_array($data)) {
+            foreach ($data as $key => $value) {
+                $data[$key] = $this->toArrayWithoutResponse($value);
+            }
+            return $data;
+        }
+        return $data;
+    }
+
 }

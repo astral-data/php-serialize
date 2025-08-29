@@ -43,6 +43,20 @@ abstract class Serialize implements JsonSerializable
         return $this;
     }
 
+    public function toJsonString(): bool|string
+    {
+        return json_encode($this);
+    }
+
+    public function withoutResponseToJsonString(): string
+    {
+        if ($this->getContext() === null) {
+            $this->setContext(ContextFactory::build(static::class));
+        }
+
+        return json_encode($this->getContext()->toArrayWithoutResponse($this->toArray()));
+    }
+
     public function toArray(): array
     {
         if ($this->getContext() === null) {
@@ -74,6 +88,7 @@ abstract class Serialize implements JsonSerializable
         return $instance;
     }
 
+
     public function __debugInfo()
     {
         $res             = get_object_vars($this);
@@ -92,7 +107,7 @@ abstract class Serialize implements JsonSerializable
             $resultData = [];
             foreach ($responses as $field => $item){
                 if($item === 'T'){
-                    $resultData[$field] = $this->toArray();
+                    $resultData[$field] = $this->getContext()->toArrayWithoutResponse($this->toArray());
                 }else{
                     $resultData[$field] = $item['value'] ?? ($item['example'] ?? '');
                 }
@@ -100,7 +115,7 @@ abstract class Serialize implements JsonSerializable
             return $resultData;
         }
 
-        return $this->toArray();
+        return $this->getContext()->toArrayWithoutResponse($this->toArray());
     }
 
     public function __call(string $name, array $arguments)
