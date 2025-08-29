@@ -250,7 +250,7 @@ class SerializeContext
     public function toArrayWithoutResponse($data)
     {
         if ($data instanceof Serialize) {
-            return $data->toArray();
+            return get_object_vars($data);
         } elseif (is_array($data)) {
             foreach ($data as $key => $value) {
                 $data[$key] = $this->toArrayWithoutResponse($value);
