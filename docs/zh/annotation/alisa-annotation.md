@@ -128,8 +128,7 @@ $complexUser = ComplexUser::from([
     'user_tags' => ['developer', 'programmer']
 ]);
 
-// 转换为标准数组
-$complexUserArray = $complexUser->toArray();
+var_dump($complexUser);
 // $complexUserArray 的内容:
 // [
 //     'profile' => UserProfile Object ([

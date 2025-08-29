@@ -40,8 +40,8 @@ $data1 = MultiArraySerialize::from(
     ]
 );
 
-$data1Array = $data1->toArray();
-// $data1Array 的内容:
+var_dump($data1)
+// $data1 的内容:
 // [
 //     'mixedTypeArray' => [
 //           [0] => ArrayOne Object
@@ -72,8 +72,8 @@ $data2 = MultiArraySerialize::from(
     ]
 );
 
-$data2Array = $data2->toArray();
-// $data2Array 的内容:
+var_dump($data2)
+// $data2 的内容:
 // [
 //     'multiTypeArray' => [
 //         ArrayOne Object (
@@ -97,8 +97,8 @@ $data3 = MultiArraySerialize::from(
     ]
 );
 
-$data3Array = $data3->toArray();
-// $data3Array 的内容:
+var_dump($data3)
+// $data3 的内容:
 // [
 //     'keyValueMixedArray' => [
 //         'user1' => ArrayOne Object (
@@ -121,7 +121,7 @@ $data4 = MultiArraySerialize::from(
     ]
 );
 
-$data4Array = $data4->toArray();
+var_dump($data4)
 // $data4Array 的内容:
 // [
 //     'mixedTypeArray' => [

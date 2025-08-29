@@ -21,8 +21,8 @@ $userList = UserListFaker::faker();
 
 $complexUserListFaker = UserListFaker::faker();
 
-$complexUserListFakerArray = $complexUserListFaker->toArray();
-// $complexUserListFakerArray 的内容:
+var_dump($complexUserListFaker)
+// $complexUserListFaker 的内容:
 // [
 //     'profile' => [
 //        [0] => UserProfile Object (

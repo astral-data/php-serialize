@@ -128,9 +128,8 @@ $complexUser = ComplexUser::from([
     'user_tags' => ['developer', 'programmer']
 ]);
 
-// Convert to standard array
-$complexUserArray = $complexUser->toArray();
-// $complexUserArray toArray:
+var_dump($complexUserListFaker)
+// Content of $complexUserListFaker:
 // [
 //     'profile' => UserProfile Object ([
 //         'nickname' => 'job',
