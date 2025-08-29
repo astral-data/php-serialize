@@ -38,7 +38,7 @@ class ConfigManager
 
     /** @var (OutValueCastInterface|string)[] $outputValueCasts */
     private array $outputValueCasts = [
-        OutArrayChildCast::class,
+//        OutArrayChildCast::class,
         OutValueEnumCast::class,
         OutValueGetterCast::class,
     ];
