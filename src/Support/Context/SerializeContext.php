@@ -211,7 +211,6 @@ class SerializeContext
      */
     public function from(mixed ...$payload): object
     {
-
         $payloads = [];
         foreach ($payload as $field => $itemPayload) {
             $itemPayload = $this->normalizerCastResolver->resolve($itemPayload);
@@ -245,19 +244,6 @@ class SerializeContext
     {
         $this->chooseSerializeContext->setGroups($this->getGroups());
         return $this->propertyToArrayResolver->resolve($this->chooseSerializeContext, $this->getGroupCollection(), $object);
-    }
-
-    public function toArrayWithoutResponse($data)
-    {
-        if ($data instanceof Serialize) {
-            return get_object_vars($data);
-        } elseif (is_array($data)) {
-            foreach ($data as $key => $value) {
-                $data[$key] = $this->toArrayWithoutResponse($value);
-            }
-            return $data;
-        }
-        return $data;
     }
 
 }
