@@ -3,6 +3,7 @@
 namespace Astral\Serialize\Resolvers;
 
 use Astral\Serialize\Resolvers\Casts\OutputCastResolver;
+use Astral\Serialize\Serialize;
 use Astral\Serialize\Support\Collections\DataCollection;
 use Astral\Serialize\Support\Collections\GroupDataCollection;
 use Astral\Serialize\Support\Context\ChoosePropertyContext;
@@ -22,7 +23,6 @@ class OutputResolver
 
     public function resolve(ChooseSerializeContext $chooseContext, GroupDataCollection $groupCollection, object $object): array
     {
-
         $context         = new OutContext(
             className: $groupCollection->getClassName(),
             classInstance: $object,
@@ -31,7 +31,6 @@ class OutputResolver
         );
 
         $properties = $groupCollection->getProperties();
-
 
         $toArray  = [];
         foreach ($properties as $collection) {
@@ -53,8 +52,9 @@ class OutputResolver
             );
 
             foreach ($matchData['names'] as $name) {
-                $toArray[$name] = $resolvedValue;
+                $toArray[$name] =  $resolvedValue instanceof  Serialize ? $resolvedValue->toArray() : $resolvedValue;
             }
+
         }
 
         return $toArray;

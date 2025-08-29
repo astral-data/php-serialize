@@ -40,8 +40,8 @@ $data1 = MultiArraySerialize::from(
     ]
 );
 
-$data1Array = $data1->toArray();
-// Content of $data1Array:
+var_dump($data1)
+// Content of $data1:
 // [
 //     'mixedTypeArray' => [
 //           [0] => ArrayOne Object
@@ -72,8 +72,8 @@ $data2 = MultiArraySerialize::from(
     ]
 );
 
-$data2Array = $data2->toArray();
-// Content of $data2Array:
+var_dump($data2)
+// Content of $data2:
 // [
 //     'multiTypeArray' => [
 //         ArrayOne Object (
@@ -97,8 +97,8 @@ $data3 = MultiArraySerialize::from(
     ]
 );
 
-$data3Array = $data3->toArray();
-// $data3Array toArray:
+var_dump($data3)
+// Content of $data3:
 // [
 //     'keyValueMixedArray' => [
 //         'user1' => ArrayOne Object (
@@ -121,8 +121,8 @@ $data4 = MultiArraySerialize::from(
     ]
 );
 
-$data4Array = $data4->toArray();
-// $data4Array toArray:
+var_dump($data4)
+// Content of $data4:
 // [
 //     'mixedTypeArray' => [
 //         ['unknown' => 'data1'],

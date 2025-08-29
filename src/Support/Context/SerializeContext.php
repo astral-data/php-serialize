@@ -5,6 +5,7 @@ namespace Astral\Serialize\Support\Context;
 use Astral\Serialize\Exceptions\NotFoundGroupException;
 use Astral\Serialize\Faker\FakerResolver;
 use Astral\Serialize\Resolvers\Casts\DataCollectionCastResolver;
+use Astral\Serialize\Resolvers\Casts\NormalizerCastResolver;
 use Astral\Serialize\Resolvers\GroupResolver;
 use Astral\Serialize\Resolvers\InputResolver;
 use Astral\Serialize\Resolvers\OutputResolver;
@@ -25,6 +26,7 @@ use RuntimeException;
 class SerializeContext
 {
     private array $groups = [];
+    private array $responses = [];
 
     public function __construct(
         /** @var class-string<T> */
@@ -38,8 +40,30 @@ class SerializeContext
         private readonly InputResolver                  $propertyInputValueResolver,
         private readonly OutputResolver                 $propertyToArrayResolver,
         private readonly FakerResolver                  $fakerResolver,
+        private readonly NormalizerCastResolver         $normalizerCastResolver,
     ) {
 
+    }
+
+    public function setCode(string|int $code, $description ='' , $field = 'code'): void
+    {
+        $this->responses[$field] = ['description' => $description,'value' => $code];
+    }
+
+    public function setMessage(string $message, $description ='' , $field = 'message'): void
+    {
+        $this->responses[$field] = ['description' => $description,'value' => $message];
+    }
+
+    public function withResponses(array $responses): self
+    {
+        $this->responses = $responses;
+        return $this;
+    }
+
+    public function getResponses(): array
+    {
+        return $this->responses ?? [];
     }
 
     public function getChooseSerializeContext(): ChooseSerializeContext
@@ -189,6 +213,7 @@ class SerializeContext
     {
         $payloads = [];
         foreach ($payload as $field => $itemPayload) {
+            $itemPayload = $this->normalizerCastResolver->resolve($itemPayload);
             $values   = is_numeric($field) && is_array($itemPayload) ? $itemPayload : [$field => $itemPayload];
             $payloads = [...$payloads, ...$values];
         }
@@ -220,4 +245,5 @@ class SerializeContext
         $this->chooseSerializeContext->setGroups($this->getGroups());
         return $this->propertyToArrayResolver->resolve($this->chooseSerializeContext, $this->getGroupCollection(), $object);
     }
+
 }

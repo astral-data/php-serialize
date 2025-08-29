@@ -60,7 +60,7 @@ $data2 = FlexibleData::from([
 echo $data2->userIdentifier; // 输出 User 对象
 echo $data2->complexIdentifier; // 输出 User 对象
 
-$data2Array = $data2->toArray();
+var_dump($data2)
 // $data2Array 的内容:
 // [
 //     'flexibleId' => 'ABC123',
@@ -87,10 +87,10 @@ $data3 = FlexibleData::from([
     ]
 ]);
 
-echo $data2->userIdentifier; // 输出 User 对象
-echo $data2->complexIdentifier; // 输出 AdminUser 对象
+echo $data3->userIdentifier; // 输出 User 对象
+echo $data3->complexIdentifier; // 输出 AdminUser 对象
 
-$data3Array = $data3->toArray();
+var_dump($data3)
 // $data3Array 的内容:
 // [
 //     'flexibleId' => 'USER001',

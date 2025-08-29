@@ -60,8 +60,8 @@ $data2 = FlexibleData::from([
 echo $data2->userIdentifier; // Output User object
 echo $data2->complexIdentifier; // Output AdminUser object
 
-$data2Array = $data2->toArray();
-// Content of $data2Array:
+var_dump($data2)
+// Content of $data2:
 // [
 //     'flexibleId' => 'ABC123',
 //     'userIdentifier' => User Object (
@@ -87,11 +87,11 @@ $data3 = FlexibleData::from([
     ]
 ]);
 
-echo $data2->userIdentifier; // Output User object
-echo $data2->complexIdentifier; // Output AdminUser object
+echo $data3->userIdentifier; // Output User object
+echo $data3->complexIdentifier; // Output AdminUser object
 
-$data3Array = $data3->toArray();
-// Content of $data3Array:
+var_dump($data3)
+// Content of $data3:
 // [
 //     'flexibleId' => 'USER001',
 //     'userIdentifier' => User Object (

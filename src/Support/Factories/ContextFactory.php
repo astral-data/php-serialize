@@ -28,6 +28,7 @@ class ContextFactory
             propertyInputValueResolver: SerializeContainer::get()->propertyInputValueResolver(),
             propertyToArrayResolver:  SerializeContainer::get()->propertyToArrayResolver(),
             fakerResolver: SerializeContainer::get()->fakerResolver(),
+            normalizerCastResolver: SerializeContainer::get()->normalizerCastResolver(),
         ));
     }
 }
