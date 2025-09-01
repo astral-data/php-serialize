@@ -59,37 +59,30 @@ test('OpenAPI structure is correct', function () {
     // 顶层结构断言
     expect($openApi->openapi)->toBe('3.1.1')
         ->and($openApi->info->version)->toBe('1.0.0');
-//        ->and($openApi->tags[0]->name)->toBe('接口测试');
+    //        ->and($openApi->tags[0]->name)->toBe('接口测试');
 
-    // 路径是否存在
     $paths = $openApi->paths;
     expect($paths)->toHaveKey('/test/one-action');
 
-    // 方法与标签断言
     $post = $paths['/test/one-action']['post'];
     expect($post->summary)->toBe('测试方法一')
         ->and($post->tags)->toContain('接口测试');
 
-    // 请求体断言
     $requestBody = $post->requestBody;
     expect($requestBody['required'])->toBeTrue();
     $schema = $requestBody['content']['application/json']['schema'];
 
-    // 请求字段存在
     expect($schema['properties'])->toHaveKeys(['name', 'id', 'any_array']);
 
-    // id 字段是 oneOf 并包含 string, integer, number
     $idOneOf = $schema['properties']['id']['oneOf'];
     $types   = array_map(static fn ($item) => $item['type'], $idOneOf);
     expect($types)->toMatchArray(['string', 'integer', 'number']);
 
-    // any_array 是 oneOf 并包含至少一个 array 类型
     $anyArray = $schema['properties']['any_array'];
     expect($anyArray['type'])->toBe('oneOf')
         ->and($anyArray['oneOf'])->toBeArray()
         ->and($anyArray['oneOf'][0]['type'])->toBe('array');
 
-    // 响应体 200 是否定义成功
     $response200 = $post->responses[200];
     expect($response200['description'])->toBe('成功');
 

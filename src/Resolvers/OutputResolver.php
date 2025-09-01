@@ -2,8 +2,8 @@
 
 namespace Astral\Serialize\Resolvers;
 
+use Astral\Serialize\Resolvers\Casts\OutNormalizerCastResolver;
 use Astral\Serialize\Resolvers\Casts\OutputCastResolver;
-use Astral\Serialize\Serialize;
 use Astral\Serialize\Support\Collections\DataCollection;
 use Astral\Serialize\Support\Collections\GroupDataCollection;
 use Astral\Serialize\Support\Context\ChoosePropertyContext;
@@ -17,6 +17,7 @@ class OutputResolver
         protected readonly ReflectionClassInstanceManager $reflectionClassInstanceManager,
         private readonly OutputCastResolver               $outValueCastResolver,
         protected readonly GroupResolver                  $groupResolver,
+        private readonly OutNormalizerCastResolver        $normalizerCastResolver,
     ) {
 
     }
@@ -52,7 +53,7 @@ class OutputResolver
             );
 
             foreach ($matchData['names'] as $name) {
-                $toArray[$name] =  $resolvedValue instanceof  Serialize ? $resolvedValue->toArray() : $resolvedValue;
+                $toArray[$name] =  $this->normalizerCastResolver->resolve($resolvedValue);
             }
 
         }

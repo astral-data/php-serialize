@@ -19,7 +19,6 @@ use Astral\Serialize\OpenApi\Storage\OpenAPI\ResponseStorage;
 use Astral\Serialize\OpenApi\Storage\OpenAPI\SchemaStorage;
 use Astral\Serialize\Resolvers\GroupResolver;
 use Astral\Serialize\Serialize;
-use Astral\Serialize\SerializeContainer;
 use Astral\Serialize\Support\Factories\ContextFactory;
 use Psr\SimpleCache\InvalidArgumentException;
 use ReflectionMethod;
@@ -58,7 +57,7 @@ class OpenApiCollection
         $requestBody = $this->buildRequestBody(
             className:$this->getRequestBodyClass(),
             contentType:$this->requestBody->contentType ?? ContentTypeEnum::JSON,
-            groups: $this->requestBody->groups ?? []
+            groups: $this->requestBody->groups          ?? []
         );
 
         $response = $this->buildResponse(
@@ -71,10 +70,9 @@ class OpenApiCollection
         return $openAPIMethod;
     }
 
-
     public function getRequestBodyClass(): string
     {
-        if($this->requestBody?->className){
+        if ($this->requestBody?->className) {
             return $this->requestBody->className;
         }
 
@@ -88,12 +86,11 @@ class OpenApiCollection
         return '';
     }
 
-
-    public function buildRequestBody(string $className,ContentTypeEnum $contentType,array $groups = []): RequestBodyStorage
+    public function buildRequestBody(string $className, ContentTypeEnum $contentType, array $groups = []): RequestBodyStorage
     {
         $openAPIRequestBody = new RequestBodyStorage($contentType);
         if (is_subclass_of($className, Serialize::class)) {
-            $schemaStorage = (new SchemaStorage())->build($this->buildRequestParameterCollections($className,$groups));
+            $schemaStorage = (new SchemaStorage())->build($this->buildRequestParameterCollections($className, $groups));
             $openAPIRequestBody->withParameter($schemaStorage);
         }
 
@@ -102,7 +99,7 @@ class OpenApiCollection
 
     public function getResponseClass(): string
     {
-        if($this->response?->className){
+        if ($this->response?->className) {
             return $this->response->className;
         }
 
@@ -118,18 +115,18 @@ class OpenApiCollection
     /**
      * @throws InvalidArgumentException
      */
-    public function buildResponse(string $className,array $groups = []): ResponseStorage
+    public function buildResponse(string $className, array $groups = []): ResponseStorage
     {
         $responseStorage = new ResponseStorage();
 
-        $baseResponse = Config::get('response',[]);
+        $baseResponse = Config::get('response', []);
 
         if ($className) {
-            $schemaStorage = (new SchemaStorage())->build($this->buildResponseParameterCollections($className,$groups));
+            $schemaStorage = (new SchemaStorage())->build($this->buildResponseParameterCollections($className, $groups));
             $responseStorage->withParameter($schemaStorage);
         }
 
-        if($baseResponse){
+        if ($baseResponse) {
             $responseStorage->addGlobParameters($baseResponse);
         }
 
@@ -148,13 +145,13 @@ class OpenApiCollection
         $serializeContext =  ContextFactory::build($className);
         $serializeContext->setGroups($groups)->from();
         $properties = $serializeContext->getGroupCollection()->getProperties();
-        $groups = $groups ?: [$className];
+        $groups     = $groups ?: [$className];
 
         $vols = [];
         foreach ($properties as $property) {
 
 
-            if($property->isInputIgnoreByGroups($groups) || !$this->groupResolver->resolveExistsGroupsByDataCollection($property, $groups, $className)){
+            if ($property->isInputIgnoreByGroups($groups) || !$this->groupResolver->resolveExistsGroupsByDataCollection($property, $groups, $className)) {
                 continue;
             }
 
@@ -192,12 +189,12 @@ class OpenApiCollection
         $serializeContext =  ContextFactory::build($className);
         $serializeContext->from();
         $properties = $serializeContext->getGroupCollection()->getProperties();
-        $groups = $groups ?: [$className];
+        $groups     = $groups ?: [$className];
 
         $vols = [];
         foreach ($properties as $property) {
 
-            if($property->isOutIgnoreByGroups($groups) || !$this->groupResolver->resolveExistsGroupsByDataCollection($property, $groups, $className)){
+            if ($property->isOutIgnoreByGroups($groups) || !$this->groupResolver->resolveExistsGroupsByDataCollection($property, $groups, $className)) {
                 continue;
             }
 

@@ -3,23 +3,23 @@
 namespace Astral\Serialize\Casts\Normalizer;
 
 use Astral\Serialize\Contracts\Normalizer\NormalizerCastInterface;
+use DateTimeInterface;
 use JsonException;
 
-class JsonNormalizerCast implements NormalizerCastInterface
+class DateTimeNormalizerCast implements NormalizerCastInterface
 {
     public function match(mixed $values): bool
     {
-        return is_string($values);
+        return is_object($values) && is_subclass_of($values, DateTimeInterface::class);
     }
 
-    public function resolve(mixed $values): array
+    public function resolve(mixed $values): mixed
     {
         if ($this->match($values)) {
             try {
-                $decoded = json_decode($values, true, 512, JSON_THROW_ON_ERROR);
-                return is_array($decoded) ? $decoded : $values;
+                return $values->format('Y-m-d H:i:s');
             } catch (JsonException $e) {
-
+                return '';
             }
         }
 

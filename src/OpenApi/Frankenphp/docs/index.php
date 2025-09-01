@@ -15,7 +15,7 @@ require_once dirname(__DIR__, 7) . '/vendor/autoload.php';
 <body>
 
 <elements-api
-    apiDescriptionUrl="<?php echo \Astral\Serialize\OpenApi\Handler\Config::get('doc_url','http://127.0.0.1:8089'); ?>"
+    apiDescriptionUrl="<?php echo \Astral\Serialize\OpenApi\Handler\Config::get('doc_url', 'http://127.0.0.1:8089'); ?>"
     router="hash"
     layout="sidebar"
 />

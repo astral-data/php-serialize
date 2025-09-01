@@ -7,8 +7,9 @@ use Astral\Serialize\Faker\FakerCastResolver;
 use Astral\Serialize\Faker\FakerResolver;
 use Astral\Serialize\Faker\Rule\FakerDefaultRules;
 use Astral\Serialize\Resolvers\Casts\DataCollectionCastResolver;
+use Astral\Serialize\Resolvers\Casts\InputNormalizerCastResolver;
 use Astral\Serialize\Resolvers\Casts\InputValueCastResolver;
-use Astral\Serialize\Resolvers\Casts\NormalizerCastResolver;
+use Astral\Serialize\Resolvers\Casts\OutNormalizerCastResolver;
 use Astral\Serialize\Resolvers\Casts\OutputCastResolver;
 use Astral\Serialize\Resolvers\GroupResolver;
 use Astral\Serialize\Resolvers\InputResolver;
@@ -42,7 +43,8 @@ class SerializeContainer
     protected ?GroupResolver $groupResolver                                                 = null;
     protected ?ReflectionClassInstanceManager $reflectionClassInstanceManager               = null;
     protected ?SerializeInstanceManager $serializeInstanceManager                           = null;
-    protected ?NormalizerCastResolver $normalizerCastResolver                               = null;
+    protected ?InputNormalizerCastResolver $inputNormalizerCastResolver                     = null;
+    protected ?OutNormalizerCastResolver $outNormalizerCastResolver                         = null;
     protected ?DataCollectionCastResolver $attributePropertyResolver                        = null;
     protected ?InputResolver $propertyInputValueResolver                                    = null;
     protected ?OutputResolver $propertyToArrayResolver                                      = null;
@@ -121,9 +123,14 @@ class SerializeContainer
         );
     }
 
-    public function normalizerCastResolver(): NormalizerCastResolver
+    public function inputNormalizerCastResolver(): InputNormalizerCastResolver
     {
-        return $this->normalizerCastResolver ??= new NormalizerCastResolver(ConfigManager::getInstance());
+        return $this->inputNormalizerCastResolver ??= new InputNormalizerCastResolver(ConfigManager::getInstance());
+    }
+
+    public function outNormalizerCastResolver(): OutNormalizerCastResolver
+    {
+        return $this->outNormalizerCastResolver ??= new OutNormalizerCastResolver(ConfigManager::getInstance());
     }
 
     public function inputValueCastResolver(): InputValueCastResolver
@@ -147,6 +154,7 @@ class SerializeContainer
             reflectionClassInstanceManager:$this->reflectionClassInstanceManager(),
             outValueCastResolver:$this->outValueCastResolver(),
             groupResolver: $this->groupResolver(),
+            normalizerCastResolver:$this->outNormalizerCastResolver(),
         );
     }
 

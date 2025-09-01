@@ -84,7 +84,6 @@ abstract class Serialize implements JsonSerializable
         return $instance;
     }
 
-
     public function __debugInfo()
     {
         $res             = get_object_vars($this);
@@ -95,16 +94,16 @@ abstract class Serialize implements JsonSerializable
 
     public function jsonSerialize(): array
     {
-        $baseResponses = Config::get('response',[]);
+        $baseResponses     = Config::get('response', []);
         $customerResponses = $this->getContext()?->getResponses() ?? [];
-        $responses = array_merge($baseResponses, $customerResponses);
+        $responses         = array_merge($baseResponses, $customerResponses);
 
-        if($responses){
+        if ($responses) {
             $resultData = [];
-            foreach ($responses as $field => $item){
-                if($item === 'T'){
+            foreach ($responses as $field => $item) {
+                if ($item === 'T') {
                     $resultData[$field] = $this->toArray();
-                }else{
+                } else {
                     $resultData[$field] = $item['value'] ?? ($item['example'] ?? '');
                 }
             }

@@ -8,8 +8,9 @@ use Astral\Serialize\Casts\InputValue\InputObjectBestMatchChildCast;
 use Astral\Serialize\Casts\InputValue\InputValueEnumCast;
 use Astral\Serialize\Casts\InputValue\InputValueNullCast;
 use Astral\Serialize\Casts\Normalizer\ArrayNormalizerCast;
+use Astral\Serialize\Casts\Normalizer\DateTimeNormalizerCast;
 use Astral\Serialize\Casts\Normalizer\JsonNormalizerCast;
-use Astral\Serialize\Casts\OutValue\OutArrayChildCast;
+use Astral\Serialize\Casts\Normalizer\ObjectNormalizerCast;
 use Astral\Serialize\Casts\OutValue\OutValueEnumCast;
 use Astral\Serialize\Casts\OutValue\OutValueGetterCast;
 use Astral\Serialize\Contracts\Attribute\DataCollectionCastInterface;
@@ -17,8 +18,9 @@ use Astral\Serialize\Contracts\Attribute\InputValueCastInterface;
 use Astral\Serialize\Contracts\Attribute\OutValueCastInterface;
 use Astral\Serialize\Contracts\Normalizer\NormalizerCastInterface;
 use Astral\Serialize\Enums\CacheDriverEnum;
-use Astral\Serialize\Exceptions\NotFoundAttributePropertyResolver;
+use Astral\Serialize\Enums\ConfigCastEnum;
 use Astral\Serialize\Support\Caching\MemoryCache;
+use RuntimeException;
 
 class ConfigManager
 {
@@ -38,88 +40,71 @@ class ConfigManager
 
     /** @var (OutValueCastInterface|string)[] $outputValueCasts */
     private array $outputValueCasts = [
-//        OutArrayChildCast::class,
         OutValueEnumCast::class,
         OutValueGetterCast::class,
     ];
 
-    /** @var (NormalizerCastInterface|string)[] $normalizerCasts */
-    private array $normalizerCasts = [
+    /** @var (NormalizerCastInterface|string)[] $inputNormalizerCasts */
+    private array $inputNormalizerCasts = [
 //        JsonNormalizerCast::class,
         ArrayNormalizerCast::class,
     ];
 
+    /** @var (NormalizerCastInterface|string)[] $inputNormalizerCasts */
+    private array $outNormalizerCasts = [
+        DateTimeNormalizerCast::class,
+        ArrayNormalizerCast::class,
+        ObjectNormalizerCast::class
+    ];
+
     /** @var CacheDriverEnum|class-string $cacheDriver */
     private string|CacheDriverEnum $cacheDriver = MemoryCache::class;
-
-    public function __construct()
-    {
-        foreach ($this->inputValueCasts as $key => $cast) {
-            $this->inputValueCasts[$key] = new $cast();
-        }
-
-        foreach ($this->outputValueCasts as $key => $cast) {
-            $this->outputValueCasts[$key] = new $cast();
-        }
-
-        foreach ($this->normalizerCasts as $key => $cast) {
-            $this->normalizerCasts[$key] = new $cast();
-        }
-    }
 
     public static function getInstance(): ConfigManager
     {
         return self::$instance ??= new self();
     }
 
-    /**
-     * @throws NotFoundAttributePropertyResolver
-     */
-    public function addNormalizerCasts(NormalizerCastInterface|string $resolverClass): static
+    public function __construct()
     {
-        if (is_string($resolverClass) && !is_subclass_of($resolverClass, NormalizerCastInterface::class)) {
-            throw new NotFoundAttributePropertyResolver('Resolver class must be an instance of NormalizerCastInterface');
-        }
-        $this->attributePropertyResolver[] = (is_string($resolverClass) ? new $resolverClass() : $resolverClass);
-
-        return $this;
+        $this->instantiateArrayProperties(ConfigCastEnum::getValues());
     }
 
     /**
-     * @throws NotFoundAttributePropertyResolver
+     * @param array $propertyNames
+     * @return void
      */
-    public function addAttributePropertyResolver(DataCollectionCastInterface|string $resolverClass): static
+    private function instantiateArrayProperties(array $propertyNames): void
     {
-        if (is_string($resolverClass) && !is_subclass_of($resolverClass, DataCollectionCastInterface::class)) {
-            throw new NotFoundAttributePropertyResolver('Resolver class must be an instance of DataCollectionCastInterface');
-        }
-        $this->attributePropertyResolver[] = (is_string($resolverClass) ? new $resolverClass() : $resolverClass);
+        foreach ($propertyNames as $property) {
+            if (!property_exists($this, $property)) {
+                throw new RuntimeException("Property $property does not exist");
+            }
 
-        return $this;
+            $this->$property = array_map(
+                fn ($class) => is_string($class) ? new $class() : $class,
+                $this->$property
+            );
+        }
     }
 
     /**
-     * @throws NotFoundAttributePropertyResolver
+     * @param object|string $castClass
+     * @param ConfigCastEnum $castEnum
+     * @return static
+     * @throws RuntimeException
      */
-    public function addOutputValueCasts(OutValueCastInterface|string $castClass): static
+    private function addCast(object|string $castClass, ConfigCastEnum $castEnum): static
     {
-        if (is_string($castClass) && !is_subclass_of($castClass, OutValueCastInterface::class)) {
-            throw new NotFoundAttributePropertyResolver('Resolver class must be an instance of OutValueCastInterface');
+        if (is_string($castClass) && !is_subclass_of($castClass, $castEnum->getCastInterface())) {
+            throw new RuntimeException("Cast class must be an instance of {$castEnum->getCastInterface()}");
         }
-        $this->outputValueCasts[] = (is_string($castClass) ? new $castClass() : $castClass);
 
-        return $this;
-    }
-
-    /**
-     * @throws NotFoundAttributePropertyResolver
-     */
-    public function addInputValueCasts(InputValueCastInterface|string $castClass): static
-    {
-        if (is_string($castClass) && !is_subclass_of($castClass, InputValueCastInterface::class)) {
-            throw new NotFoundAttributePropertyResolver('Resolver class must be an instance of InputValueCastInterface');
+        if (!property_exists($this, $castEnum->value)) {
+            throw new RuntimeException("Property {$castEnum->value} does not exist");
         }
-        $this->inputValueCasts[] = (is_string($castClass) ? new $castClass() : $castClass);
+
+        $this->{$castEnum->value}[] = is_string($castClass) ? new $castClass() : $castClass;
 
         return $this;
     }
@@ -139,9 +124,14 @@ class ConfigManager
         return $this->outputValueCasts;
     }
 
-    public function getNormalizerCasts(): array
+    public function getInputNormalizerCasts(): array
     {
-        return $this->normalizerCasts;
+        return $this->inputNormalizerCasts;
+    }
+
+    public function getOutNormalizerCasts(): array
+    {
+        return $this->outNormalizerCasts;
     }
 
     public function getCacheDriver(): string

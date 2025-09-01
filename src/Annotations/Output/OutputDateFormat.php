@@ -8,14 +8,12 @@ use Astral\Serialize\Contracts\Attribute\OutValueCastInterface;
 use Astral\Serialize\Support\Collections\DataCollection;
 use Astral\Serialize\Support\Context\OutContext;
 use Attribute;
+use DateInvalidTimeZoneException;
 use DateTime;
 use DateTimeInterface;
 use DateTimeZone;
 use Exception;
 
-/**
- * toArray 输出值为 固定日期格式 默认 YYYY-MM-DD HH:ii:ss的日期格式
- */
 #[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_CLASS)]
 class OutputDateFormat implements OutValueCastInterface
 {
@@ -35,6 +33,9 @@ class OutputDateFormat implements OutValueCastInterface
         return $this->formatValue($value);
     }
 
+    /**
+     * @throws DateInvalidTimeZoneException
+     */
     private function formatValue(mixed $value): ?string
     {
         $timezone = $this->timezone ? new DateTimeZone($this->timezone) : null;

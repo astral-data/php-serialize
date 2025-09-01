@@ -31,13 +31,13 @@ beforeAll(function () {
 
 it('test normalizer Serialize class', function () {
 
-    $normalizerOne = new NormalizerOne();
+    $normalizerOne           = new NormalizerOne();
     $normalizerOne->name_one = 'one name';
-    $normalizerOne->id_one = 1;
+    $normalizerOne->id_one   = 1;
 
-    $normalizerTwo = new NormalizerTwo();
+    $normalizerTwo           = new NormalizerTwo();
     $normalizerTwo->name_two = 'two name';
-    $normalizerTwo->id_two = 2;
+    $normalizerTwo->id_two   = 2;
 
     $res = NormalizerClass::from(one: $normalizerOne, two: $normalizerTwo, three: $normalizerOne);
 
@@ -50,21 +50,21 @@ it('test normalizer Serialize class', function () {
         ->and($res->three)->toBeArray()
         ->and($res->three)->toMatchArray([
             'name_one' => 'one name',
-            'id_one' => 1
+            'id_one'   => 1
         ]);
-//
+    //
 
 });
 
 it('test json_encode Serialize class', function () {
 
-    $normalizerOne = new NormalizerOne();
+    $normalizerOne           = new NormalizerOne();
     $normalizerOne->name_one = 'one name';
-    $normalizerOne->id_one = 1;
+    $normalizerOne->id_one   = 1;
 
-    $normalizerTwo = new NormalizerTwo();
+    $normalizerTwo           = new NormalizerTwo();
     $normalizerTwo->name_two = 'two name';
-    $normalizerTwo->id_two = 2;
+    $normalizerTwo->id_two   = 2;
 
     $res = NormalizerClass::from(one: $normalizerOne, two: $normalizerTwo, three: $normalizerOne);
 
