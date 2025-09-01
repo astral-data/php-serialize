@@ -12,7 +12,7 @@ class JsonNormalizerCast implements NormalizerCastInterface
         return is_string($values);
     }
 
-    public function resolve(mixed $values): array
+    public function resolve(mixed $values): mixed
     {
         if ($this->match($values)) {
             try {

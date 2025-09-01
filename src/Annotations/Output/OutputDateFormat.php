@@ -8,7 +8,6 @@ use Astral\Serialize\Contracts\Attribute\OutValueCastInterface;
 use Astral\Serialize\Support\Collections\DataCollection;
 use Astral\Serialize\Support\Context\OutContext;
 use Attribute;
-use DateInvalidTimeZoneException;
 use DateTime;
 use DateTimeInterface;
 use DateTimeZone;
@@ -33,9 +32,6 @@ class OutputDateFormat implements OutValueCastInterface
         return $this->formatValue($value);
     }
 
-    /**
-     * @throws DateInvalidTimeZoneException
-     */
     private function formatValue(mixed $value): ?string
     {
         $timezone = $this->timezone ? new DateTimeZone($this->timezone) : null;

@@ -4,7 +4,7 @@ namespace Astral\Serialize\Casts\Normalizer;
 
 use Astral\Serialize\Contracts\Normalizer\NormalizerCastInterface;
 use DateTimeInterface;
-use JsonException;
+use Throwable;
 
 class DateTimeNormalizerCast implements NormalizerCastInterface
 {
@@ -18,8 +18,7 @@ class DateTimeNormalizerCast implements NormalizerCastInterface
         if ($this->match($values)) {
             try {
                 return $values->format('Y-m-d H:i:s');
-            } catch (JsonException $e) {
-                return '';
+            } catch (Throwable $e) {
             }
         }
 

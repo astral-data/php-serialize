@@ -94,7 +94,7 @@ class ConfigManager
      * @return static
      * @throws RuntimeException
      */
-    private function addCast(object|string $castClass, ConfigCastEnum $castEnum): static
+    public function addCast(object|string $castClass, ConfigCastEnum $castEnum): static
     {
         if (is_string($castClass) && !is_subclass_of($castClass, $castEnum->getCastInterface())) {
             throw new RuntimeException("Cast class must be an instance of {$castEnum->getCastInterface()}");
