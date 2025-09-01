@@ -5,7 +5,7 @@ namespace Astral\Serialize\Support\Context;
 use Astral\Serialize\Exceptions\NotFoundGroupException;
 use Astral\Serialize\Faker\FakerResolver;
 use Astral\Serialize\Resolvers\Casts\DataCollectionCastResolver;
-use Astral\Serialize\Resolvers\Casts\NormalizerCastResolver;
+use Astral\Serialize\Resolvers\Casts\InputNormalizerCastResolver;
 use Astral\Serialize\Resolvers\GroupResolver;
 use Astral\Serialize\Resolvers\InputResolver;
 use Astral\Serialize\Resolvers\OutputResolver;
@@ -25,7 +25,7 @@ use RuntimeException;
  */
 class SerializeContext
 {
-    private array $groups = [];
+    private array $groups    = [];
     private array $responses = [];
 
     public function __construct(
@@ -39,18 +39,18 @@ class SerializeContext
         private readonly ConstructDataCollectionManager $constructDataCollectionManager,
         private readonly InputResolver                  $propertyInputValueResolver,
         private readonly OutputResolver                 $propertyToArrayResolver,
+        private readonly InputNormalizerCastResolver    $inputNormalizerCastResolver,
         private readonly FakerResolver                  $fakerResolver,
-        private readonly NormalizerCastResolver         $normalizerCastResolver,
     ) {
 
     }
 
-    public function setCode(string|int $code, $description ='' , $field = 'code'): void
+    public function setCode(string|int $code, $description = '', $field = 'code'): void
     {
         $this->responses[$field] = ['description' => $description,'value' => $code];
     }
 
-    public function setMessage(string $message, $description ='' , $field = 'message'): void
+    public function setMessage(string $message, $description = '', $field = 'message'): void
     {
         $this->responses[$field] = ['description' => $description,'value' => $message];
     }
@@ -213,9 +213,9 @@ class SerializeContext
     {
         $payloads = [];
         foreach ($payload as $field => $itemPayload) {
-            $itemPayload = $this->normalizerCastResolver->resolve($itemPayload);
-            $values   = is_numeric($field) && is_array($itemPayload) ? $itemPayload : [$field => $itemPayload];
-            $payloads = [...$payloads, ...$values];
+            $itemPayload = $this->inputNormalizerCastResolver->resolve($itemPayload);
+            $values      = is_numeric($field) && is_array($itemPayload) ? $itemPayload : [$field => $itemPayload];
+            $payloads    = [...$payloads, ...$values];
         }
 
         $this->chooseSerializeContext->setGroups($this->getGroups());
@@ -245,5 +245,4 @@ class SerializeContext
         $this->chooseSerializeContext->setGroups($this->getGroups());
         return $this->propertyToArrayResolver->resolve($this->chooseSerializeContext, $this->getGroupCollection(), $object);
     }
-
 }

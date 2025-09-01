@@ -1,4 +1,5 @@
 <?php
+
 use Astral\Serialize\OpenApi;
 
 ignore_user_abort(true);

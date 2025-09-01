@@ -12,9 +12,9 @@ class JsonNormalizerCast implements NormalizerCastInterface
         return is_string($values);
     }
 
-    public function resolve(mixed $values): array
+    public function resolve(mixed $values): mixed
     {
-        if($this->match($values)){
+        if ($this->match($values)) {
             try {
                 $decoded = json_decode($values, true, 512, JSON_THROW_ON_ERROR);
                 return is_array($decoded) ? $decoded : $values;

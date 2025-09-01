@@ -8,7 +8,6 @@ beforeAll(static function () {
 
     class TestBaseGroupRequest extends Serialize
     {
-
         public int $input_group_0;
 
         #[\Astral\Serialize\Annotations\Groups('group_1')]
@@ -17,8 +16,8 @@ beforeAll(static function () {
         #[\Astral\Serialize\Annotations\Groups('group_1')]
         public string $input_group_1_22;
 
-        #[\Astral\Serialize\Annotations\Groups('group_1','group_2')]
-        #[\Astral\Serialize\Annotations\DataCollection\InputName('input_change_group_1_33_2_11',['group_2'])]
+        #[\Astral\Serialize\Annotations\Groups('group_1', 'group_2')]
+        #[\Astral\Serialize\Annotations\DataCollection\InputName('input_change_group_1_33_2_11', ['group_2'])]
         public string $input_group_1_33_2_11;
 
         #[\Astral\Serialize\Annotations\Groups('group_2')]
@@ -39,7 +38,7 @@ beforeAll(static function () {
         #[\Astral\Serialize\Annotations\Groups('group_1')]
         public string $out_group_1_22;
 
-        #[\Astral\Serialize\Annotations\Groups('group_1','group_2')]
+        #[\Astral\Serialize\Annotations\Groups('group_1', 'group_2')]
         public string $out_group_1_33_2_11;
 
         #[\Astral\Serialize\Annotations\Groups('group_2')]

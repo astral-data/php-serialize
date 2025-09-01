@@ -19,16 +19,16 @@ class ContextFactory
     {
         return (new SerializeContext(
             serializeClassName: $className,
-            chooseSerializeContext:new ChooseSerializeContext($className),
+            chooseSerializeContext: new ChooseSerializeContext($className),
             cache: CacheFactory::build(),
             reflectionClassInstanceManager: SerializeContainer::get()->reflectionClassInstanceManager(),
             groupResolver: SerializeContainer::get()->groupResolver(),
             dataCollectionCastResolver: SerializeContainer::get()->attributePropertyResolver(),
             constructDataCollectionManager: SerializeContainer::get()->constructDataCollectionManager(),
             propertyInputValueResolver: SerializeContainer::get()->propertyInputValueResolver(),
-            propertyToArrayResolver:  SerializeContainer::get()->propertyToArrayResolver(),
+            propertyToArrayResolver: SerializeContainer::get()->propertyToArrayResolver(),
+            inputNormalizerCastResolver: SerializeContainer::get()->inputNormalizerCastResolver(),
             fakerResolver: SerializeContainer::get()->fakerResolver(),
-            normalizerCastResolver: SerializeContainer::get()->normalizerCastResolver(),
         ));
     }
 }
