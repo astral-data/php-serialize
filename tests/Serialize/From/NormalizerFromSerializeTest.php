@@ -35,7 +35,7 @@ it('test normalizer Serialize class', function () {
     $normalizerOne->name_one = 'one name';
     $normalizerOne->id_one   = 1;
 
-    $normalizerTwo           = new NormalizerTwo();
+    $normalizerTwo = new NormalizerTwo();
     $normalizerTwo->name_two = 'two name';
     $normalizerTwo->id_two   = 2;
 
