@@ -69,7 +69,7 @@ it('test json_encode Serialize class', function () {
     $res = NormalizerClass::from(one: $normalizerOne, two: $normalizerTwo, three: $normalizerOne);
 
     $resJson = json_encode($res);
-    expect($resJson)->toBe('{"code":200,"message":"\u64cd\u4f5c\u6210\u529f","data":{"one":{"name_one":"one name","id_one":1},"two":{"name_two":"two name","id_2":2},"three":{"name_one":"one name","id_one":1}}}');
+    expect($resJson)->toBe('{"code":200,"message":"success","data":{"one":{"name_one":"one name","id_one":1},"two":{"name_two":"two name","id_2":2},"three":{"name_one":"one name","id_one":1}}}');
 
     $res->setMessage('233');
     $resJson = json_encode($res);

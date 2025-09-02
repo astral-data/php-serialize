@@ -8,8 +8,6 @@ use Astral\Serialize\Serialize;
 use Astral\Serialize\Support\Config\ConfigManager;
 
 beforeAll(function () {
-
-
     class AddCastTestClass extends Serialize
     {
         #[InputName('name_three_other')]

@@ -10,6 +10,7 @@
 * [Enum Mapping](mapper/enum-mapper.md)
 * [Array Object Mapping](mapper/array-mapper.md)
 * [Union Type Mapping](mapper/union-mapper.md)
+* [Output Format](mapper/out.md)
 
 ## Annotation Usage
 
