@@ -57,8 +57,8 @@ return [
      *
      */
     'response' => [
-        'code' => ['description' =>'状态码', 'example'=> 200],
-        'message' => ['description' =>'返回信息', 'example'=> '操作成功'],
+        'code' => ['description' =>'code', 'example'=> 200],
+        'message' => ['description' =>'message', 'example'=> 'success'],
         'data' => 'T',
     ]
 ];
