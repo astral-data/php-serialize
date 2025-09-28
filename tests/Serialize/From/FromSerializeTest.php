@@ -43,7 +43,7 @@ it('test parse Serialize class', function () {
             'type_float'  => 0.02,
             'withoutType' => 'hhh',
         ],
-        type_float:null,
+        type_float:null, //  'type_float'  => 0.02 change to null
         input_name:null,
         type_object:null,
         type_mixed_other: ['abc' => ['bbb' => ['ccc' => 'dddd'],['abc']],'aaa','bbb','ccc',''],
@@ -60,4 +60,29 @@ it('test parse Serialize class', function () {
         ->and($object->type_mixed_other)->toBeArray()
         ->and($object->type_mixed_other['abc']['bbb']['ccc'])->toBe('dddd')
         ->and($object->type_collect_object)->toBeInstanceOf(StdClass::class);
+});
+
+it('test parse construct Serialize class', function () {
+
+    $object  = TestFromSerialize::from(
+        [
+            'input_name'  => [ fn () => new stdClass()],
+            'type_string' => 123,
+            'type_int'    => '11',
+            'type_float'  => '0.01',
+            'type_object' => new StdClass(),
+            'withoutType' => 'hhh',
+        ],
+        input_name:null,
+        type_object:null,
+        type_mixed_other: ['abc' => ['bbb' => ['ccc' => 'dddd'],['abc']],'aaa','bbb','ccc',''],
+        abc:123
+    );
+
+    expect($object)->toBeInstanceOf(TestFromSerialize::class)
+        ->and($object->type_string)->toBe('123')
+        ->and($object->type_object)->toBeInstanceOf(StdClass::class)
+        ->and($object->type_int)->toBe(11)
+        ->and($object->type_null)->toBe(123)
+        ->and($object->type_float)->toBe(0.01);
 });

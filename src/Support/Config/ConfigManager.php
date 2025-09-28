@@ -7,6 +7,7 @@ use Astral\Serialize\Casts\InputValue\InputArraySingleChildCast;
 use Astral\Serialize\Casts\InputValue\InputObjectBestMatchChildCast;
 use Astral\Serialize\Casts\InputValue\InputValueEnumCast;
 use Astral\Serialize\Casts\InputValue\InputValueNullCast;
+use Astral\Serialize\Casts\InputValue\InputValueOnlyBaseTypeCast;
 use Astral\Serialize\Casts\Normalizer\ArrayNormalizerCast;
 use Astral\Serialize\Casts\Normalizer\DateTimeNormalizerCast;
 use Astral\Serialize\Casts\Normalizer\JsonNormalizerCast;
@@ -36,6 +37,7 @@ class ConfigManager
         InputArraySingleChildCast::class,
         InputArrayBestMatchChildCast::class,
         InputValueEnumCast::class,
+        InputValueOnlyBaseTypeCast::class,
     ];
 
     /** @var (OutValueCastInterface|string)[] $outputValueCasts */
