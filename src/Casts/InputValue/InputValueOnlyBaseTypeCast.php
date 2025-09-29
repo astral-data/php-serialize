@@ -14,7 +14,7 @@ class InputValueOnlyBaseTypeCast implements InputValueCastInterface
 {
     public function match(mixed $value, DataCollection $collection, InputValueContext $context): bool
     {
-        return $value && $collection->isNullable() === false && count($collection->getTypes()) == 1 ;
+        return $value !== null && $collection->isNullable() === false && count($collection->getTypes()) == 1 ;
     }
 
     public function resolve(mixed $value, DataCollection $collection, InputValueContext $context): mixed
