@@ -8,7 +8,6 @@ use Astral\Serialize\Contracts\Attribute\InputValueCastInterface;
 use Astral\Serialize\Enums\TypeKindEnum;
 use Astral\Serialize\Support\Collections\DataCollection;
 use Astral\Serialize\Support\Context\InputValueContext;
-use stdClass;
 
 class InputValueOnlyBaseTypeCast implements InputValueCastInterface
 {
@@ -20,11 +19,11 @@ class InputValueOnlyBaseTypeCast implements InputValueCastInterface
     public function resolve(mixed $value, DataCollection $collection, InputValueContext $context): mixed
     {
         return match ($collection->getTypes()[0]->kind) {
-            TypeKindEnum::INT  => (int)$value,
-            TypeKindEnum::FLOAT => (float)$value,
-            TypeKindEnum::STRING => (string)$value,
+            TypeKindEnum::INT     => (int)$value,
+            TypeKindEnum::FLOAT   => (float)$value,
+            TypeKindEnum::STRING  => (string)$value,
             TypeKindEnum::BOOLEAN => (bool)$value,
-            default              => $value,
+            default               => $value,
         };
     }
 }
