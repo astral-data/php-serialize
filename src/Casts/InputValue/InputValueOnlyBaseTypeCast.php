@@ -19,11 +19,6 @@ class InputValueOnlyBaseTypeCast implements InputValueCastInterface
 
     public function resolve(mixed $value, DataCollection $collection, InputValueContext $context): mixed
     {
-
-//        if($context->getTypes()[0]->kind == TypeKindEnum::FLOAT){
-//            print_r($context);
-//        }
-
         return match ($collection->getTypes()[0]->kind) {
             TypeKindEnum::INT  => (int)$value,
             TypeKindEnum::FLOAT => (float)$value,
