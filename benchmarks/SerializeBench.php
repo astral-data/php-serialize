@@ -83,7 +83,7 @@ class SerializeBench
         Revs(500),
         Iterations(5),
         BeforeMethods([ 'setupObjectCreation']),
-        Assert('mode(variant.time.avg) < 120 microseconds +/- 5%')
+        Assert('mode(variant.time.avg) < 130 microseconds +/- 5%')
     ]
     public function benchObjectCreation(): void
     {

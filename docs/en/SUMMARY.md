@@ -11,6 +11,7 @@
 * [Array Object Mapping](mapper/array-mapper.md)
 * [Union Type Mapping](mapper/union-mapper.md)
 * [Output Format](mapper/out.md)
+* [Validation](mapper/validate.md)
 
 ## Annotation Usage
 

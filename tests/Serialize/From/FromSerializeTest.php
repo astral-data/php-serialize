@@ -30,6 +30,34 @@ beforeAll(function () {
             $this->type_null = $abc;
         }
     }
+
+    class TestConstructFromSerialize extends Serialize
+    {
+        public function __construct(
+            public string $type_string,
+            public object $type_object,
+            public int $type_int,
+            public int $type_null,
+            public float $type_float,
+        ) {
+        }
+    }
+
+    class TestConstructValidationFromSerialize extends Serialize
+    {
+
+        public string $type_string;
+
+        public function validate():void
+        {
+            if($this->type_string !== '123'){
+                throw new Exception('type_string is not 123');
+            }
+
+            $this->type_string = '234';
+
+        }
+    }
 });
 
 it('test parse Serialize class', function () {
@@ -43,7 +71,7 @@ it('test parse Serialize class', function () {
             'type_float'  => 0.02,
             'withoutType' => 'hhh',
         ],
-        type_float:null,
+        type_float:null, //  'type_float'  => 0.02 change to null
         input_name:null,
         type_object:null,
         type_mixed_other: ['abc' => ['bbb' => ['ccc' => 'dddd'],['abc']],'aaa','bbb','ccc',''],
@@ -60,4 +88,36 @@ it('test parse Serialize class', function () {
         ->and($object->type_mixed_other)->toBeArray()
         ->and($object->type_mixed_other['abc']['bbb']['ccc'])->toBe('dddd')
         ->and($object->type_collect_object)->toBeInstanceOf(StdClass::class);
+});
+
+it('test parse construct Serialize class', function () {
+
+    $object = TestConstructFromSerialize::from(
+        type_string: 123,
+        type_object: null,
+        type_int: '123',
+        type_null: null,
+        type_float: '0.01',
+    );
+
+    expect($object)->toBeInstanceOf(TestConstructFromSerialize::class)
+        ->and($object->type_string)->toBe('123')
+        ->and($object->type_object)->toBeInstanceOf(StdClass::class)
+        ->and($object->type_int)->toBe(123)
+        ->and($object->type_null)->toBe(0)
+        ->and($object->type_float)->toBe(0.01);
+});
+
+it('throws exception when type_string is not 123', function () {
+    expect(function () {
+        TestConstructValidationFromSerialize::from(type_string: 111);
+    })->toThrow(Exception::class, 'type_string is not 123');
+});
+
+it('creates object successfully when type_string is 123', function () {
+    $object = TestConstructValidationFromSerialize::from(type_string: 123);
+
+    expect($object)
+        ->toBeInstanceOf(TestConstructValidationFromSerialize::class)
+        ->and($object->type_string)->toBe('234');
 });

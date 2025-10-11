@@ -1,0 +1,29 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Astral\Serialize\Casts\InputValue;
+
+use Astral\Serialize\Contracts\Attribute\InputValueCastInterface;
+use Astral\Serialize\Enums\TypeKindEnum;
+use Astral\Serialize\Support\Collections\DataCollection;
+use Astral\Serialize\Support\Context\InputValueContext;
+
+class InputValueOnlyBaseTypeCast implements InputValueCastInterface
+{
+    public function match(mixed $value, DataCollection $collection, InputValueContext $context): bool
+    {
+        return $value !== null && $collection->isNullable() === false && count($collection->getTypes()) == 1 ;
+    }
+
+    public function resolve(mixed $value, DataCollection $collection, InputValueContext $context): mixed
+    {
+        return match ($collection->getTypes()[0]->kind) {
+            TypeKindEnum::INT     => (int)$value,
+            TypeKindEnum::FLOAT   => (float)$value,
+            TypeKindEnum::STRING  => (string)$value,
+            TypeKindEnum::BOOLEAN => (bool)$value,
+            default               => $value,
+        };
+    }
+}

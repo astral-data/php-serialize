@@ -27,6 +27,7 @@ $user = User::from([
 ### Outputting the Object
 
 ```php
+
 // $user is an object by default
 echo $user->name;  // Output: Jon
 echo $user->age;   // Output: 30
