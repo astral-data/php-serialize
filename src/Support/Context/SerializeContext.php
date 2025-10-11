@@ -20,16 +20,13 @@ use Psr\SimpleCache\InvalidArgumentException;
 use ReflectionProperty;
 use RuntimeException;
 
-/**
- * @template T
- */
 class SerializeContext
 {
     private array $groups    = [];
     private array $responses = [];
 
     public function __construct(
-        /** @var class-string<T> */
+        /** @var class-string */
         private readonly string                         $serializeClassName,
         private readonly ChooseSerializeContext         $chooseSerializeContext,
         private readonly CacheInterface                 $cache,
@@ -208,6 +205,7 @@ class SerializeContext
 
     /**
      * @param mixed ...$payload
+     * @return object
      */
     public function from(mixed ...$payload): object
     {
@@ -220,7 +218,7 @@ class SerializeContext
 
         $this->chooseSerializeContext->setGroups($this->getGroups());
 
-        /** @var T $object */
+
         $object = $this->propertyInputValueResolver->resolve($this->chooseSerializeContext, $this->getGroupCollection(), $payloads);
 
         if ($object instanceof Serialize && $object->getContext() === null) {
@@ -231,7 +229,7 @@ class SerializeContext
 
     }
 
-    public function faker()
+    public function faker(): object
     {
         $this->chooseSerializeContext->setGroups($this->getGroups());
         return $this->fakerResolver->resolve($this->chooseSerializeContext, $this->getGroupCollection());

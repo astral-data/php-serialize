@@ -32,7 +32,6 @@ abstract class Serialize implements JsonSerializable
 
     public static function setGroups(array|string $groups): SerializeContext
     {
-        /** @var SerializeContext<static> $serializeContext */
         $serializeContext = ContextFactory::build(static::class);
         return $serializeContext->setGroups((array)$groups);
     }
