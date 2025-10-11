@@ -26,7 +26,7 @@ class InputResolver
     /**
      * @throws ReflectionException
      */
-    public function resolve(ChooseSerializeContext $chooseContext, GroupDataCollection $groupCollection, array $payload)
+    public function resolve(ChooseSerializeContext $chooseContext, GroupDataCollection $groupCollection, array $payload): object
     {
         $reflectionClass =  $this->reflectionClassInstanceManager->get($groupCollection->getClassName());
         $object          =  $reflectionClass->newInstanceWithoutConstructor();
@@ -70,6 +70,11 @@ class InputResolver
 
         if ($groupCollection->hasConstruct()) {
             $this->inputConstructCast->resolve($groupCollection->getConstructProperties(), $object, $constructInputs);
+        }
+
+        // validate execution
+        if(method_exists($object,'validate')){
+            $object->validate();
         }
 
         return $object;

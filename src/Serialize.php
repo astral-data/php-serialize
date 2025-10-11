@@ -84,6 +84,11 @@ abstract class Serialize implements JsonSerializable
         return $instance;
     }
 
+    public function validate(): void
+    {
+
+    }
+
     public function __debugInfo()
     {
         $res             = get_object_vars($this);
